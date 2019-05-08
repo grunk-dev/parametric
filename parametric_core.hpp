@@ -96,7 +96,8 @@ public:
         return v.hasChild;
     }
 
-    template <typename Visitor> void accept(Visitor& v, size_t depth = 0) const
+    template <typename Visitor>
+    void accept(Visitor& v, size_t depth = 0) const
     {
         v.visit(*this, depth);
         for (std::weak_ptr<DAGNode>& child : childs) {
@@ -106,7 +107,8 @@ public:
         }
     }
 
-    template <typename Visitor> void accept(Visitor& v, size_t depth = 0)
+    template <typename Visitor>
+    void accept(Visitor& v, size_t depth = 0)
     {
         v.visit(*this, depth);
         for (std::weak_ptr<DAGNode>& child : childs) {
@@ -222,7 +224,8 @@ private:
     }
 };
 
-template <class ResultType> class param : public ValueType
+template <class ResultType>
+class param : public ValueType
 {
 public:
     param(const ResultType& v)
@@ -322,20 +325,24 @@ private:
     optional<ResultType> value;
 };
 
-template <typename T> using param_ptr = std::shared_ptr<param<T>>;
+template <typename T>
+using param_ptr = std::shared_ptr<param<T>>;
 
-template <class T> param_ptr<T> new_param(const T& v)
+template <class T>
+param_ptr<T> new_param(const T& v)
 {
     return std::make_shared<param<T>>(v);
 }
 
-template <class T> param_ptr<T> new_param()
+template <class T>
+param_ptr<T> new_param()
 {
     return std::make_shared<param<T>>();
 }
 
 // Disable connecting two values
-template <class C1, class C2> void attach(param_ptr<C1>&, param_ptr<C2>&)
+template <class C1, class C2>
+void attach(param_ptr<C1>&, param_ptr<C2>&)
 {
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }

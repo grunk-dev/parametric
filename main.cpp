@@ -1,7 +1,8 @@
 #include <iostream>
 #include "parametric_core.hpp"
 
-template <class T> parametric::param_ptr<T> add(const parametric::param_ptr<T>& a, const parametric::param_ptr<T>& b)
+template <class T>
+parametric::param_ptr<T> add(const parametric::param_ptr<T>& a, const parametric::param_ptr<T>& b)
 {
 
     class Adder : public parametric::ComputeNode

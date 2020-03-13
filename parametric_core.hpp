@@ -101,7 +101,6 @@ using namespace std;
 class DAGNode;
 
 typedef std::shared_ptr<DAGNode> NodeRef;
-typedef std::shared_ptr<const DAGNode> ConstNodeRef;
 
 class may_not_attach : public std::exception
 {
@@ -115,7 +114,7 @@ public:
     {
     }
 
-    friend void attach(NodeRef child, NodeRef parent)
+    friend void attach(const NodeRef& child, const NodeRef& parent)
     {
 
         if (!child || !parent) {
@@ -213,30 +212,6 @@ public:
         }
     }
 
-    virtual ~DAGNode()
-    {
-        for (auto parent : parents) {
-            if (parent) {
-                unattachFrom(*parent);
-            }
-        }
-    }
-
-protected:
-    int _id;
-
-    mutable std::vector<std::weak_ptr<DAGNode>> childs;
-    std::vector<std::shared_ptr<DAGNode>> parents;
-};
-
-class InvalidatibleNode : public DAGNode
-{
-public:
-    InvalidatibleNode(int id)
-        : DAGNode(id)
-    {
-    }
-
     void invalidate()
     {
         class InvalVisitor
@@ -248,9 +223,7 @@ public:
                     return;
                 }
 
-                if (auto* par = dynamic_cast<InvalidatibleNode*>(&n)) {
-                    par->invalidateSelf();
-                }
+                n.invalidateSelf();
             }
         };
 
@@ -258,78 +231,49 @@ public:
         accept(v);
     }
 
-protected:
-    virtual void invalidateSelf() = 0;
-};
+    virtual void eval() const {}
 
-class ValueType : public InvalidatibleNode
-{
-public:
-    ValueType(int id)
-        : InvalidatibleNode(id)
+    virtual ~DAGNode()
     {
-    }
-};
-
-
-class ComputeNode : public InvalidatibleNode
-{
-public:
-    virtual void compute() = 0;
-
-    static void connect_ins_outs(std::shared_ptr<ComputeNode> computeNode)
-    {
-        for (auto in : computeNode->_inputs) {
-            attach(computeNode, in);
-        }
-        for (auto out : computeNode->_outputs) {
-            attach(out, computeNode);
+        for (auto parent : parents) {
+            if (parent) {
+                unattachFrom(*parent);
+            }
         }
     }
 
-    void define_input(const std::shared_ptr<ValueType>& input_param)
-    {
-        _inputs.push_back(input_param);
-    }
-    void define_output(const std::shared_ptr<ValueType>& output_param)
-    {
-        _outputs.push_back(output_param);
-    }
-
-    virtual ~ComputeNode() {}
 
 protected:
-    ComputeNode()
-        : InvalidatibleNode(0)
-    {
-    }
+    int _id;
 
-private:
-    std::vector<std::shared_ptr<ValueType>> _inputs, _outputs;
+    mutable std::vector<std::weak_ptr<DAGNode>> childs;
+    std::vector<std::shared_ptr<DAGNode>> parents;
 
-    void invalidateSelf()
-    {
-    }
+protected:
+    virtual void invalidateSelf() {}
 };
+
+
+
 
 template <class ResultType>
-class param_holder : public ValueType
+class param_holder : public DAGNode
 {
 public:
     param_holder(const ResultType& v)
-        : ValueType(1)
+        : DAGNode(1)
         , value(v)
     {
     }
     param_holder()
-        : ValueType(0)
+        : DAGNode(0)
     {
     }
 
     virtual const ResultType& Value() const
     {
         if (!value.is_initialized()) {
-            computeValue();
+            eval();
             // this assertion should only fail, if the node was not connected to its compute node
             // and therefore compute fails
             assert(value.is_initialized());
@@ -339,6 +283,7 @@ public:
     }
     virtual void SetValue(const ResultType& v)
     {
+        // TODO: not all classes provide the != operators. This should be abstracted
         if (!value.is_initialized() || v != value.value()) {
             value = v;
             invalidate();
@@ -357,7 +302,7 @@ protected:
     }
 
 private:
-    void computeValue() const
+    void eval() const override
     {
         // TODO: Here we need a mutex to avoid multiple threads computing
         // The same value
@@ -365,9 +310,7 @@ private:
 
         if (parents.size() > 0) {
             NodeRef p = parents[0];
-            if (auto* computeNode = dynamic_cast<ComputeNode*>(p.get())) {
-                computeNode->compute();
-            }
+            p->eval();
         }
     }
 
@@ -436,6 +379,30 @@ void attach(std::shared_ptr<param_holder<C1>>&, std::shared_ptr<param_holder<C2>
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }
 
+class ComputeNode : public DAGNode
+{
+public:
+
+    template <typename T>
+    static void AddInput(const std::shared_ptr<ComputeNode>& cn, const param<T>& p){
+        attach(cn, p.node_pointer());
+    }
+
+    template <typename T>
+    static void AddOutput(const std::shared_ptr<ComputeNode>& cn, const param<T>& p){
+        attach(p.node_pointer(), cn);
+    }
+
+    virtual ~ComputeNode() {}
+
+protected:
+    ComputeNode()
+        : DAGNode(0)
+    {
+    }
+
+};
+
 /**
  * @brief This function creates a parametric version from a "normal" function
  *
@@ -465,28 +432,20 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
     class ComputeWrapperNode : public parametric::ComputeNode
     {
     public:
-        ComputeWrapperNode(Fn ff, parametric::param<Args>... args)
-            : _wrapped_function(ff), _parameters(args...)
+        ComputeWrapperNode(Fn ff, std::tuple<parametric::param<Args>...> t)
+            : _wrapped_function(ff), _parameters(t)
             ,  _resultNode(parametric::new_param<rtype>())
         {
-            // define input and output arguments
-            define_output(_resultNode.node_pointer());
-            static_foreach(_parameters, [this](const auto & parm) {
-                define_input(parm.node_pointer());
-            });
-
         }
 
-        void compute()
+        void eval() const
         {
             _resultNode.SetValue(
-                apply(
-                    std::forward<Fn>(_wrapped_function),
-                    _parameters,
-            [](const auto & parm) {
-                return parm.Value();
-            }
-                ));
+                apply(std::forward<const Fn>(_wrapped_function),
+                  _parameters,
+                  [](const auto& parm){return parm.Value();}
+                )
+             );
         }
 
         parametric::param<rtype> result() const
@@ -497,17 +456,21 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
     private:
         Fn _wrapped_function;
         std::tuple<parametric::param<Args>...> _parameters;
-        parametric::param<rtype> _resultNode;
+        mutable parametric::param<rtype> _resultNode;
     };
 
 
-    std::shared_ptr<ComputeWrapperNode> computeNode(new ComputeWrapperNode(wrapped_function, parameterArgs...));
-    ComputeWrapperNode::connect_ins_outs(computeNode);
+    std::tuple<parametric::param<Args>...> _parameters(parameterArgs...);
 
+    std::shared_ptr<ComputeWrapperNode> computeNode(new ComputeWrapperNode(wrapped_function, _parameters));
+    // connect inputs
+    static_foreach(_parameters, [&computeNode](const auto & parm) {
+        ComputeNode::AddInput(computeNode, parm);
+    });
+    ComputeNode::AddOutput(computeNode, computeNode->result());
 
     return computeNode->result();
 }
-
 
 } // namespace parametric
 

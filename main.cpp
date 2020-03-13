@@ -11,13 +11,18 @@ auto p_add(const parametric::param<T1>& a, const parametric::param<T2>& b)
         std::cout << "Add" << std::endl;
         return v1 + v2;
     };
-    return  parametric::eval(theFun, a, b);
+    return parametric::eval(theFun, a, b);
 }
 
-double mult(double a, int b)
+template <class T1, class T2>
+auto p_mult(const parametric::param<T1>& a, const parametric::param<T2>& b)
 {
-    std::cout << "Mult" << std::endl;
-    return a * b;
+
+    auto theFun = [](T1 v1, T2 v2) {
+        std::cout << "Mult" << std::endl;
+        return v1 * v2;
+    };
+    return parametric::eval(theFun, a, b);
 }
 
 template <class T1, class T2>
@@ -31,7 +36,7 @@ template <class T1, class T2>
 auto operator*(const parametric::param<T1>& a, const parametric::param<T2>& b)
 {
 
-    return parametric::eval(mult, a, b);
+    return p_mult(a, b);
 }
 
 

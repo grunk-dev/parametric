@@ -6,4 +6,4 @@ add_executable(${PROJECT_NAME}
     parametric_core.hpp
 )
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)

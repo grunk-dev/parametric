@@ -9,8 +9,89 @@
 
 #include <type_traits> // for std::false_type
 
+namespace TupleTools_private
+{
+
+//! helper template function for the actual implementation of a compile-time for loop
+template<typename GenericLambda, std::size_t ... Is>
+constexpr void static_for_impl(GenericLambda&& f, std::index_sequence<Is...>)
+{
+    // unpack into std::initializer list for "looping" in correct order without recursion
+    (void)std::initializer_list<char>{((void)f(std::integral_constant<unsigned,Is>()),'0')...};
+}
+
+template <class Tuple, class F, typename ElemFun, size_t... Is>
+constexpr auto apply_impl(F f, Tuple t, ElemFun ef,
+                          std::index_sequence<Is...>) {
+    return f(ef(std::get<Is>(t))...);
+}
+
+
+}
+template<unsigned N, typename GenericLambda>
+constexpr void static_for(GenericLambda&& f)
+{
+    TupleTools_private::static_for_impl(std::forward<GenericLambda>(f), std::make_index_sequence<N>());
+}
+
+template<typename... _Elements, typename GenericLambda>
+constexpr void static_foreach(std::tuple<_Elements...>& aTuple, GenericLambda&& f)
+{
+    constexpr auto N = std::tuple_size<std::tuple<_Elements...>>::value;
+    static_for<N>([&aTuple, &f](auto i)
+                  {
+                      f(std::get<i>(aTuple));
+                  });
+}
+
+template <class F, class Tuple, typename ElemFun>
+constexpr auto apply(F f, Tuple t, ElemFun ef)
+{
+    return TupleTools_private::apply_impl(
+        f, t, ef, std::make_index_sequence<std::tuple_size<Tuple>{}>{});
+}
+
 namespace parametric
 {
+
+template <typename T> class optional
+{
+public:
+    optional()
+        : data(nullptr)
+    {
+    }
+
+    optional(const T& t)
+        : data(new T(t))
+    {
+    }
+    const T& value() const
+    {
+        if (!data) {
+            throw std::runtime_error("Value not initialized");
+        }
+        return *data;
+    }
+
+    operator T const&() const
+    {
+        return value();
+    }
+
+    bool is_initialized() const
+    {
+        return data != nullptr;
+    }
+
+    void reset()
+    {
+        data.reset();
+    }
+
+private:
+    std::unique_ptr<T> data;
+};
 
 template <typename T> struct AlwaysFalse : std::false_type {
 };
@@ -188,7 +269,45 @@ public:
 };
 
 
-class ComputeNode;
+class ComputeNode : public InvalidatibleNode
+{
+public:
+    virtual void compute() = 0;
+
+    static void connect_ins_outs(std::shared_ptr<ComputeNode> computeNode)
+    {
+        for (auto in : computeNode->_inputs) {
+            attach(computeNode, in);
+        }
+        for (auto out : computeNode->_outputs) {
+            attach(out, computeNode);
+        }
+    }
+
+    void define_input(const std::shared_ptr<ValueType>& input_param)
+    {
+        _inputs.push_back(input_param);
+    }
+    void define_output(const std::shared_ptr<ValueType>& output_param)
+    {
+        _outputs.push_back(output_param);
+    }
+
+    virtual ~ComputeNode(){}
+
+protected:
+    ComputeNode()
+        : InvalidatibleNode(0)
+    {
+    }
+
+private:
+    std::vector<std::shared_ptr<ValueType>> _inputs, _outputs;
+
+    void invalidateSelf()
+    {
+    }
+};
 
 template <class ResultType>
 class param_holder : public ValueType
@@ -235,45 +354,6 @@ protected:
     }
 
 private:
-    template <typename T> class optional
-    {
-    public:
-        optional()
-            : data(nullptr)
-        {
-        }
-
-        optional(const T& t)
-            : data(new T(t))
-        {
-        }
-        const T& value() const
-        {
-            if (!data) {
-                throw std::runtime_error("Value not initialized");
-            }
-            return *data;
-        }
-
-        operator T const&() const
-        {
-            return value();
-        }
-
-        bool is_initialized() const
-        {
-            return data != nullptr;
-        }
-
-        void reset()
-        {
-            data.reset();
-        }
-
-    private:
-        std::unique_ptr<T> data;
-    };
-
     void computeValue() const
     {
         // TODO: Here we need a mutex to avoid multiple threads computing
@@ -289,46 +369,6 @@ private:
     }
 
     optional<ResultType> value;
-};
-
-class ComputeNode : public InvalidatibleNode
-{
-public:
-    virtual void compute() = 0;
-
-    static void connect_ins_outs(std::shared_ptr<ComputeNode> computeNode)
-    {
-        for (auto in : computeNode->_inputs) {
-            attach(computeNode, in);
-        }
-        for (auto out : computeNode->_outputs) {
-            attach(out, computeNode);
-        }
-    }
-
-    void define_input(const std::shared_ptr<ValueType>& input_param)
-    {
-        _inputs.push_back(input_param);
-    }
-    void define_output(const std::shared_ptr<ValueType>& output_param)
-    {
-        _outputs.push_back(output_param);
-    }
-
-    virtual ~ComputeNode(){}
-
-protected:
-    ComputeNode()
-        : InvalidatibleNode(0)
-    {
-    }
-
-private:
-    std::vector<std::shared_ptr<ValueType>> _inputs, _outputs;
-
-    void invalidateSelf()
-    {
-    }
 };
 
 
@@ -388,49 +428,77 @@ void attach(std::shared_ptr<param_holder<C1>>&, std::shared_ptr<param_holder<C2>
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }
 
+/**
+ * @brief This function creates a parametric version from a "normal" function
+ *
+ * The first argument is the function to be wrapped
+ * It accepts a variable list of input arguments, each must be a parameter
+ *
+ * Here's an example:
+ *
+ * double mult(double a, double b)
+ * {
+ *   return a * b;
+ * }
+ *
+ * parametric::param<double> a = parametric::new_param(2.0);
+ * parametric::param<double> b = parametric::new_param(10.0);
+ *
+ *
+ * auto result = eval_parametric(mult, a, b);
+ */
+template<typename Fn, typename... Args>
+parametric::param<typename std::result_of<Fn(Args...)>::type>
+eval(Fn wrapped_function, const parametric::param<Args>&... parameterArgs) {
+
+    using rtype = typename std::result_of<Fn(Args...)>::type;
+
+    class ComputeWrapperNode : public parametric::ComputeNode
+    {
+    public:
+        ComputeWrapperNode(Fn ff, parametric::param<Args>... args)
+            : _wrapped_function(ff), _parameters(args...)
+            ,  _resultNode(parametric::new_param<rtype>())
+        {
+            // define input and output arguments
+            define_output(_resultNode.node_pointer());
+            static_foreach(_parameters, [this](const auto& parm) {
+                define_input(parm.node_pointer());
+            });
+
+        }
+
+        void compute()
+        {
+            _resultNode.SetValue(
+                apply(
+                    std::forward<Fn>(_wrapped_function),
+                    _parameters,
+                    [](const auto& parm) {return parm.Value();}
+                    ));
+        }
+
+        parametric::param<rtype> result() const
+        {
+            return _resultNode;
+        }
+
+    private:
+        Fn _wrapped_function;
+        std::tuple<parametric::param<Args>...> _parameters;
+        parametric::param<rtype> _resultNode;
+    };
+
+
+    std::shared_ptr<ComputeWrapperNode> computeNode(new ComputeWrapperNode(wrapped_function, parameterArgs...));
+    ComputeWrapperNode::connect_ins_outs(computeNode);
+
+
+    return computeNode->result();
+}
+
+
 } // namespace parametric
 
-
-namespace TupleTools_private
-{
-
-//! helper template function for the actual implementation of a compile-time for loop
-template<typename GenericLambda, std::size_t ... Is>
-constexpr void static_for_impl(GenericLambda&& f, std::index_sequence<Is...>)
-{
-    // unpack into std::initializer list for "looping" in correct order without recursion
-    (void)std::initializer_list<char>{((void)f(std::integral_constant<unsigned,Is>()),'0')...};
-}
-
-template <class Tuple, class F, typename ElemFun, size_t... Is>
-constexpr auto apply_impl(F f, Tuple t, ElemFun ef,
-                          std::index_sequence<Is...>) {
-    return f(ef(std::get<Is>(t))...);
-}
-
-
-}
-template<unsigned N, typename GenericLambda>
-constexpr void static_for(GenericLambda&& f)
-{
-    TupleTools_private::static_for_impl(std::forward<GenericLambda>(f), std::make_index_sequence<N>());
-}
-
-template<typename... _Elements, typename GenericLambda>
-constexpr void static_foreach(std::tuple<_Elements...>& aTuple, GenericLambda&& f)
-{
-    constexpr auto N = std::tuple_size<std::tuple<_Elements...>>::value;
-    static_for<N>([&aTuple, &f](auto i)
-                  {
-                      f(std::get<i>(aTuple));
-                  });
-}
-
-template <class F, class Tuple, typename ElemFun>
-constexpr auto apply(F f, Tuple t, ElemFun ef)
-{
-    return TupleTools_private::apply_impl(
-        f, t, ef, std::make_index_sequence<std::tuple_size<Tuple>{}>{});
-}
 
 #endif // PARAMETRIC_CORE_HPP

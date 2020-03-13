@@ -84,10 +84,11 @@ public:
                 }
             }
 
-            bool hasChild;
-
         private:
             const DAGNode& _c;
+
+        public:
+            bool hasChild;
         };
 
         HasChildVisitor v(child);
@@ -122,14 +123,14 @@ public:
     {
         auto& p_childs  = parent.childs;
         auto it_to_this = std::find_if(p_childs.begin(), p_childs.end(),
-                                       [this](std::weak_ptr<DAGNode>& child) { return !child.lock(); });
+                                       [](std::weak_ptr<DAGNode>& child) { return !child.lock(); });
 
         if (it_to_this != p_childs.end()) {
             p_childs.erase(it_to_this);
         }
     }
 
-    ~DAGNode()
+    virtual ~DAGNode()
     {
         for (auto parent : parents) {
             if (parent)
@@ -210,6 +211,8 @@ public:
         _outputs.push_back(output_param);
     }
 
+    virtual ~ComputeNode(){}
+
 protected:
     ComputeNode()
         : InvalidatibleNode(0)
@@ -225,15 +228,15 @@ private:
 };
 
 template <class ResultType>
-class param : public ValueType
+class param_holder : public ValueType
 {
 public:
-    param(const ResultType& v)
+    param_holder(const ResultType& v)
         : ValueType(1)
         , value(v)
     {
     }
-    param()
+    param_holder()
         : ValueType(0)
     {
     }
@@ -326,27 +329,70 @@ private:
 };
 
 template <typename T>
-using param_ptr = std::shared_ptr<param<T>>;
+using param = std::shared_ptr<param_holder<T>>;
 
 template <class T>
-param_ptr<T> new_param(const T& v)
+param<T> new_param(const T& v)
 {
-    return std::make_shared<param<T>>(v);
+    return std::make_shared<param_holder<T>>(v);
 }
 
 template <class T>
-param_ptr<T> new_param()
+param<T> new_param()
 {
-    return std::make_shared<param<T>>();
+    return std::make_shared<param_holder<T>>();
 }
 
 // Disable connecting two values
 template <class C1, class C2>
-void attach(param_ptr<C1>&, param_ptr<C2>&)
+void attach(param<C1>&, param<C2>&)
 {
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }
 
 } // namespace parametric
+
+
+namespace TupleTools_private
+{
+
+//! helper template function for the actual implementation of a compile-time for loop
+template<typename GenericLambda, std::size_t ... Is>
+constexpr void static_for_impl(GenericLambda&& f, std::index_sequence<Is...>)
+{
+    // unpack into std::initializer list for "looping" in correct order without recursion
+    (void)std::initializer_list<char>{((void)f(std::integral_constant<unsigned,Is>()),'0')...};
+}
+
+template <class Tuple, class F, typename ElemFun, size_t... Is>
+constexpr auto apply_impl(F f, Tuple t, ElemFun ef,
+                          std::index_sequence<Is...>) {
+    return f(ef(std::get<Is>(t))...);
+}
+
+
+}
+template<unsigned N, typename GenericLambda>
+constexpr void static_for(GenericLambda&& f)
+{
+    TupleTools_private::static_for_impl(std::forward<GenericLambda>(f), std::make_index_sequence<N>());
+}
+
+template<typename... _Elements, typename GenericLambda>
+constexpr void static_foreach(std::tuple<_Elements...>& aTuple, GenericLambda&& f)
+{
+    constexpr auto N = std::tuple_size<std::tuple<_Elements...>>::value;
+    static_for<N>([&aTuple, &f](auto i)
+                  {
+                      f(std::get<i>(aTuple));
+                  });
+}
+
+template <class F, class Tuple, typename ElemFun>
+constexpr auto apply(F f, Tuple t, ElemFun ef)
+{
+    return TupleTools_private::apply_impl(
+        f, t, ef, std::make_index_sequence<std::tuple_size<Tuple>{}>{});
+}
 
 #endif // PARAMETRIC_CORE_HPP

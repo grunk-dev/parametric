@@ -1,63 +1,117 @@
 #include <iostream>
 #include "parametric_core.hpp"
+#include <tuple>
 
-template <class T>
-parametric::param_ptr<T> add(const parametric::param_ptr<T>& a, const parametric::param_ptr<T>& b)
-{
 
-    class Adder : public parametric::ComputeNode
+/**
+ * @brief This function creates a parametric version from a "normal" function
+ *
+ * The first argument is the function to be wrapped
+ * It accepts a variable list of input arguments, each must be a parameter
+ *
+ * Here's an example:
+ *
+ * double mult(double a, double b)
+ * {
+ *   return a * b;
+ * }
+ *
+ * parametric::param<double> a = parametric::new_param(2.0);
+ * parametric::param<double> b = parametric::new_param(10.0);
+ *
+ *
+ * auto result = eval_parametric(mult, a, b);
+ */
+template<typename Fn, typename... Args>
+parametric::param<typename std::result_of<Fn(Args...)>::type>
+eval_parametric(Fn wrapped_function, const parametric::param<Args>&... parameterArgs) {
+
+    using rtype = typename std::result_of<Fn(Args...)>::type;
+
+    class ComputeWrapperNode : public parametric::ComputeNode
     {
     public:
-        static std::shared_ptr<Adder> New(const parametric::param_ptr<T>& a, const parametric::param_ptr<T>& b)
-        {
-            std::shared_ptr<Adder> self(new Adder(a, b));
-            ComputeNode::connect_ins_outs(self);
-            return self;
-        }
-
         void compute()
         {
-            std::cout << "Comput add: " << _a->Value() << "+" << _b->Value() << std::endl;
-            _sum->SetValue(_a->Value() + _b->Value());
+            _resultNode->SetValue(
+                apply(
+                  std::forward<Fn>(_wrapped_function),
+                  _inputNodes,
+                  [](const auto& node) {return node->Value();}
+            ));
         }
 
-        parametric::param_ptr<T> sum() const { return _sum;}
+        parametric::param<rtype> result() const
+        {
+            return _resultNode;
+        }
+
+
+        ComputeWrapperNode(Fn ff, parametric::param<Args>... args)
+            : _wrapped_function(ff), _inputNodes(args...)
+            ,  _resultNode(parametric::new_param<rtype>())
+        {
+            define_output(_resultNode);
+            static_foreach(_inputNodes, [this](const auto& parm) {
+                define_input(parm);
+            });
+
+        }
 
     private:
-        Adder(const parametric::param_ptr<int>& a, const parametric::param_ptr<int>& b)
-            : _a(a)
-            , _b(b)
-            , _sum(parametric::new_param<int>())
-        {
-            define_input(_a);
-            define_input(_b);
-            define_output(_sum);
-        }
-
-        parametric::param_ptr<T> _a, _b;
-        parametric::param_ptr<T> _sum;
+        Fn _wrapped_function;
+        std::tuple<parametric::param<Args>...> _inputNodes;
+        parametric::param<rtype> _resultNode;
     };
 
-    return Adder::New(a, b)->sum();
+
+    std::shared_ptr<ComputeWrapperNode> computeNode(new ComputeWrapperNode(wrapped_function, parameterArgs...));
+    ComputeWrapperNode::connect_ins_outs(computeNode);
+
+
+   return computeNode->result();
 }
+
+template <class T1, class T2>
+auto p_add(parametric::param<T1> a, parametric::param<T2> b)
+{
+
+    auto theFun = [](T1 v1, T2 v2) {
+        std::cout << "Add" << std::endl;
+        return v1 + v2;
+    };
+    return eval_parametric(theFun, a, b);
+}
+
+double mult(double a, int b)
+{
+    std::cout << "Mult" << std::endl;
+    return a * b;
+}
+
+
 
 int main()
 {
-    parametric::param_ptr<int> k = parametric::new_param(1);
-    parametric::param_ptr<int> j = parametric::new_param(2);
+    parametric::param<int> k = parametric::new_param(1);
+    parametric::param<double> j = parametric::new_param(2.5);
 
-    parametric::param_ptr<int> sum = add(k, j);
-    sum = add(sum, sum);
+
+    auto result = eval_parametric(mult, k, k);
+    result = p_add(result, j);
+
 
     std::cout << "Until here, nothing has been computed!" << std::endl;
-    std::cout << "Sum: " << sum->Value() << std::endl;
+    std::cout << "Result: " << result->Value() << std::endl;
+    std::cout << "Result: " << result->Value() << std::endl;
 
-    j->SetValue(10);
-    std::cout << "Sum: " << sum->Value() << std::endl;
-    std::cout << "Sum: " << sum->Value() << std::endl;
+    k->SetValue(10);
+    std::cout << "Result: " << result->Value() << std::endl;
+    std::cout << "Result: " << result->Value() << std::endl;
     
     j->SetValue(11);
-    std::cout << "Sum: " << sum->Value() << std::endl;
+    std::cout << "Result: " << result->Value() << std::endl;
+    std::cout << "Result: " << result->Value() << std::endl;
 
     return 0;
 }

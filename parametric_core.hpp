@@ -17,12 +17,13 @@ template<typename GenericLambda, std::size_t ... Is>
 constexpr void static_for_impl(GenericLambda&& f, std::index_sequence<Is...>)
 {
     // unpack into std::initializer list for "looping" in correct order without recursion
-    (void)std::initializer_list<char>{((void)f(std::integral_constant<unsigned,Is>()),'0')...};
+    (void)std::initializer_list<char> {((void)f(std::integral_constant<unsigned, Is>()), '0')...};
 }
 
 template <class Tuple, class F, typename ElemFun, size_t... Is>
 constexpr auto apply_impl(F f, Tuple t, ElemFun ef,
-                          std::index_sequence<Is...>) {
+                          std::index_sequence<Is...>)
+{
     return f(ef(std::get<Is>(t))...);
 }
 
@@ -38,17 +39,16 @@ template<typename... _Elements, typename GenericLambda>
 constexpr void static_foreach(std::tuple<_Elements...>& aTuple, GenericLambda&& f)
 {
     constexpr auto N = std::tuple_size<std::tuple<_Elements...>>::value;
-    static_for<N>([&aTuple, &f](auto i)
-                  {
-                      f(std::get<i>(aTuple));
-                  });
+    static_for<N>([&aTuple, &f](auto i) {
+        f(std::get<i>(aTuple));
+    });
 }
 
 template <class F, class Tuple, typename ElemFun>
 constexpr auto apply(F f, Tuple t, ElemFun ef)
 {
     return TupleTools_private::apply_impl(
-        f, t, ef, std::make_index_sequence<std::tuple_size<Tuple>{}>{});
+               f, t, ef, std::make_index_sequence < std::tuple_size<Tuple> {} > {});
 }
 
 namespace parametric
@@ -74,7 +74,7 @@ public:
         return *data;
     }
 
-    operator T const&() const
+    operator T const& () const
     {
         return value();
     }
@@ -204,7 +204,9 @@ public:
     {
         auto& p_childs  = parent.childs;
         auto it_to_this = std::find_if(p_childs.begin(), p_childs.end(),
-                                       [](std::weak_ptr<DAGNode>& child) { return !child.lock(); });
+        [](std::weak_ptr<DAGNode>& child) {
+            return !child.lock();
+        });
 
         if (it_to_this != p_childs.end()) {
             p_childs.erase(it_to_this);
@@ -214,8 +216,9 @@ public:
     virtual ~DAGNode()
     {
         for (auto parent : parents) {
-            if (parent)
+            if (parent) {
                 unattachFrom(*parent);
+            }
         }
     }
 
@@ -293,7 +296,7 @@ public:
         _outputs.push_back(output_param);
     }
 
-    virtual ~ComputeNode(){}
+    virtual ~ComputeNode() {}
 
 protected:
     ComputeNode()
@@ -384,23 +387,28 @@ public:
         : m_holder(std::make_shared<param_holder<T>>())
     {}
 
-    const std::shared_ptr<param_holder<T>> node_pointer() const {
+    const std::shared_ptr<param_holder<T>> node_pointer() const
+    {
         return m_holder;
     }
 
-    const T& Value() const {
+    const T& Value() const
+    {
         return m_holder->Value();
     }
 
-    void SetValue(const T& other) {
+    void SetValue(const T& other)
+    {
         return m_holder->SetValue(other);
     }
 
-    operator const T& () const {
+    operator const T& () const
+    {
         return Value();
     }
 
-    param<T>& operator=(const T& other) {
+    param<T>& operator=(const T& other)
+    {
         m_holder->SetValue(other);
         return *this;
     }
@@ -449,7 +457,8 @@ void attach(std::shared_ptr<param_holder<C1>>&, std::shared_ptr<param_holder<C2>
  */
 template<typename Fn, typename... Args>
 parametric::param<typename std::result_of<Fn(Args...)>::type>
-eval(Fn wrapped_function, const parametric::param<Args>&... parameterArgs) {
+eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
+{
 
     using rtype = typename std::result_of<Fn(Args...)>::type;
 
@@ -462,7 +471,7 @@ eval(Fn wrapped_function, const parametric::param<Args>&... parameterArgs) {
         {
             // define input and output arguments
             define_output(_resultNode.node_pointer());
-            static_foreach(_parameters, [this](const auto& parm) {
+            static_foreach(_parameters, [this](const auto & parm) {
                 define_input(parm.node_pointer());
             });
 
@@ -474,8 +483,10 @@ eval(Fn wrapped_function, const parametric::param<Args>&... parameterArgs) {
                 apply(
                     std::forward<Fn>(_wrapped_function),
                     _parameters,
-                    [](const auto& parm) {return parm.Value();}
-                    ));
+            [](const auto & parm) {
+                return parm.Value();
+            }
+                ));
         }
 
         parametric::param<rtype> result() const

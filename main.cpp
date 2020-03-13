@@ -55,7 +55,7 @@ int main()
     k = 10;
     std::cout << "Result: " << result << std::endl;
     std::cout << "Result: " << result << std::endl;
-    
+
     j = 11;
     std::cout << "Result: " << result << std::endl;
     std::cout << "Result: " << result << std::endl;

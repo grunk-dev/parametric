@@ -187,45 +187,8 @@ public:
     }
 };
 
-class ComputeNode : public InvalidatibleNode
-{
-public:
-    virtual void compute() = 0;
 
-    static void connect_ins_outs(std::shared_ptr<ComputeNode> computeNode)
-    {
-        for (auto in : computeNode->_inputs) {
-            attach(computeNode, in);
-        }
-        for (auto out : computeNode->_outputs) {
-            attach(out, computeNode);
-        }
-    }
-
-    void define_input(const std::shared_ptr<ValueType>& input_param)
-    {
-        _inputs.push_back(input_param);
-    }
-    void define_output(const std::shared_ptr<ValueType>& output_param)
-    {
-        _outputs.push_back(output_param);
-    }
-
-    virtual ~ComputeNode(){}
-
-protected:
-    ComputeNode()
-        : InvalidatibleNode(0)
-    {
-    }
-
-private:
-    std::vector<std::shared_ptr<ValueType>> _inputs, _outputs;
-
-    void invalidateSelf()
-    {
-    }
-};
+class ComputeNode;
 
 template <class ResultType>
 class param_holder : public ValueType
@@ -328,24 +291,99 @@ private:
     optional<ResultType> value;
 };
 
+class ComputeNode : public InvalidatibleNode
+{
+public:
+    virtual void compute() = 0;
+
+    static void connect_ins_outs(std::shared_ptr<ComputeNode> computeNode)
+    {
+        for (auto in : computeNode->_inputs) {
+            attach(computeNode, in);
+        }
+        for (auto out : computeNode->_outputs) {
+            attach(out, computeNode);
+        }
+    }
+
+    void define_input(const std::shared_ptr<ValueType>& input_param)
+    {
+        _inputs.push_back(input_param);
+    }
+    void define_output(const std::shared_ptr<ValueType>& output_param)
+    {
+        _outputs.push_back(output_param);
+    }
+
+    virtual ~ComputeNode(){}
+
+protected:
+    ComputeNode()
+        : InvalidatibleNode(0)
+    {
+    }
+
+private:
+    std::vector<std::shared_ptr<ValueType>> _inputs, _outputs;
+
+    void invalidateSelf()
+    {
+    }
+};
+
+
 template <typename T>
-using param = std::shared_ptr<param_holder<T>>;
+class param
+{
+public:
+    param(const T& v)
+        : m_holder(std::make_shared<param_holder<T>>(v))
+    {}
+
+    param()
+        : m_holder(std::make_shared<param_holder<T>>())
+    {}
+
+    const std::shared_ptr<param_holder<T>> node_pointer() const {
+        return m_holder;
+    }
+
+    const T& Value() const {
+        return m_holder->Value();
+    }
+
+    void SetValue(const T& other) {
+        return m_holder->SetValue(other);
+    }
+
+    operator const T& () const {
+        return Value();
+    }
+
+    param<T>& operator=(const T& other) {
+        m_holder->SetValue(other);
+        return *this;
+    }
+
+private:
+    std::shared_ptr<param_holder<T>> m_holder;
+};
 
 template <class T>
 param<T> new_param(const T& v)
 {
-    return std::make_shared<param_holder<T>>(v);
+    return param<T>(v);
 }
 
 template <class T>
 param<T> new_param()
 {
-    return std::make_shared<param_holder<T>>();
+    return param<T>();
 }
 
 // Disable connecting two values
 template <class C1, class C2>
-void attach(param<C1>&, param<C2>&)
+void attach(std::shared_ptr<param_holder<C1>>&, std::shared_ptr<param_holder<C2>>)
 {
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }

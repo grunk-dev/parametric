@@ -31,13 +31,25 @@ eval_parametric(Fn wrapped_function, const parametric::param<Args>&... parameter
     class ComputeWrapperNode : public parametric::ComputeNode
     {
     public:
+        ComputeWrapperNode(Fn ff, parametric::param<Args>... args)
+            : _wrapped_function(ff), _parameters(args...)
+            ,  _resultNode(parametric::new_param<rtype>())
+        {
+            // define input and output arguments
+            define_output(_resultNode.node_pointer());
+            static_foreach(_parameters, [this](const auto& parm) {
+                define_input(parm.node_pointer());
+            });
+
+        }
+
         void compute()
         {
-            _resultNode->SetValue(
+            _resultNode.SetValue(
                 apply(
                   std::forward<Fn>(_wrapped_function),
-                  _inputNodes,
-                  [](const auto& node) {return node->Value();}
+                  _parameters,
+                  [](const auto& parm) {return parm.Value();}
             ));
         }
 
@@ -46,21 +58,9 @@ eval_parametric(Fn wrapped_function, const parametric::param<Args>&... parameter
             return _resultNode;
         }
 
-
-        ComputeWrapperNode(Fn ff, parametric::param<Args>... args)
-            : _wrapped_function(ff), _inputNodes(args...)
-            ,  _resultNode(parametric::new_param<rtype>())
-        {
-            define_output(_resultNode);
-            static_foreach(_inputNodes, [this](const auto& parm) {
-                define_input(parm);
-            });
-
-        }
-
     private:
         Fn _wrapped_function;
-        std::tuple<parametric::param<Args>...> _inputNodes;
+        std::tuple<parametric::param<Args>...> _parameters;
         parametric::param<rtype> _resultNode;
     };
 
@@ -73,7 +73,7 @@ eval_parametric(Fn wrapped_function, const parametric::param<Args>&... parameter
 }
 
 template <class T1, class T2>
-auto p_add(parametric::param<T1> a, parametric::param<T2> b)
+auto p_add(const parametric::param<T1>& a, const parametric::param<T2>& b)
 {
 
     auto theFun = [](T1 v1, T2 v2) {
@@ -93,25 +93,24 @@ double mult(double a, int b)
 
 int main()
 {
-    parametric::param<int> k = parametric::new_param(1);
-    parametric::param<double> j = parametric::new_param(2.5);
+    auto k = parametric::new_param(1);
+    auto j = parametric::new_param(2.5);
 
 
     auto result = eval_parametric(mult, k, k);
     result = p_add(result, j);
 
-
     std::cout << "Until here, nothing has been computed!" << std::endl;
-    std::cout << "Result: " << result->Value() << std::endl;
-    std::cout << "Result: " << result->Value() << std::endl;
+    std::cout << "Result: " << result << std::endl;
+    std::cout << "Result: " << result << std::endl;
 
-    k->SetValue(10);
-    std::cout << "Result: " << result->Value() << std::endl;
-    std::cout << "Result: " << result->Value() << std::endl;
+    k = 10;
+    std::cout << "Result: " << result << std::endl;
+    std::cout << "Result: " << result << std::endl;
     
-    j->SetValue(11);
-    std::cout << "Result: " << result->Value() << std::endl;
-    std::cout << "Result: " << result->Value() << std::endl;
+    j = 11;
+    std::cout << "Result: " << result << std::endl;
+    std::cout << "Result: " << result << std::endl;
 
     return 0;
 }

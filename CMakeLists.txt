@@ -6,6 +6,7 @@ add_library(parametric INTERFACE)
 target_compile_features(parametric INTERFACE cxx_std_14)
 
 add_subdirectory(examples)
+add_subdirectory(tests)
 
 install(TARGETS parametric
         EXPORT parametric-targets

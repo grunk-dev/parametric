@@ -3,6 +3,7 @@
 
 #include <parametric/typename.hpp>
 #include <parametric/tupletools.hpp>
+#include <parametric/optional.hpp>
 
 #include <memory>
 #include <vector>
@@ -14,46 +15,6 @@
 
 namespace parametric
 {
-
-template <typename T> class optional
-{
-public:
-    optional()
-        : data(nullptr)
-    {
-    }
-
-    optional(const T& t)
-        : data(new T(t))
-    {
-    }
-    const T& value() const
-    {
-        if (!data) {
-            throw std::runtime_error("Value not initialized");
-        }
-        return *data;
-    }
-
-    operator T const& () const
-    {
-        return value();
-    }
-
-    bool is_initialized() const
-    {
-        return data != nullptr;
-    }
-
-    void reset()
-    {
-        data.reset();
-    }
-
-private:
-    std::unique_ptr<T> data;
-};
-
 
 template <typename T> struct AlwaysFalse : std::false_type {
 };

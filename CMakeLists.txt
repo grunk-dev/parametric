@@ -5,10 +5,7 @@ project(Parametric VERSION 0.0.1)
 add_library(parametric INTERFACE)
 target_compile_features(parametric INTERFACE cxx_std_14)
 
-
-add_executable(example main.cpp)
-target_link_libraries(example PRIVATE parametric)
-
+add_subdirectory(examples)
 
 install(TARGETS parametric
         EXPORT parametric-targets

@@ -26,16 +26,14 @@ class DAGNode;
 typedef std::shared_ptr<DAGNode> NodeRef;
 
 class may_not_attach : public std::exception
-{
-};
+{};
 
 class DAGNode
 {
 public:
     DAGNode(const std::string& id)
         : _id(id)
-    {
-    }
+    {}
 
     friend void attach(const NodeRef& child, const NodeRef& parent)
     {
@@ -62,7 +60,12 @@ public:
         return _id;
     }
 
-    bool precedes(const DAGNode& child) const
+    /**
+     * @brief Checks, whether "node" precides the current node in the DAG
+     * @param node The node to be checked
+     * @return True, if node precedes this node.
+     */
+    bool precedes(const DAGNode& node) const
     {
         class HasChildVisitor
         {
@@ -70,8 +73,7 @@ public:
             HasChildVisitor(const DAGNode& c)
                 : _c(c)
                 , hasChild(false)
-            {
-            }
+            {}
 
             void visit(const DAGNode& n, size_t depth)
             {
@@ -87,12 +89,16 @@ public:
             bool hasChild;
         };
 
-        HasChildVisitor v(child);
+        HasChildVisitor v(node);
         accept(v);
 
         return v.hasChild;
     }
 
+    /**
+     * @brief This provides an interface for the visitor pattern to
+     * walk through the whole DAG down from this node
+     */
     template <typename Visitor>
     void accept(Visitor& v, size_t depth = 0) const
     {
@@ -128,6 +134,7 @@ public:
         }
     }
 
+    // Invalidates this node and all other childs
     void invalidate()
     {
         class InvalVisitor
@@ -199,16 +206,10 @@ public:
     }
     virtual void SetValue(const ResultType& v)
     {
-        // TODO: not all classes provide the != operators. This should be abstracted
         if (!value.is_initialized() || v != value.value()) {
             value = v;
             invalidate();
         }
-    }
-
-    bool attachAllowed()
-    {
-        return parents.size() == 0;
     }
 
 protected:
@@ -256,9 +257,25 @@ public:
         return m_holder->Value();
     }
 
-    void SetValue(const T& other)
+    /**
+     * @brief Sets the value of the parameter.
+     *
+     * The value will only be changed only, if the new value is different
+     * than the old one.
+     *
+     * Note: The check for difference is done using the != operator. If a custom class
+     * does not provide this operator, it can be added on global scope e.g.
+     *
+     * bool operator(const MyClass& c1, const MyClass& c2)
+     * {
+     *     return ...
+     * }
+     *
+     * @param value The value to be set.
+     */
+    void SetValue(const T& value)
     {
-        return m_holder->SetValue(other);
+        return m_holder->SetValue(value);
     }
 
     operator const T& () const

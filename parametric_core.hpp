@@ -93,6 +93,34 @@ private:
     std::unique_ptr<T> data;
 };
 
+template <typename T>
+struct TypeName
+{
+    static const char* Get()
+    {
+        return typeid(T).name();
+    }
+};
+
+template <>
+struct TypeName<int>
+{
+    static const char* Get()
+    {
+        return "int";
+    }
+};
+
+template <>
+struct TypeName<double>
+{
+    static const char* Get()
+    {
+        return "double";
+    }
+};
+
+
 template <typename T> struct AlwaysFalse : std::false_type {
 };
 
@@ -109,7 +137,7 @@ class may_not_attach : public std::exception
 class DAGNode
 {
 public:
-    DAGNode(int id)
+    DAGNode(const std::string& id)
         : _id(id)
     {
     }
@@ -121,9 +149,6 @@ public:
             throw std::invalid_argument("Cannot attach node: null pointer passed.");
         }
 
-        if (!child->attachAllowed()) {
-            throw may_not_attach();
-        }
 
         if (child == parent || child->precedes(*parent)) {
             throw std::invalid_argument("Cannot attach node: cycles are not allowed.");
@@ -136,12 +161,8 @@ public:
         }
     }
 
-    virtual bool attachAllowed() const
-    {
-        return true;
-    }
 
-    virtual int id() const
+    virtual std::string id() const
     {
         return _id;
     }
@@ -244,7 +265,7 @@ public:
 
 
 protected:
-    int _id;
+    std::string _id;
 
     mutable std::vector<std::weak_ptr<DAGNode>> childs;
     std::vector<std::shared_ptr<DAGNode>> parents;
@@ -260,13 +281,13 @@ template <class ResultType>
 class param_holder : public DAGNode
 {
 public:
-    param_holder(const ResultType& v)
-        : DAGNode(1)
+    param_holder(const ResultType& v, const std::string& id)
+        : DAGNode(id)
         , value(v)
     {
     }
-    param_holder()
-        : DAGNode(0)
+    param_holder(const std::string& id)
+        : DAGNode(id)
     {
     }
 
@@ -322,12 +343,12 @@ template <typename T>
 class param
 {
 public:
-    param(const T& v)
-        : m_holder(std::make_shared<param_holder<T>>(v))
+    param(const T& v, const std::string& id)
+        : m_holder(std::make_shared<param_holder<T>>(v, id))
     {}
 
-    param()
-        : m_holder(std::make_shared<param_holder<T>>())
+    param(const std::string& id)
+        : m_holder(std::make_shared<param_holder<T>>(id))
     {}
 
     const std::shared_ptr<param_holder<T>> node_pointer() const
@@ -363,13 +384,13 @@ private:
 template <class T>
 param<T> new_param(const T& v)
 {
-    return param<T>(v);
+    return param<T>(v, TypeName<T>::Get());
 }
 
 template <class T>
 param<T> new_param()
 {
-    return param<T>();
+    return param<T>(TypeName<T>::Get());
 }
 
 // Disable connecting two values
@@ -397,7 +418,7 @@ public:
 
 protected:
     ComputeNode()
-        : DAGNode(0)
+        : DAGNode("")
     {
     }
 
@@ -423,7 +444,7 @@ protected:
  * auto result = eval_parametric(mult, a, b);
  */
 template<typename Fn, typename... Args>
-parametric::param<typename std::result_of<Fn(Args...)>::type>
+constexpr parametric::param<typename std::result_of<Fn(Args...)>::type>
 eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 {
 
@@ -432,11 +453,10 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
     class ComputeWrapperNode : public parametric::ComputeNode
     {
     public:
-        ComputeWrapperNode(Fn ff, std::tuple<parametric::param<Args>...> t)
+        ComputeWrapperNode(Fn&& ff, const std::tuple<parametric::param<Args>...>& t)
             : _wrapped_function(ff), _parameters(t)
             ,  _resultNode(parametric::new_param<rtype>())
-        {
-        }
+        {}
 
         void eval() const
         {
@@ -462,7 +482,7 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 
     std::tuple<parametric::param<Args>...> _parameters(parameterArgs...);
 
-    std::shared_ptr<ComputeWrapperNode> computeNode(new ComputeWrapperNode(wrapped_function, _parameters));
+    auto computeNode = std::make_shared<ComputeWrapperNode>(std::forward<Fn>(wrapped_function), _parameters);
     // connect inputs
     static_foreach(_parameters, [&computeNode](const auto & parm) {
         ComputeNode::AddInput(computeNode, parm);

@@ -1,13 +1,14 @@
 #include <iostream>
-#include "parametric_core.hpp"
+#include <parametric/core.hpp>
 #include <tuple>
+#include <cmath>
 
 
 template <class T1, class T2>
 auto p_add(const parametric::param<T1>& a, const parametric::param<T2>& b)
 {
 
-    auto theFun = [](T1 v1, T2 v2) {
+    auto theFun = [](const T1& v1, const T2& v2) {
         std::cout << "Add" << std::endl;
         return v1 + v2;
     };
@@ -42,11 +43,13 @@ auto operator*(const parametric::param<T1>& a, const parametric::param<T2>& b)
 
 int main()
 {
-    auto k = parametric::new_param(1);
-    auto j = parametric::new_param(2.5);
+    auto k = parametric::new_param(2);
+    auto j = parametric::new_param(-1.);
 
 
     auto result = k * k + j;
+
+    result = parametric::eval([](double v) {return v*v;}, result);
 
     std::cout << "Until here, nothing has been computed!" << std::endl;
     std::cout << "Result: " << result << std::endl;

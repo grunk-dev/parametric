@@ -1,0 +1,23 @@
+image: ubuntu:18.04
+
+build:
+  stage: build
+  # instead of calling g++ directly you can also use some build toolkit like make
+  # install the necessary build tools when needed
+  before_script:
+     - apt-get -qq update && apt -qq -y install make cmake g++ git
+  script:
+    - mkdir build && cd build
+    - cmake ..
+    - cmake --build .
+  artifacts:
+    expire_in: 2 hrs
+    paths:
+      - build/
+
+# run tests using the binary built before
+test:
+  stage: test
+  script:
+    - cd build/tests
+    - ./runUnitTests

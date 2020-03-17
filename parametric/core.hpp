@@ -35,7 +35,7 @@ public:
         : _id(id)
     {}
 
-    friend void attach(const NodeRef& child, const NodeRef& parent)
+    friend void addParent(const NodeRef& child, const NodeRef& parent)
     {
 
         if (!child || !parent) {
@@ -44,7 +44,7 @@ public:
 
 
         if (child == parent || child->precedes(*parent)) {
-            throw std::invalid_argument("Cannot attach node: cycles are not allowed.");
+            throw std::runtime_error("Cannot attach node: cycles are not allowed.");
         }
 
         // only attach if not already attached
@@ -59,6 +59,12 @@ public:
     {
         return _id;
     }
+
+    void setId(const std::string& id)
+    {
+        _id = id;
+    }
+
 
     /**
      * @brief Checks, whether "node" precides the current node in the DAG
@@ -100,37 +106,61 @@ public:
      * walk through the whole DAG down from this node
      */
     template <typename Visitor>
-    void accept(Visitor& v, size_t depth = 0) const
+    void accept(Visitor& v, size_t depth = 0,bool down=true) const
     {
         v.visit(*this, depth);
-        for (std::weak_ptr<DAGNode>& child : childs) {
-            if (NodeRef c = child.lock()) {
-                c->accept(v, depth + 1);
+        if (down) {
+            for (std::weak_ptr<DAGNode>& child : childs) {
+                if (NodeRef c = child.lock()) {
+                    c->accept(v, depth + 1, down);
+                }
+            }
+        }
+        else {
+            for (NodeRef parent : parents) {
+                parent->accept(v, depth + 1, down);
             }
         }
     }
 
     template <typename Visitor>
-    void accept(Visitor& v, size_t depth = 0)
+    void accept(Visitor& v, size_t depth = 0, bool down=true)
     {
         v.visit(*this, depth);
-        for (std::weak_ptr<DAGNode>& child : childs) {
-            if (NodeRef c = child.lock()) {
-                c->accept(v, depth + 1);
+        if (down) {
+            for (std::weak_ptr<DAGNode>& child : childs) {
+                if (NodeRef c = child.lock()) {
+                    c->accept(v, depth + 1, down);
+                }
+            }
+        }
+        else {
+            for (NodeRef parent : parents) {
+                parent->accept(v, depth + 1, down);
             }
         }
     }
 
-    void unattachFrom(const DAGNode& parent)
+    void removeParent(const DAGNode& parent)
     {
+        // remove myself from parent
         auto& p_childs  = parent.childs;
         auto it_to_this = std::find_if(p_childs.begin(), p_childs.end(),
-        [](std::weak_ptr<DAGNode>& child) {
-            return !child.lock();
+        [this](std::weak_ptr<DAGNode>& child) {
+            return child.lock().get() == this;
         });
 
         if (it_to_this != p_childs.end()) {
             p_childs.erase(it_to_this);
+        }
+
+        // remove parent from parent list
+        auto parentIt = std::find_if(std::begin(parents), std::end(parents), [&parent](const NodeRef& p) {
+            return p.get() == &parent;
+        });
+
+        if (parentIt != parents.end()) {
+            parents.erase(parentIt);
         }
     }
 
@@ -160,7 +190,7 @@ public:
     {
         for (auto parent : parents) {
             if (parent) {
-                unattachFrom(*parent);
+                removeParent(*parent);
             }
         }
     }
@@ -289,6 +319,11 @@ public:
         return *this;
     }
 
+    void SetId(const std::string& id)
+    {
+        m_holder->setId(id);
+    }
+
 private:
     std::shared_ptr<param_holder<T>> m_holder;
 };
@@ -300,6 +335,13 @@ param<T> new_param(const T& v)
 }
 
 template <class T>
+param<T> new_param(const T& v, const std::string& name)
+{
+    return param<T>(v, name);
+}
+
+
+template <class T>
 param<T> new_param()
 {
     return param<T>(TypeName<T>::Get());
@@ -307,7 +349,7 @@ param<T> new_param()
 
 // Disable connecting two values
 template <class C1, class C2>
-void attach(std::shared_ptr<param_holder<C1>>&, std::shared_ptr<param_holder<C2>>)
+void addParent(std::shared_ptr<param_holder<C1>>&, std::shared_ptr<param_holder<C2>>)
 {
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }
@@ -318,12 +360,12 @@ public:
 
     template <typename T>
     static void AddInput(const std::shared_ptr<ComputeNode>& cn, const param<T>& p){
-        attach(cn, p.node_pointer());
+        addParent(cn, p.node_pointer());
     }
 
     template <typename T>
     static void AddOutput(const std::shared_ptr<ComputeNode>& cn, const param<T>& p){
-        attach(p.node_pointer(), cn);
+        addParent(p.node_pointer(), cn);
     }
 
     virtual ~ComputeNode() {}
@@ -400,6 +442,8 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
         ComputeNode::AddInput(computeNode, parm);
     });
     ComputeNode::AddOutput(computeNode, computeNode->result());
+
+        std::cout << TypeName<Fn>::Get() << std::endl;
 
     return computeNode->result();
 }

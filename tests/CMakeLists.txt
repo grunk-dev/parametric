@@ -12,6 +12,7 @@ include(AddGoogleTest)
 set(TESTSOURCES
   testmain.cpp
   dag.cpp
+  eval.cpp
 )
 
 add_executable(runUnitTests ${TESTSOURCES})

@@ -443,8 +443,6 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
     });
     ComputeNode::AddOutput(computeNode, computeNode->result());
 
-        std::cout << TypeName<Fn>::Get() << std::endl;
-
     return computeNode->result();
 }
 

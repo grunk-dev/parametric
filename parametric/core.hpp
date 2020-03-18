@@ -357,24 +357,39 @@ void addParent(std::shared_ptr<param_holder<C1>>&, std::shared_ptr<param_holder<
 class ComputeNode : public DAGNode
 {
 public:
-
-    template <typename T>
-    static void AddInput(const std::shared_ptr<ComputeNode>& cn, const param<T>& p){
-        addParent(cn, p.node_pointer());
-    }
-
-    template <typename T>
-    static void AddOutput(const std::shared_ptr<ComputeNode>& cn, const param<T>& p){
-        addParent(p.node_pointer(), cn);
-    }
-
     virtual ~ComputeNode() {}
+
+    template <typename T>
+    void DefineInput(const param<T>& p) {
+        inputs.push_back(p.node_pointer());
+    }
+
+    template <typename T>
+    void DefineOutput(const param<T>& p) {
+        outputs.push_back(p.node_pointer());
+    }
+
+    static void connect(const std::shared_ptr<ComputeNode>& c)
+    {
+        if (!c) {
+            return;
+        }
+        for (const auto& input : c->inputs) {
+            addParent(c, input.lock());
+        }
+        for (const auto& output : c->outputs) {
+            addParent(output.lock(), c);
+        }
+    }
 
 protected:
     ComputeNode()
         : DAGNode("")
     {
     }
+
+    std::vector<std::weak_ptr<DAGNode> > inputs;
+    std::vector<std::weak_ptr<DAGNode> > outputs;
 
 };
 
@@ -407,10 +422,16 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
     class ComputeWrapperNode : public parametric::ComputeNode
     {
     public:
-        ComputeWrapperNode(Fn&& ff, const std::tuple<parametric::param<Args>...>& t)
-            : _wrapped_function(ff), _parameters(t)
-            ,  _resultNode(parametric::new_param<rtype>())
-        {}
+        ComputeWrapperNode(Fn&& ff, const parametric::param<Args>&... t)
+            : _wrapped_function(ff), _parameters(t...)
+            , _resultNode(parametric::new_param<rtype>())
+        {
+            // connect inputs
+            static_foreach(_parameters, [this](const auto & parm) {
+                DefineInput(parm);
+            });
+            DefineOutput(result());
+        }
 
         void eval() const
         {
@@ -433,15 +454,8 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
         mutable parametric::param<rtype> _resultNode;
     };
 
-
-    std::tuple<parametric::param<Args>...> _parameters(parameterArgs...);
-
-    auto computeNode = std::make_shared<ComputeWrapperNode>(std::forward<Fn>(wrapped_function), _parameters);
-    // connect inputs
-    static_foreach(_parameters, [&computeNode](const auto & parm) {
-        ComputeNode::AddInput(computeNode, parm);
-    });
-    ComputeNode::AddOutput(computeNode, computeNode->result());
+    auto computeNode = std::make_shared<ComputeWrapperNode>(std::forward<Fn>(wrapped_function), parameterArgs...);
+    ComputeNode::connect(computeNode);
 
     return computeNode->result();
 }

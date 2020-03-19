@@ -3,271 +3,16 @@
 
 #include <parametric/typename.hpp>
 #include <parametric/tupletools.hpp>
-#include <parametric/optional.hpp>
+#include <parametric/dag.hpp>
+#include <parametric/impl/core_impl.hpp>
 
 #include <memory>
 #include <vector>
-#include <algorithm>
 #include <exception>
 #include <cassert>
 
-#include <type_traits> // for std::false_type
-
 namespace parametric
 {
-
-template <typename T> struct AlwaysFalse : std::false_type {
-};
-
-using namespace std;
-
-class DAGNode;
-
-typedef std::shared_ptr<DAGNode> NodeRef;
-
-class may_not_attach : public std::exception
-{};
-
-class DAGNode
-{
-public:
-    DAGNode(const std::string& id)
-        : _id(id)
-    {}
-
-    friend void addParent(const NodeRef& child, const NodeRef& parent)
-    {
-
-        if (!child || !parent) {
-            throw std::invalid_argument("Cannot attach node: null pointer passed.");
-        }
-
-
-        if (child == parent || child->precedes(*parent)) {
-            throw std::runtime_error("Cannot attach node: cycles are not allowed.");
-        }
-
-        // only attach if not already attached
-        if (std::find(std::begin(child->parents), std::end(child->parents), parent) == child->parents.end()) {
-            child->parents.push_back(parent);
-            parent->childs.push_back(child);
-        }
-    }
-
-
-    virtual std::string id() const
-    {
-        return _id;
-    }
-
-    void SetId(const std::string& id)
-    {
-        _id = id;
-    }
-
-
-    /**
-     * @brief Checks, whether "node" precides the current node in the DAG
-     * @param node The node to be checked
-     * @return True, if node precedes this node.
-     */
-    bool precedes(const DAGNode& node) const
-    {
-        class HasChildVisitor
-        {
-        public:
-            HasChildVisitor(const DAGNode& c)
-                : _c(c)
-                , hasChild(false)
-            {}
-
-            void visit(const DAGNode& n, size_t depth)
-            {
-                if (&n == &_c && depth > 0) {
-                    hasChild = true;
-                }
-            }
-
-        private:
-            const DAGNode& _c;
-
-        public:
-            bool hasChild;
-        };
-
-        HasChildVisitor v(node);
-        accept(v);
-
-        return v.hasChild;
-    }
-
-    /**
-     * @brief This provides an interface for the visitor pattern to
-     * walk through the whole DAG down from this node
-     */
-    template <typename Visitor>
-    void accept(Visitor& v, size_t depth = 0,bool down=true) const
-    {
-        v.visit(*this, depth);
-        if (down) {
-            for (std::weak_ptr<DAGNode>& child : childs) {
-                if (NodeRef c = child.lock()) {
-                    c->accept(v, depth + 1, down);
-                }
-            }
-        }
-        else {
-            for (NodeRef parent : parents) {
-                parent->accept(v, depth + 1, down);
-            }
-        }
-    }
-
-    template <typename Visitor>
-    void accept(Visitor& v, size_t depth = 0, bool down=true)
-    {
-        v.visit(*this, depth);
-        if (down) {
-            for (std::weak_ptr<DAGNode>& child : childs) {
-                if (NodeRef c = child.lock()) {
-                    c->accept(v, depth + 1, down);
-                }
-            }
-        }
-        else {
-            for (NodeRef parent : parents) {
-                parent->accept(v, depth + 1, down);
-            }
-        }
-    }
-
-    void removeParent(const DAGNode& parent)
-    {
-        // remove myself from parent
-        auto& p_childs  = parent.childs;
-        auto it_to_this = std::find_if(p_childs.begin(), p_childs.end(),
-        [this](std::weak_ptr<DAGNode>& child) {
-            return child.lock().get() == this;
-        });
-
-        if (it_to_this != p_childs.end()) {
-            p_childs.erase(it_to_this);
-        }
-
-        // remove parent from parent list
-        auto parentIt = std::find_if(std::begin(parents), std::end(parents), [&parent](const NodeRef& p) {
-            return p.get() == &parent;
-        });
-
-        if (parentIt != parents.end()) {
-            parents.erase(parentIt);
-        }
-    }
-
-    // Invalidates this node and all other childs
-    void invalidate()
-    {
-        class InvalVisitor
-        {
-        public:
-            void visit(DAGNode& n, size_t depth)
-            {
-                if (depth == 0) {
-                    return;
-                }
-
-                n.invalidateSelf();
-            }
-        };
-
-        InvalVisitor v;
-        accept(v);
-    }
-
-    virtual void eval() const {}
-
-    virtual ~DAGNode()
-    {
-        for (auto parent : parents) {
-            if (parent) {
-                removeParent(*parent);
-            }
-        }
-    }
-
-
-protected:
-    std::string _id;
-
-    mutable std::vector<std::weak_ptr<DAGNode>> childs;
-    std::vector<std::shared_ptr<DAGNode>> parents;
-
-protected:
-    virtual void invalidateSelf() {}
-};
-
-
-
-
-template <class ResultType>
-class param_holder : public DAGNode
-{
-public:
-    param_holder(const ResultType& v, const std::string& id)
-        : DAGNode(id)
-        , value(v)
-    {
-    }
-    param_holder(const std::string& id)
-        : DAGNode(id)
-    {
-    }
-
-    const ResultType& Value() const
-    {
-        if (!value.is_initialized()) {
-            eval();
-            // this assertion should only fail, if the node was not connected to its compute node
-            // and therefore compute fails
-            assert(value.is_initialized());
-        }
-
-        return value.value();
-    }
-    void SetValue(const ResultType& v)
-    {
-        if (!value.is_initialized() || v != value.value()) {
-            value = v;
-            invalidate();
-        }
-    }
-
-    bool IsValid() const
-    {
-        return value.is_initialized();
-    }
-
-protected:
-    void invalidateSelf()
-    {
-        value.reset();
-    }
-
-private:
-    void eval() const override
-    {
-        // TODO: Here we need a mutex to avoid multiple threads computing
-        // The same value
-        assert(parents.size() <= 1);
-
-        if (parents.size() > 0) {
-            NodeRef p = parents[0];
-            p->eval();
-        }
-    }
-
-    optional<ResultType> value;
-};
 
 /**
  * @param This class encapsulates an arbitrary type to be used
@@ -288,18 +33,18 @@ class param
 {
 public:
     param(const T& v, const std::string& id)
-        : m_holder(std::make_shared<param_holder<T>>(v, id))
+        : m_holder(std::make_shared<impl::param_holder<T>>(v, id))
     {}
 
     param(const std::string& id)
-        : m_holder(std::make_shared<param_holder<T>>(id))
+        : m_holder(std::make_shared<impl::param_holder<T>>(id))
     {}
 
-    param(const std::shared_ptr<param_holder<T>>& holder)
+    param(const std::shared_ptr<impl::param_holder<T>>& holder)
         : m_holder(holder)
     {}
 
-    const std::shared_ptr<param_holder<T>> node_pointer() const
+    const std::shared_ptr<impl::param_holder<T>> node_pointer() const
     {
         return m_holder;
     }
@@ -352,7 +97,7 @@ public:
     }
 
 private:
-    std::shared_ptr<param_holder<T>> m_holder;
+    std::shared_ptr<impl::param_holder<T>> m_holder;
 };
 
 template <class T>
@@ -376,7 +121,7 @@ param<T> new_param()
 
 // Disable connecting two values
 template <class C1, class C2>
-void addParent(std::shared_ptr<param_holder<C1>>&, std::shared_ptr<param_holder<C2>>)
+void addParent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, const std::shared_ptr<parametric::impl::param_holder<C2>>)
 {
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }
@@ -441,17 +186,48 @@ public:
     }
 
 private:
-    std::weak_ptr<parametric::param_holder<T>> p_holder;
+    std::weak_ptr<impl::param_holder<T>> p_holder;
 };
 
-
+/**
+ * @brief This class is the base class to define arbitrary compute nodes.
+ *
+ * A valid compute node has to
+ *  - Have A (private) parametric::InterfaceParam object for each input and output parameter
+ *  - Override the ```eval() const``` method to perform the computation
+ *  - Must register the input and output parameters using ::DefineInput and ::DefineOutput
+ *
+ *  Example:
+ *  \code{.cpp}
+ *      class DivComputer : public parametric::ComputeNode
+ *      {
+ *      public:
+ *          DivComputer(const parametric::param<double>& op1, const parametric::param<double>& op2) : v1(op1), v2(op2) {
+ *              DefineInput(v1);
+ *              DefineInput(v2);
+ *              DefineOutput(_result, parametric::param<double>("result"));
+ *           }
+ *
+ *          parametric::param<double> result() const {return _result;}
+ *
+ *          void eval() const {
+ *              if (!_result.Expired())
+ *                  _result.SetValue(v1.Value() / v2.Value());
+ *          }
+ *
+ *      private:
+ *          const parametric::InterfaceParam<double> v1, v2;
+ *          mutable parametric::InterfaceParam<double> _result;
+ *   \endcode
+ */
 class ComputeNode : public DAGNode
 {
 public:
     virtual ~ComputeNode() {}
 
     template <typename T>
-    void DefineInput(const InterfaceParam<T>& p) {
+    void DefineInput(const InterfaceParam<T>& p)
+    {
         inputs.push_back(p.Param().node_pointer());
     }
 
@@ -464,9 +240,7 @@ public:
 
     static void Connect(const std::shared_ptr<ComputeNode>& c)
     {
-        if (!c) {
-            return;
-        }
+        assert(c);
         for (const auto& input : c->inputs) {
             addParent(c, input);
         }
@@ -491,7 +265,6 @@ protected:
 
     std::vector<std::shared_ptr<DAGNode> > inputs;
     std::vector<std::shared_ptr<DAGNode> > outputs;
-
 };
 
 /**
@@ -517,7 +290,8 @@ public:
         return wrapped;
     }
 
-    ~compute_node_ptr(){
+    ~compute_node_ptr()
+    {
         T::ReleaseNodes(wrapped);
     }
 
@@ -533,7 +307,8 @@ private:
  *   ```parametric::new_node<MyComputeNode>(arg1, arg2)```
  */
 template <typename T, typename ... Args>
-compute_node_ptr<T> new_node(Args&& ... args){
+compute_node_ptr<T> new_node(Args&& ... args)
+{
     return compute_node_ptr<T>(new T(std::forward<Args>(args) ... ));
 }
 

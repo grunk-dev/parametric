@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <parametric/core.hpp>
+#include <parametric/dag.hpp>
 
 using namespace parametric;
 

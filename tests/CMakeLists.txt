@@ -13,6 +13,7 @@ set(TESTSOURCES
   testmain.cpp
   dag.cpp
   eval.cpp
+  customclass.cpp
 )
 
 add_executable(runUnitTests ${TESTSOURCES})

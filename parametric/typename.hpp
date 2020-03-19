@@ -1,15 +1,24 @@
 #ifndef TYPENAME_HPP
 #define TYPENAME_HPP
 
+/**
+ * @brief TypeName provides an interface to
+ * access the string representation of T
+ *
+ * A customized string representation can be defined
+ * by providing a template specialization of TypeName
+ */
 template <typename T>
 struct TypeName
 {
+    /// @brief Returns the type string
     static const char* Get()
     {
         return typeid(T).name();
     }
 };
 
+/// @private
 template <>
 struct TypeName<int>
 {
@@ -19,6 +28,7 @@ struct TypeName<int>
     }
 };
 
+/// @private
 template <>
 struct TypeName<double>
 {

@@ -1,3 +1,9 @@
+/**
+ * @file core.hpp
+ *
+ * @brief This file provides the core functionality for
+ * the parametric compute engine.
+ */
 #ifndef PARAMETRIC_CORE_HPP
 #define PARAMETRIC_CORE_HPP
 
@@ -14,6 +20,9 @@
 namespace parametric
 {
 
+template <typename T>
+class InterfaceParam;
+
 /**
  * @param This class encapsulates an arbitrary type to be used
  * as a parameter.
@@ -26,29 +35,39 @@ namespace parametric
  * Output interface parameters store a reference to an output parameter.
  * If an output parameter is not used in the code or no reference exist to it,
  * the interface output will be expired. Before setting an output value,
- * it has to be checked with ::Expired() for validity.
+ * it has to be checked with InterfaceParam::Expired() for validity.
  */
 template <typename T>
 class param
 {
 public:
+    /**
+     * @brief Creates a **valid** parameter from a value and an identifier.
+     *
+     * After construction, the parameter is valid (it contains a value)
+     */
     param(const T& v, const std::string& id)
         : m_holder(std::make_shared<impl::param_holder<T>>(v, id))
     {}
 
+    /**
+     * @brief Creates a **invalid** parameter with an identifier.
+     *
+     * After construction, the parameter is invalid (it does not contain a value)
+     */
     param(const std::string& id)
         : m_holder(std::make_shared<impl::param_holder<T>>(id))
     {}
 
-    param(const std::shared_ptr<impl::param_holder<T>>& holder)
-        : m_holder(holder)
-    {}
-
+    /// @private
     const std::shared_ptr<impl::param_holder<T>> node_pointer() const
     {
         return m_holder;
     }
 
+    /**
+     * @brief Returns the current value of the parameter
+     */
     const T& Value() const
     {
         return m_holder->Value();
@@ -58,15 +77,17 @@ public:
      * @brief Sets the value of the parameter.
      *
      * The value will only be changed only, if the new value is different
-     * than the old one.
+     * than the old one. The parameter will be **valid** after setting the value.
      *
      * Note: The check for difference is done using the != operator. If a custom class
      * does not provide this operator, it can be added on global scope e.g.
      *
+     * \code{cpp}
      * bool operator(const MyClass& c1, const MyClass& c2)
      * {
      *     return ...
      * }
+     * \endcode
      *
      * @param value The value to be set.
      */
@@ -75,51 +96,79 @@ public:
         return m_holder->SetValue(value);
     }
 
+    /**
+     * @brief Returns the parameter value
+     */
     operator const T& () const
     {
         return Value();
     }
 
+    /**
+     * @brief Sets the value of the parameter, see param::SetValue
+     */
     param<T>& operator=(const T& other)
     {
         m_holder->SetValue(other);
         return *this;
     }
 
+    /**
+     * @brief Sets the identifier of the parameter
+     */
     void SetId(const std::string& id)
     {
         m_holder->SetId(id);
     }
 
+    /**
+     * @brief Indicates, whether the parameter contains a value (valid) or not (invalid)
+     */
     bool IsValid() const
     {
         return m_holder->IsValid();
     }
 
 private:
+    friend InterfaceParam<T>;
+    param(const std::shared_ptr<impl::param_holder<T>>& holder)
+        : m_holder(holder)
+    {}
+
     std::shared_ptr<impl::param_holder<T>> m_holder;
 };
 
+/**
+ * @brief Convenience function to create a parameter of type T with value v
+ */
 template <class T>
 param<T> new_param(const T& v)
 {
     return param<T>(v, TypeName<T>::Get());
 }
 
+/**
+ * @brief Convenience function to create a parameter of type T with value v
+ * and identifier id
+ */
 template <class T>
-param<T> new_param(const T& v, const std::string& name)
+param<T> new_param(const T& v, const std::string& id)
 {
-    return param<T>(v, name);
+    return param<T>(v, id);
 }
 
-
+/**
+ * @brief Convenience function to create an empty parameter of
+ * and identifier id
+ */
 template <class T>
 param<T> new_param()
 {
     return param<T>(TypeName<T>::Get());
 }
 
-// Disable connecting two values
+/// @private
+/// Disable connecting two values
 template <class C1, class C2>
 void addParent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, const std::shared_ptr<parametric::impl::param_holder<C2>>)
 {
@@ -137,31 +186,50 @@ template <class T>
 class InterfaceParam
 {
 public:
+    /**
+     * @brief Creates interface parameter placeholder
+     */
     InterfaceParam()
     {}
 
+    /**
+     * @brief Creates interface parameter referencing parameter p
+     */
     explicit InterfaceParam(const parametric::param<T>& p)
         : p_holder(p.node_pointer())
     {}
 
+    /**
+     * @brief Returns the resulting parameter from the interface
+     */
     parametric::param<T> Param() const
     {
         return  parametric::param<T>(p_holder.lock());
     }
 
+    /**
+     * @brief Conversion to a parameter
+     */
     operator parametric::param<T>() const
     {
         return Param();
     }
 
+    /**
+     * @brief Assigns the parameter p to the interface
+     */
     InterfaceParam<T>& operator=(const parametric::param<T>& p)
     {
         p_holder = p.node_pointer();
         return *this;
     }
 
+    /// @private
     InterfaceParam<T>& operator=(const InterfaceParam<T>& p) = delete;
 
+    /**
+     * @brief Sets the value of the parameter, equal to param::SetValue
+     */
     void SetValue(const T& v)
     {
         if (!Expired()) {
@@ -169,17 +237,26 @@ public:
         }
     }
 
+    /**
+     * @brief Returns the value of the parameter, equal to param::Value
+     */
     const T& Value() const
     {
         assert(!Expired());
         return Param().Value();
     }
 
+    /**
+     * @brief Returns the value of the parameter, equal to param::Value
+     */
     operator const T& () const
     {
         return Value();
     }
 
+    /**
+     * @brief Expired returns, whether the reference to the parameter node is still valid
+     */
     bool Expired() const
     {
         return p_holder.expired();
@@ -192,14 +269,17 @@ private:
 /**
  * @brief This class is the base class to define arbitrary compute nodes.
  *
- * A valid compute node has to
- *  - Have A (private) parametric::InterfaceParam object for each input and output parameter
- *  - Override the ```eval() const``` method to perform the computation
- *  - Must register the input and output parameters using ::DefineInput and ::DefineOutput
+ * A compute node has to
+ *  - inherit from parametric::ComputeNode
+ *  - have a (private) parametric::InterfaceParam object for each input and output parameter
+ *  - register the input and output parameters using ComputeNode::DefineInput and ComputeNode::DefineOutput
+ *  - override the ComputeNode::eval method to perform the computation
+ *  - be constructed with ::parametric::new_node  (Args &&... args)
  *
  *  Example:
  *  \code{.cpp}
- *      class DivComputer : public parametric::ComputeNode
+ *      // define computing node
+ *      class DivComputer : public :parametric::ComputeNode
  *      {
  *      public:
  *          DivComputer(const parametric::param<double>& op1, const parametric::param<double>& op2) : v1(op1), v2(op2) {
@@ -218,6 +298,13 @@ private:
  *      private:
  *          const parametric::InterfaceParam<double> v1, v2;
  *          mutable parametric::InterfaceParam<double> _result;
+ *      };
+ *
+ *      // Usage
+ *      auto p1 = parametric::param<double>(2.0, "p1");
+ *      auto p2 = parametric::param<double>(5.0, "p2");
+ *      auto computer = parametric::new_node<DivComputer>(p1, p2);
+ *      auto result = computer->result();
  *   \endcode
  */
 class ComputeNode : public DAGNode
@@ -225,12 +312,20 @@ class ComputeNode : public DAGNode
 public:
     virtual ~ComputeNode() {}
 
+    /**
+     * @brief DefineInput must be called in the derived classes constructor
+     * to register input parameters.
+     */
     template <typename T>
     void DefineInput(const InterfaceParam<T>& p)
     {
         inputs.push_back(p.Param().node_pointer());
     }
 
+    /**
+     * @brief DefineOutput must be called in the derived classes constructor
+     * to register output parameters.
+     */
     template <typename T>
     void DefineOutput(parametric::InterfaceParam<T>& intf_param, const parametric::param<T>& initial)
     {
@@ -238,6 +333,7 @@ public:
         outputs.push_back(initial.node_pointer());
     }
 
+    /// @private
     static void Connect(const std::shared_ptr<ComputeNode>& c)
     {
         assert(c);
@@ -249,6 +345,7 @@ public:
         }
     }
 
+    /// @private
     static void ReleaseNodes(const std::shared_ptr<ComputeNode>& c)
     {
         if (!c) return;
@@ -263,12 +360,12 @@ protected:
     {
     }
 
-    std::vector<std::shared_ptr<DAGNode> > inputs;
-    std::vector<std::shared_ptr<DAGNode> > outputs;
+    std::vector<std::shared_ptr<DAGNode> > inputs;  /**< @private */
+    std::vector<std::shared_ptr<DAGNode> > outputs; /**< @private */
 };
 
 /**
- * This class handles to correct memory management of compute nodes
+ * @brief This class handles to correct memory management of compute nodes
  *
  * It ensures the correct connection if inputs and outputs
  * To create a compute node, use ```parametric::new_node<MyComputeNode>(arg1, arg2)```
@@ -278,7 +375,11 @@ class compute_node_ptr
 {
 public:
 
-
+    /**
+     * Wraps a raw pointer to a compute node
+     *
+     * @param t Pointer to a compute node created with ``new``
+     */
     template<typename ... Args>
     compute_node_ptr(T* t)
         : wrapped(t)
@@ -286,6 +387,9 @@ public:
         T::Connect(wrapped);
     }
 
+    /**
+     * @brief The operator allows to access the wrapped objects members
+     */
     std::shared_ptr<T> operator->() {
         return wrapped;
     }
@@ -304,14 +408,15 @@ private:
  * should be used to correctly create a compute node
  *
  * Example:
- *   ```parametric::new_node<MyComputeNode>(arg1, arg2)```
+ * \code{cpp}
+ * parametric::new_node<MyComputeNode>(arg1, arg2)
+ * \endcode
  */
 template <typename T, typename ... Args>
-compute_node_ptr<T> new_node(Args&& ... args)
+parametric::compute_node_ptr<T> new_node(Args&& ... args)
 {
     return compute_node_ptr<T>(new T(std::forward<Args>(args) ... ));
 }
-
 
 /**
  * @brief This function creates a parametric version from a "normal" function
@@ -321,6 +426,7 @@ compute_node_ptr<T> new_node(Args&& ... args)
  *
  * Here's an example:
  *
+ * \code{cpp}
  * double mult(double a, double b)
  * {
  *   return a * b;
@@ -329,8 +435,8 @@ compute_node_ptr<T> new_node(Args&& ... args)
  * parametric::param<double> a = parametric::new_param(2.0);
  * parametric::param<double> b = parametric::new_param(10.0);
  *
- *
- * auto result = eval_parametric(mult, a, b);
+ * auto result = parametric::eval(mult, a, b);
+ * \endcode
  */
 template<typename Fn, typename... Args>
 constexpr parametric::param<typename std::result_of<Fn(Args...)>::type>

@@ -2,7 +2,7 @@
 #define CORE_IMPL_HPP
 
 #include <parametric/dag.hpp>
-#include <parametric/optional.hpp>
+#include <parametric/impl/optional.hpp>
 
 namespace parametric {
 namespace impl

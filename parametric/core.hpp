@@ -60,7 +60,7 @@ public:
         return _id;
     }
 
-    void setId(const std::string& id)
+    void SetId(const std::string& id)
     {
         _id = id;
     }
@@ -223,7 +223,7 @@ public:
     {
     }
 
-    virtual const ResultType& Value() const
+    const ResultType& Value() const
     {
         if (!value.is_initialized()) {
             eval();
@@ -234,12 +234,17 @@ public:
 
         return value.value();
     }
-    virtual void SetValue(const ResultType& v)
+    void SetValue(const ResultType& v)
     {
         if (!value.is_initialized() || v != value.value()) {
             value = v;
             invalidate();
         }
+    }
+
+    bool IsValid() const
+    {
+        return value.is_initialized();
     }
 
 protected:
@@ -264,7 +269,20 @@ private:
     optional<ResultType> value;
 };
 
-
+/**
+ * @param This class encapsulates an arbitrary type to be used
+ * as a parameter.
+ *
+ * A parameter is an object with a value
+ * and a valid state. Whenever its value has been changed,
+ * it propagates this invalidation to all dependent parameters,
+ * requiring their recomputation.
+ *
+ * Output interface parameters store a reference to an output parameter.
+ * If an output parameter is not used in the code or no reference exist to it,
+ * the interface output will be expired. Before setting an output value,
+ * it has to be checked with ::Expired() for validity.
+ */
 template <typename T>
 class param
 {
@@ -275,6 +293,10 @@ public:
 
     param(const std::string& id)
         : m_holder(std::make_shared<param_holder<T>>(id))
+    {}
+
+    param(const std::shared_ptr<param_holder<T>>& holder)
+        : m_holder(holder)
     {}
 
     const std::shared_ptr<param_holder<T>> node_pointer() const
@@ -321,7 +343,12 @@ public:
 
     void SetId(const std::string& id)
     {
-        m_holder->setId(id);
+        m_holder->SetId(id);
+    }
+
+    bool IsValid() const
+    {
+        return m_holder->IsValid();
     }
 
 private:
@@ -354,32 +381,106 @@ void addParent(std::shared_ptr<param_holder<C1>>&, std::shared_ptr<param_holder<
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }
 
+/**
+ * @brief The interface parameter is used to define
+ * the in- and outputs in ComputeNodes.
+ *
+ * Interface paramters thus define the parametric interface
+ * of a compute node.
+ */
+template <class T>
+class InterfaceParam
+{
+public:
+    InterfaceParam()
+    {}
+
+    explicit InterfaceParam(const parametric::param<T>& p)
+        : p_holder(p.node_pointer())
+    {}
+
+    parametric::param<T> Param() const
+    {
+        return  parametric::param<T>(p_holder.lock());
+    }
+
+    operator parametric::param<T>() const
+    {
+        return Param();
+    }
+
+    InterfaceParam<T>& operator=(const parametric::param<T>& p)
+    {
+        p_holder = p.node_pointer();
+        return *this;
+    }
+
+    InterfaceParam<T>& operator=(const InterfaceParam<T>& p) = delete;
+
+    void SetValue(const T& v)
+    {
+        if (!Expired()) {
+            Param().SetValue(v);
+        }
+    }
+
+    const T& Value() const
+    {
+        assert(!Expired());
+        return Param().Value();
+    }
+
+    operator const T& () const
+    {
+        return Value();
+    }
+
+    bool Expired() const
+    {
+        return p_holder.expired();
+    }
+
+private:
+    std::weak_ptr<parametric::param_holder<T>> p_holder;
+};
+
+
 class ComputeNode : public DAGNode
 {
 public:
     virtual ~ComputeNode() {}
 
     template <typename T>
-    void DefineInput(const param<T>& p) {
-        inputs.push_back(p.node_pointer());
+    void DefineInput(const InterfaceParam<T>& p) {
+        inputs.push_back(p.Param().node_pointer());
     }
 
     template <typename T>
-    void DefineOutput(const param<T>& p) {
-        outputs.push_back(p.node_pointer());
+    void DefineOutput(parametric::InterfaceParam<T>& intf_param, const parametric::param<T>& initial)
+    {
+        intf_param = initial;
+        outputs.push_back(initial.node_pointer());
     }
 
-    static void connect(const std::shared_ptr<ComputeNode>& c)
+    static void Connect(const std::shared_ptr<ComputeNode>& c)
     {
         if (!c) {
             return;
         }
         for (const auto& input : c->inputs) {
-            addParent(c, input.lock());
+            addParent(c, input);
         }
         for (const auto& output : c->outputs) {
-            addParent(output.lock(), c);
+            addParent(output, c);
         }
+    }
+
+    static void ReleaseNodes(const std::shared_ptr<ComputeNode>& c)
+    {
+        if (!c) return;
+
+        c->inputs.clear();
+        c->outputs.clear();
     }
 
 protected:
@@ -388,10 +489,54 @@ protected:
     {
     }
 
-    std::vector<std::weak_ptr<DAGNode> > inputs;
-    std::vector<std::weak_ptr<DAGNode> > outputs;
+    std::vector<std::shared_ptr<DAGNode> > inputs;
+    std::vector<std::shared_ptr<DAGNode> > outputs;
 
 };
+
+/**
+ * This class handles to correct memory management of compute nodes
+ *
+ * It ensures the correct connection if inputs and outputs
+ * To create a compute node, use ```parametric::new_node<MyComputeNode>(arg1, arg2)```
+ */
+template <class T>
+class compute_node_ptr
+{
+public:
+
+
+    template<typename ... Args>
+    compute_node_ptr(T* t)
+        : wrapped(t)
+    {
+        T::Connect(wrapped);
+    }
+
+    std::shared_ptr<T> operator->() {
+        return wrapped;
+    }
+
+    ~compute_node_ptr(){
+        T::ReleaseNodes(wrapped);
+    }
+
+private:
+    std::shared_ptr<T> wrapped;
+};
+
+/**
+ * @brief Similar to std::shared_ptr, this function
+ * should be used to correctly create a compute node
+ *
+ * Example:
+ *   ```parametric::new_node<MyComputeNode>(arg1, arg2)```
+ */
+template <typename T, typename ... Args>
+compute_node_ptr<T> new_node(Args&& ... args){
+    return compute_node_ptr<T>(new T(std::forward<Args>(args) ... ));
+}
+
 
 /**
  * @brief This function creates a parametric version from a "normal" function
@@ -430,17 +575,19 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
             static_foreach(_parameters, [this](const auto & parm) {
                 DefineInput(parm);
             });
-            DefineOutput(result());
+            DefineOutput(_resultNode, parametric::param<rtype>("result"));
         }
 
         void eval() const
         {
-            _resultNode.SetValue(
-                apply(std::forward<const Fn>(_wrapped_function),
-                  _parameters,
-                  [](const auto& parm){return parm.Value();}
-                )
-             );
+            if(!_resultNode.Expired()) {
+                _resultNode.SetValue(
+                    apply(std::forward<const Fn>(_wrapped_function),
+                      _parameters,
+                      [](const auto& parm){return parm.Value();}
+                    )
+                 );
+            }
         }
 
         parametric::param<rtype> result() const
@@ -450,13 +597,12 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 
     private:
         Fn _wrapped_function;
-        std::tuple<parametric::param<Args>...> _parameters;
-        mutable parametric::param<rtype> _resultNode;
+        std::tuple<parametric::InterfaceParam<Args>...> _parameters;
+        mutable parametric::InterfaceParam<rtype> _resultNode;
     };
 
-    auto computeNode = std::make_shared<ComputeWrapperNode>(std::forward<Fn>(wrapped_function), parameterArgs...);
-    ComputeNode::connect(computeNode);
-
+    auto computeNode = new_node<ComputeWrapperNode>(std::forward<Fn>(wrapped_function),
+                                                    std::forward<const parametric::param<Args>&>(parameterArgs)...);
     return computeNode->result();
 }
 

@@ -2,12 +2,19 @@ cmake_minimum_required(VERSION 3.4)
 
 project(parametric VERSION 0.0.1)
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
 add_library(parametric INTERFACE)
+target_include_directories(parametric INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
 target_compile_features(parametric INTERFACE cxx_std_14)
 
 add_subdirectory(examples)
 add_subdirectory(tests)
-
+add_subdirectory(docs)
 
 include(GNUInstallDirs)
 
@@ -46,9 +53,4 @@ install (
     "${CMAKE_CURRENT_BINARY_DIR}/parametric-config.cmake"
   DESTINATION
     ${CMAKE_INSTALL_LIBDIR}/cmake/parametric
-)
-
-target_include_directories(parametric INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )

@@ -22,13 +22,13 @@ int main()
     auto k = parametric::new_param(3.);
     auto j = parametric::new_param(4.);
 
-    // This is an example to compute j*j using a lambda expression
+    // 1. This is an example to compute j*j using a lambda expression
     auto j_sqr = parametric::eval([](double v) {
         std::cout << "Computing j_sqr\n";
         return v*v;
     }, j);
 
-    // Alternatively, we can also use the operator approach
+    // 2. Alternatively, we can also use the operator approach
     auto result = k * k + j_sqr;
 
     std::cout << "Until here, nothing has been computed!" << std::endl;
@@ -43,7 +43,7 @@ int main()
     j = 6;
     std::cout << "  Result: " << result << std::endl;
 
-    // And now lets use a user defined function
+    // 3. And now lets use a user defined function
     result = parametric::eval(divide, result, k);
     std::cout << "  Result: " << result << std::endl;
 
@@ -52,11 +52,12 @@ int main()
 ```
 
 In this example, we use different ways to define parametric expressions.
- 1) User defined functions
- 2) With Lambda expressions
- 3) Using operators
+
+ 1. With Lambda expressions
+ 2. Using operators
+ 3. User-defined functions
  
- Lets have a look at the output
+Lets have a look at the output
 
 ```
 Until here, nothing has been computed!

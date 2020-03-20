@@ -1,8 +1,5 @@
 /**
  * @file core.hpp
- *
- * @brief This file provides the core functionality for
- * the parametric compute engine.
  */
 #ifndef PARAMETRIC_CORE_HPP
 #define PARAMETRIC_CORE_HPP
@@ -24,18 +21,13 @@ template <typename T>
 class InterfaceParam;
 
 /**
- * @param This class encapsulates an arbitrary type to be used
+ * @brief This class encapsulates an arbitrary type to be used
  * as a parameter.
  *
  * A parameter is an object with a value
  * and a valid state. Whenever its value has been changed,
  * it propagates this invalidation to all dependent parameters,
  * requiring their recomputation.
- *
- * Output interface parameters store a reference to an output parameter.
- * If an output parameter is not used in the code or no reference exist to it,
- * the interface output will be expired. Before setting an output value,
- * it has to be checked with InterfaceParam::Expired() for validity.
  */
 template <typename T>
 class param
@@ -181,6 +173,11 @@ void addParent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, const
  *
  * Interface paramters thus define the parametric interface
  * of a compute node.
+ *
+ * Output interface parameters store a reference to an output parameter.
+ * If an output parameter is not used in the code or no reference exist to it,
+ * the interface output will be expired. Before setting an output value,
+ * it has to be checked with InterfaceParam::Expired() for validity.
  */
 template <class T>
 class InterfaceParam
@@ -274,38 +271,44 @@ private:
  *  - have a (private) parametric::InterfaceParam object for each input and output parameter
  *  - register the input and output parameters using ComputeNode::DefineInput and ComputeNode::DefineOutput
  *  - override the ComputeNode::eval method to perform the computation
- *  - be constructed with ::parametric::new_node  (Args &&... args)
+ *  - be constructed with parametric::new_node  (Args &&... args)
  *
  *  Example:
- *  \code{.cpp}
- *      // define computing node
- *      class DivComputer : public :parametric::ComputeNode
- *      {
- *      public:
- *          DivComputer(const parametric::param<double>& op1, const parametric::param<double>& op2) : v1(op1), v2(op2) {
- *              DefineInput(v1);
- *              DefineInput(v2);
- *              DefineOutput(_result, parametric::param<double>("result"));
- *           }
+ *  \code{cpp}
  *
- *          parametric::param<double> result() const {return _result;}
+ *  bool a;
  *
- *          void eval() const {
- *              if (!_result.Expired())
- *                  _result.SetValue(v1.Value() / v2.Value());
- *          }
+ *  // define computing node
+ *  class DivComputer : public :parametric::ComputeNode
+ *  {
+ *  public:
+ *    DivComputer(const parametric::param<double>& op1, const parametric::param<double>& op2) : v1(op1), v2(op2) {
+ *      DefineInput(v1);
+ *      DefineInput(v2);
+ *      DefineOutput(theresult, parametric::param<double>("result"));
+ *    }
  *
- *      private:
- *          const parametric::InterfaceParam<double> v1, v2;
- *          mutable parametric::InterfaceParam<double> _result;
- *      };
+ *    parametric::param<double> result() const {return theresult;}
  *
- *      // Usage
- *      auto p1 = parametric::param<double>(2.0, "p1");
- *      auto p2 = parametric::param<double>(5.0, "p2");
- *      auto computer = parametric::new_node<DivComputer>(p1, p2);
- *      auto result = computer->result();
- *   \endcode
+ *    void eval() const {
+ *        if (theresult.Expired() == false)
+ *          theresult.SetValue(v1.Value() / v2.Value());
+ *    }
+ *
+ *  private:
+ *    const parametric::InterfaceParam<double> v1, v2;
+ *    mutable parametric::InterfaceParam<double> theresult;
+ *  };
+ *  \endcode
+ *
+ * The DivComputer compute node is then used as follows
+ *
+ * \code{cpp}
+ *  auto p1 = parametric::new_param(2.0, "p1");
+ *  auto p2 = parametric::new_param(5.0, "p2");
+ *  auto computer = parametric::new_node<DivComputer>(p1, p2);
+ *  auto result = computer->result();
+ * \endcode
  */
 class ComputeNode : public DAGNode
 {

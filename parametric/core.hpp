@@ -275,11 +275,8 @@ private:
  *
  *  Example:
  *  \code{cpp}
- *
- *  bool a;
- *
  *  // define computing node
- *  class DivComputer : public :parametric::ComputeNode
+ *  class DivComputer : public parametric::ComputeNode
  *  {
  *  public:
  *    DivComputer(const parametric::param<double>& op1, const parametric::param<double>& op2) : v1(op1), v2(op2) {

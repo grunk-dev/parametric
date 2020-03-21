@@ -1,4 +1,4 @@
-.. mdinclude:: ../../Readme.md
+.. mdinclude:: ../Readme.md
 
 
 

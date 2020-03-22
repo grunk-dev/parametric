@@ -25,7 +25,7 @@ if (PARAMETRIC_BUILD_DOCS)
     add_custom_target(Doxygen ALL DEPENDS documentation)
 
     set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
-    set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
+    set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/html)
 
     add_custom_target(Sphinx ALL
                       DEPENDS Doxygen
@@ -35,5 +35,7 @@ if (PARAMETRIC_BUILD_DOCS)
                       ${SPHINX_SOURCE} ${SPHINX_BUILD}
                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                       COMMENT "Generating documentation with Sphinx")
+
+    install(DIRECTORY ${SPHINX_BUILD} DESTINATION ${CMAKE_INSTALL_DOCDIR})
 
 endif(PARAMETRIC_BUILD_DOCS)

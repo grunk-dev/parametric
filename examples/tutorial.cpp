@@ -1,11 +1,19 @@
 #include <iostream>
 #include <parametric/core.hpp>
 #include <parametric/operators.hpp>
+#include <cmath>
 
 double divide(double v1, double v2)
 {
     std::cout << "Divide result / k\n";
     return v1 / v2;
+}
+
+parametric::param<double> p_pow(const parametric::param<double>& base, double exponent)
+{
+    return parametric::eval([exponent](double b) {
+        return pow(b, exponent);
+    }, base);
 }
 
 int main()
@@ -37,6 +45,11 @@ int main()
     // And now lets use a user defined function
     result = parametric::eval(divide, result, k);
     std::cout << "  Result: " << result << std::endl;
+
+    result = p_pow(j, 2);
+    std::cout << result << std::endl;
+    j = 2;
+    std::cout << result << std::endl;
 
     return 0;
 }

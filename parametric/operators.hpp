@@ -1,3 +1,8 @@
+/**
+ * @file operators.hpp
+ * 
+ * @brief This file contains the parametric variant of arithmetic functions and their operator overloads.
+ */
 #ifndef OPERATORS_HPP
 #define OPERATORS_HPP
 
@@ -25,7 +30,6 @@ namespace parametric
         return parametric::eval(theFun, a, b);
     }
 }
-
 
 template <class T1, class T2>
 auto operator+(const parametric::param<T1>& a, const parametric::param<T2>& b)

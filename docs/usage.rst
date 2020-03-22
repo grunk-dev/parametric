@@ -6,6 +6,35 @@ Usage
 Creating parameters
 -------------------
 
+In parametric, parameters are values that might change later. Parameters are
+implemented with the template class ``parametric::param<T>``. use
+
+
+.. code-block:: cpp
+
+    parametric::param<float> my_param(10.0, "myparam");
+
+to create a *valid* parameter. A valid parameter is a parameter with a value - in this case 10.0.
+Here, the first argument is the current value of the parameter, the second is the identifier, which is optional.
+
+To create an invalid parameter, just omit the value argument
+
+.. code-block:: cpp
+
+    parametric::param<float> my_invalid_param("myparam");
+
+A invalid parameter is a parameter that does not yet have a value, but it will have on in future,
+similar to a placeholder.
+
+Similarly to ``std::make_unique``, parametric also offers a convenience factory functions
+
+.. code-block:: cpp
+
+    auto my_param = parametric::new_param(10.0);
+
+which deduces the type of the parameter from the first argument.
+
+
 Wrapping free functions
 -----------------------
 
@@ -42,10 +71,25 @@ Similarly to free functions, ``parametric::eval`` can also be used on lambdas:
    - All input values must be converted into parameters
    - It does not work in objects or object methods
 
+Of course, the limitations can be overcome by creating convenience functions that encapsulate
+the call to ``parametric::eval``:
+
+.. code-block:: cpp
+
+    parametric::param<double> p_pow(const parametric::param<double>& base, double exponent) {
+        return parametric::eval([exponent](double b) {
+            return pow(b, exponent);
+        }, base);
+    }
+
+In this example, only ``base`` goes in as a parameter whereas the exponent is constant
+and captured the the lambda.
+
+
 The object oriented approach
 ----------------------------
 
-If free function do not provide enough flexibility, compute objects
+If wrapping free functions do not provide enough flexibility, also compute objects
 can be defined. A compute object is a node in the compute graph
 that is derived from the ``parametric::ComputeNode`` base class.
 
@@ -53,7 +97,6 @@ Here's an example to define a custom compute node:
 
 .. code-block:: cpp
 
-    // define computing node
     class DivComputer : public parametric::ComputeNode
     {
     public:

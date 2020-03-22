@@ -8,15 +8,11 @@ API Reference
 
 The parametric library API consists of the following parts:
 
-* :ref:`parametric/core.hpp <core-api>`: the core API providing argument handling
-  facilities and a lightweight subset of formatting functions
-* :ref:`parametric/dag.hpp <dag-api>`: the full format API providing compile-time
-  format string checks, output iterator and user-defined type support
-* :ref:`parametric/operators.hpp <operators-api>`: additional formatting support for ranges
-  and tuples
+* :ref:`parametric/core.hpp <core-api>`: the core API everything required tp build up compute graphs.
+* :ref:`parametric/dag.hpp <dag-api>`: the DAG API provides functions and classes to build up directed acyclic graphs.
+* :ref:`parametric/operators.hpp <operators-api>`: the header file adds provides parametric operator overloads
 
-All functions and types provided by the library reside in namespace ``fmt`` and
-macros have prefix ``FMT_``.
+All functions and types provided by the library reside in namespace ``parametric``.
 
 .. _core-api:
 
@@ -28,8 +24,24 @@ The main building blocks are parmetric values (``parametric::param``), compute n
 and interface parameters(``parametric::InterfaceParam``).
 The role of each object is described at the :ref:`design concept <concepts>` section.
 
-.. doxygenfile:: core.hpp
 
+.. doxygenclass:: parametric::param
+   :members:
+
+.. doxygenfunction:: parametric::new_param(const T&, const std::string&)
+.. doxygenfunction:: parametric::new_param(const T&)
+.. doxygenfunction:: parametric::new_param()
+
+.. doxygenfunction:: parametric::eval
+
+.. doxygenclass:: parametric::InterfaceParam
+   :members:   
+
+.. doxygenclass:: parametric::ComputeNode
+   :members:
+
+
+.. doxygenfunction:: parametric::new_node
 
 .. _dag-api:
 
@@ -47,3 +59,5 @@ DAG
 
 Operators
 =========
+
+.. doxygenfile:: operators.hpp

@@ -12,11 +12,11 @@ target_include_directories(parametric INTERFACE
 
 target_compile_features(parametric INTERFACE cxx_std_14)
 
+include(GNUInstallDirs)
+
 add_subdirectory(examples)
 add_subdirectory(tests)
 add_subdirectory(docs)
-
-include(GNUInstallDirs)
 
 install(TARGETS parametric
         EXPORT parametric-targets

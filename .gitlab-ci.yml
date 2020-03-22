@@ -2,8 +2,6 @@ image: ubuntu:18.04
 
 build:
   stage: build
-  # instead of calling g++ directly you can also use some build toolkit like make
-  # install the necessary build tools when needed
   before_script:
      - apt-get -qq update && apt -qq -y install make cmake g++ git
   script:
@@ -14,6 +12,22 @@ build:
     expire_in: 2 hrs
     paths:
       - build/
+      
+docs:
+  stage: build
+  before_script:
+     - apt-get -qq update && apt -qq -y install make cmake g++ git doxygen python3-pip
+     - pip3 install Sphinx sphinx-rtd-theme breathe m2r
+  script:
+    - mkdir build && cd build
+    - cmake -DPARAMETRIC_BUILD_DOCS=ON ..
+    - cmake --build . --target Sphinx
+    - cd ..
+    - mv build/docs/html parametric-docs
+    - tar czf parametric-docs.tar.gz parametric-docs
+  artifacts:
+    paths:
+      - parametric-docs.tar.gz
 
 # run tests using the binary built before
 test:

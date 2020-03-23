@@ -1,0 +1,1430 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="DAG.svg">
+  <defs
+     id="defs2">
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="marker6598"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path6596"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#00a709;stroke-width:1pt;stroke-opacity:1;fill:#00a709;fill-opacity:1"
+         transform="scale(0.8) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker6372"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart"
+       inkscape:collect="always">
+      <path
+         transform="scale(0.8) translate(12.5,0)"
+         style="fill-rule:evenodd;stroke:#00a709;stroke-width:1pt;stroke-opacity:1;fill:#00a709;fill-opacity:1"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path6370" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lstart"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path855"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#00a709;stroke-width:1pt;stroke-opacity:1;fill:#00a709;fill-opacity:1"
+         transform="scale(0.8) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker5754"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#00a709;fill-opacity:1;fill-rule:evenodd;stroke:#00a709;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path5752"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker4879"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke:#ff0000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4877"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="marker1201"
+       style="overflow:visible;"
+       inkscape:isstock="true">
+      <path
+         id="path1199"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         transform="scale(0.4) rotate(180) translate(10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Mend"
+       style="overflow:visible;"
+       inkscape:isstock="true">
+      <path
+         id="path864"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         transform="scale(0.4) rotate(180) translate(10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;"
+       inkscape:isstock="true">
+      <path
+         id="path858"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-5"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-6"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-3"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-4"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-2"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-4"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-2-5"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-4-9"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-7"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-7"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-5-1"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-6-3"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke:#ff0000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-5"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-3-0"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-4-9"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke:#ff0000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-2-4"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-4-6"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke:#ff0000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-2-5-2"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-4-9-3"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke:#ff0000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-7-8"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-7-5"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke:#ff0000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-5-1-3"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-6-3-8"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-5-6"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-1-0"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-3-0-0"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-4-9-6"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-2-4-0"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-4-6-3"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-2-5-2-6"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-4-9-3-5"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-2-5-2-8"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-4-9-3-2"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#00a709;fill-opacity:1;fill-rule:evenodd;stroke:#00a709;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-2-4-6"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-4-6-8"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#00a709;fill-opacity:1;fill-rule:evenodd;stroke:#00a709;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-3-0-4"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-4-9-68"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-0-0-5-3"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-2-7-1-1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-7-3"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path858-7-2"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="218.34955"
+     inkscape:cy="777.49196"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <sodipodi:guide
+       position="-16.303441,238.40442"
+       orientation="0,1"
+       id="guide834"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="67.657738,317.12202"
+       orientation="1,0"
+       id="guide836"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="117.5506,317.12202"
+       orientation="0,1"
+       id="guide4515"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="88.198942,257.9151"
+       orientation="0,1"
+       id="guide5060"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="207.66842,209.00478"
+       orientation="0,1"
+       id="guide5123"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="49.491256,269.85138"
+       orientation="0,1"
+       id="guide6852"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#006da8;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect815"
+       width="21.199362"
+       height="13.750528"
+       x="8.7152481"
+       y="76.501236"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:#51874a;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817"
+       cx="5.8585958"
+       cy="58.947365"
+       rx="6.7657533"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:#51874a;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5-1"
+       cx="19.3901"
+       cy="108.36137"
+       rx="6.7657533"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.2491477;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="M 9.1662968,64.944936 14.879601,76.501231"
+       id="path853"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-0-5)"
+       d="M 19.540453,90.435958 V 101.40713"
+       id="path853-0-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <rect
+       style="fill:#006da8;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect815-9"
+       width="21.199362"
+       height="13.750528"
+       x="31.327908"
+       y="28.052538"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:#51874a;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5-7"
+       cx="55.233574"
+       cy="10.235373"
+       rx="6.7657533"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-0-0)"
+       d="m 52.477893,16.556589 -6.014,10.971166"
+       id="path853-0-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:#51874a;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-8"
+       cx="29.723127"
+       cy="10.259331"
+       rx="6.7657533"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.24914773;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-3)"
+       d="m 33.030831,16.256905 5.713304,11.556296"
+       id="path853-03"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:#51874a;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5-7-6"
+       cx="33.086723"
+       cy="58.696972"
+       rx="6.7657533"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-0-0-2)"
+       d="m 30.331061,65.018179 -6.014,10.971161"
+       id="path853-0-2-5"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-0-0-2-5)"
+       d="M 42.754026,41.656811 36.740025,52.627973"
+       id="path853-0-2-5-6"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect815-8"
+       width="21.199362"
+       height="13.750528"
+       x="13.262385"
+       y="211.44916"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5"
+       cx="10.405734"
+       cy="193.89528"
+       rx="6.7657533"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5-1-6"
+       cx="23.937237"
+       cy="243.3093"
+       rx="6.7657533"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.2491477;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-7)"
+       d="m 13.713434,199.89285 5.713304,11.5563"
+       id="path853-0"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#ff0000;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-0-5-1)"
+       d="m 24.08759,225.38388 v 10.97117"
+       id="path853-0-4-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect815-9-4"
+       width="21.199362"
+       height="13.750528"
+       x="35.875042"
+       y="163.00046"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5-7-5"
+       cx="59.78072"
+       cy="145.18329"
+       rx="6.7657533"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-0-0-5)"
+       d="m 57.025026,151.50451 -6.014,10.97116"
+       id="path853-0-2-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-8-8"
+       cx="34.270267"
+       cy="145.20724"
+       rx="6.7657533"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#ff0000;stroke-width:0.24914773;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-3-0)"
+       d="m 37.577968,151.20482 5.713308,11.5563"
+       id="path853-03-2"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#fa0000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5-7-6-9"
+       cx="37.633862"
+       cy="193.6449"
+       rx="6.7657533"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#ff0000;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-0-0-2-4)"
+       d="m 34.878198,199.9661 -6.014,10.97116"
+       id="path853-0-2-5-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#ff0000;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-0-0-2-5-2)"
+       d="m 47.301166,176.60473 -6.014,10.97116"
+       id="path853-0-2-5-6-5"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#fcfcfc;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="3.9929256"
+       y="60.47184"
+       id="text4465"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4463"
+         x="3.9929256"
+         y="60.47184"
+         style="font-size:5.64444447px;stroke-width:0.26458332;fill:#fcfcfc;fill-opacity:1;">a</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#fcfcfc;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="27.463129"
+       y="12.309901"
+       id="text4465-3"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4463-7"
+         x="27.463129"
+         y="12.309901"
+         style="font-size:5.64444447px;stroke-width:0.26458332;fill:#fcfcfc;fill-opacity:1;">b</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#fcfcfc;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="53.393646"
+       y="12.031886"
+       id="text4465-2"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4463-2"
+         x="53.393646"
+         y="12.031886"
+         style="font-size:5.64444447px;stroke-width:0.26458332;fill:#fcfcfc;fill-opacity:1;">c</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#fcfcfc;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="27.266863"
+       y="60.47184"
+       id="text4495"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4493"
+         x="27.266863"
+         y="60.47184"
+         style="font-size:5.64444447px;stroke-width:0.26458332;fill:#fcfcfc;fill-opacity:1;">res1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#fcfcfc;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="13.139935"
+       y="110.34003"
+       id="text4495-2"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4493-6"
+         x="13.139935"
+         y="110.34003"
+         style="font-size:5.64444447px;stroke-width:0.26458332;fill:#fcfcfc;fill-opacity:1;">res2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="8.3691587"
+       y="195.14424"
+       id="text4465-9"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4463-6"
+         x="8.3691587"
+         y="195.14424"
+         style="font-size:5.64444447px;stroke-width:0.26458332">a</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="31.839367"
+       y="146.98228"
+       id="text4465-3-7"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4463-7-8"
+         x="31.839367"
+         y="146.98228"
+         style="font-size:5.64444447px;fill:#ff0000;fill-opacity:1;stroke-width:0.26458332">b</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="57.769863"
+       y="146.70427"
+       id="text4465-2-4"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4463-2-7"
+         x="57.769863"
+         y="146.70427"
+         style="font-size:5.64444447px;stroke-width:0.26458332">c</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="31.643101"
+       y="195.14424"
+       id="text4495-4"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4493-5"
+         x="31.643101"
+         y="195.14424"
+         style="font-size:5.64444447px;fill:#ff0000;fill-opacity:1;stroke-width:0.26458332">res1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="17.516171"
+       y="245.01242"
+       id="text4495-2-7"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4493-6-7"
+         x="17.516171"
+         y="245.01242"
+         style="font-size:5.64444447px;fill:#ff0000;fill-opacity:1;stroke-width:0.26458332">res2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="6.9604139"
+       y="259.81595"
+       id="text4784"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4782"
+         x="6.9604139"
+         y="259.81595"
+         style="font-size:4.93888903px;stroke-width:0.26458332">Data invalidation</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4861"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion4863"><rect
+           id="rect4865"
+           width="7.0710678"
+           height="477.80215"
+           x="614.17273"
+           y="-83.602455" /></flowRegion><flowPara
+         id="flowPara4867"></flowPara></flowRoot>    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#fbfefc;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="32.33424"
+       y="33.477619"
+       id="text5027"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan5025"
+         x="32.33424"
+         y="33.477619"
+         style="font-size:4.23333311px;line-height:0.5;stroke-width:0.26458332;fill:#fbfefc;fill-opacity:1;">Compute</tspan><tspan
+         sodipodi:role="line"
+         x="32.33424"
+         y="39.006332"
+         style="font-size:4.23333311px;line-height:0.5;stroke-width:0.26458332;fill:#fbfefc;fill-opacity:1;"
+         id="tspan5029">Node 1</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5031"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion5033"><rect
+           id="rect5035"
+           width="156.3568"
+           height="59.879887"
+           x="118.40469"
+           y="106.02534" /></flowRegion><flowPara
+         id="flowPara5037"></flowPara></flowRoot>    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="36.85223"
+       y="168.51653"
+       id="text5027-3"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan5025-8"
+         x="36.85223"
+         y="168.51653"
+         style="font-size:4.23333311px;line-height:0.5;fill:#ff0000;fill-opacity:1;stroke-width:0.26458332">Compute</tspan><tspan
+         sodipodi:role="line"
+         x="36.85223"
+         y="174.04524"
+         style="font-size:4.23333311px;line-height:0.5;fill:#ff0000;fill-opacity:1;stroke-width:0.26458332"
+         id="tspan5029-8">Node 1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#e6e6e6;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="9.9164276"
+       y="82.222076"
+       id="text5027-9"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan5025-1"
+         x="9.9164276"
+         y="82.222076"
+         style="font-size:4.23333311px;line-height:0.5;stroke-width:0.26458332;fill:#e6e6e6;fill-opacity:1;">Compute</tspan><tspan
+         sodipodi:role="line"
+         x="9.9164276"
+         y="87.750793"
+         style="font-size:4.23333311px;line-height:0.5;stroke-width:0.26458332;fill:#e6e6e6;fill-opacity:1;"
+         id="tspan5029-84">Node 2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="14.134295"
+       y="217.15959"
+       id="text5027-9-8"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan5025-1-7"
+         x="14.134295"
+         y="217.15959"
+         style="font-size:4.23333311px;line-height:0.5;fill:#ff0000;fill-opacity:1;stroke-width:0.26458332">Compute</tspan><tspan
+         sodipodi:role="line"
+         x="14.134295"
+         y="222.68831"
+         style="font-size:4.23333311px;line-height:0.5;fill:#ff0000;fill-opacity:1;stroke-width:0.26458332"
+         id="tspan5029-84-2">Node 2</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#00a709;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect815-8-5"
+       width="21.199362"
+       height="13.750528"
+       x="89.56102"
+       y="211.32039"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5-2"
+       cx="86.704361"
+       cy="193.76648"
+       rx="6.7657537"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#00a709;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5-1-6-4"
+       cx="100.23586"
+       cy="243.18056"
+       rx="6.7657537"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.2491477;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-7-3)"
+       d="m 90.010816,199.76406 5.7133,11.55629"
+       id="path853-0-8"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#00a709;stroke-width:0.249;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Lstart)"
+       d="m 100.38497,225.25508 v 10.97117"
+       id="path853-0-4-4-8"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#00a709;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect815-9-4-2"
+       width="21.199362"
+       height="13.750528"
+       x="112.17366"
+       y="162.87166"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5-7-5-63"
+       cx="136.07928"
+       cy="145.05449"
+       rx="6.7657537"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-0-0-5-3)"
+       d="m 133.32241,151.37571 -6.014,10.97117"
+       id="path853-0-2-9-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-8-8-8"
+       cx="110.56889"
+       cy="145.07845"
+       rx="6.7657537"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.24914773;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-3-0-4)"
+       d="m 113.87535,151.07603 5.71331,11.55629"
+       id="path853-03-2-3"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#00a709;stroke-width:0.55366158;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path817-5-7-6-9-1"
+       cx="113.93248"
+       cy="193.51608"
+       rx="6.7657537"
+       ry="6.5827003"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#00a709;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker6372)"
+       d="m 111.17558,199.8373 -6.014,10.97116"
+       id="path853-0-2-5-7-5"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <path
+       style="fill:none;stroke:#00a709;stroke-width:0.24914774;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker6598)"
+       d="m 123.59855,176.47593 -6.014,10.97117"
+       id="path853-0-2-5-6-5-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="84.667786"
+       y="195.01544"
+       id="text4465-9-1"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4463-6-7"
+         x="84.667786"
+         y="195.01544"
+         style="font-size:5.64444447px;stroke-width:0.26458332">a</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#070000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="108.138"
+       y="146.85349"
+       id="text4465-3-7-8"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4463-7-8-6"
+         x="108.138"
+         y="146.85349"
+         style="font-size:5.64444447px;fill:#070000;fill-opacity:1;stroke-width:0.26458332">b</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="134.06848"
+       y="146.57547"
+       id="text4465-2-4-7"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4463-2-7-8"
+         x="134.06848"
+         y="146.57547"
+         style="font-size:5.64444447px;stroke-width:0.26458332">c</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#00a709;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="107.94173"
+       y="195.01544"
+       id="text4495-4-2"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4493-5-3"
+         x="107.94173"
+         y="195.01544"
+         style="font-size:5.64444447px;fill:#00a709;fill-opacity:1;stroke-width:0.26458332">res1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#00a709;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="93.814804"
+       y="244.88367"
+       id="text4495-2-7-6"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4493-6-7-4"
+         x="93.814804"
+         y="244.88367"
+         style="font-size:5.64444447px;fill:#00a709;fill-opacity:1;stroke-width:0.26458332">res2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="81.67157"
+       y="259.68719"
+       id="text4784-7"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan4782-9"
+         x="81.67157"
+         y="259.68719"
+         style="font-size:4.93888903px;stroke-width:0.26458332">Recomputation</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#00a709;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="113.15085"
+       y="168.38773"
+       id="text5027-3-0"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan5025-8-0"
+         x="113.15085"
+         y="168.38773"
+         style="font-size:4.23333311px;line-height:0.5;fill:#00a709;fill-opacity:1;stroke-width:0.26458332">Compute</tspan><tspan
+         sodipodi:role="line"
+         x="113.15085"
+         y="173.91644"
+         style="font-size:4.23333311px;line-height:0.5;fill:#00a709;fill-opacity:1;stroke-width:0.26458332"
+         id="tspan5029-8-8">Node 1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#00a709;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="90.432922"
+       y="217.03082"
+       id="text5027-9-8-5"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan5025-1-7-1"
+         x="90.432922"
+         y="217.03082"
+         style="font-size:4.23333311px;line-height:0.5;fill:#00a709;fill-opacity:1;stroke-width:0.26458332">Compute</tspan><tspan
+         sodipodi:role="line"
+         x="90.432922"
+         y="222.55954"
+         style="font-size:4.23333311px;line-height:0.5;fill:#00a709;fill-opacity:1;stroke-width:0.26458332"
+         id="tspan5029-84-2-5">Node 2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="14.171321"
+       y="135.5356"
+       id="text6812"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan6810"
+         x="14.171321"
+         y="135.5356"
+         style="font-size:4.23333311px;stroke-width:0.26458332">change value of b</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="105.15721"
+       y="236.67574"
+       id="text6812-0"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\DataChange.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan6810-5"
+         x="105.15721"
+         y="236.67574"
+         style="font-size:4.23333311px;stroke-width:0.26458332">access value of res2</tspan></text>
+    <rect
+       style="fill:#0000fb;fill-opacity:1;stroke:#010000;stroke-width:0.37041667;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect6835"
+       width="3.8754027"
+       height="1.737252"
+       x="36.267246"
+       y="27.334015"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <rect
+       style="fill:#0000fb;fill-opacity:1;stroke:#010000;stroke-width:0.37041667;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect6835-3"
+       width="3.8754027"
+       height="1.737252"
+       x="44.299938"
+       y="27.368238"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <rect
+       style="fill:#0000fb;fill-opacity:1;stroke:#010000;stroke-width:0.37041667;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect6835-5"
+       width="3.8754027"
+       height="1.737252"
+       x="40.183022"
+       y="41.021069"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <rect
+       style="fill:#0000fb;fill-opacity:1;stroke:#010000;stroke-width:0.37041667;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect6835-7"
+       width="3.8754027"
+       height="1.737252"
+       x="13.561792"
+       y="75.955116"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <rect
+       style="fill:#0000fb;fill-opacity:1;stroke:#010000;stroke-width:0.37041667;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect6835-3-3"
+       width="3.8754027"
+       height="1.737252"
+       x="21.594486"
+       y="75.989342"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <rect
+       style="fill:#0000fb;fill-opacity:1;stroke:#010000;stroke-width:0.37041667;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect6835-5-7"
+       width="3.8754027"
+       height="1.737252"
+       x="17.47757"
+       y="89.642166"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#2f7500;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="67.279755"
+       y="11.731695"
+       id="text6908"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan6906"
+         x="67.279755"
+         y="11.731695"
+         style="font-size:5.64444447px;fill:#2f7500;fill-opacity:1;stroke-width:0.26458332">Parameter</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#005b8c;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="67.284286"
+       y="35.862156"
+       id="text6908-0"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan6906-2"
+         x="67.284286"
+         y="35.862156"
+         style="font-size:5.64444447px;fill:#005b8c;fill-opacity:1;stroke-width:0.26458332">Compute node</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#0000fb;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="67.590401"
+       y="55.235424"
+       id="text6908-0-1"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60"><tspan
+         sodipodi:role="line"
+         id="tspan6906-2-7"
+         x="67.590401"
+         y="55.235424"
+         style="font-size:5.64444447px;fill:#0000fb;fill-opacity:1;stroke-width:0.26458332">Interface parameter</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 65.314284,53.681889 c 5.155591,3e-6 -4.31769,1e-6 -11.717261,0 L 44.058424,42.75832"
+       id="path6964"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="C:\Users\sigg_ma\Desktop\ComputeGraph.png"
+       inkscape:export-xdpi="60"
+       inkscape:export-ydpi="60" />
+  </g>
+</svg>

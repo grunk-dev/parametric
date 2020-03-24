@@ -11,9 +11,9 @@ public:
     CustomComputer(const parametric::param<double>& op1, double op2)
         : m_op1(op1), m_op2(op2)
     {
-        DefineInput(m_op1);
-        DefineOutput(m_result_pow, parametric::param<double>("result_pow"));
-        DefineOutput(m_result_div, parametric::param<double>("result_div"));
+        depends_on(m_op1);
+        computes(m_result_pow, parametric::param<double>("result_pow"));
+        computes(m_result_div, parametric::param<double>("result_div"));
     }
 
     parametric::param<double> pow() const

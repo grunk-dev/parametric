@@ -10,7 +10,7 @@ TEST(DAG, connect)
     NodeRef b(new DAGNode("b"));
 
     // Add b as a parent to a
-    addParent(a, b);
+    add_parent(a, b);
 
     EXPECT_TRUE(b->precedes(*a));
 }
@@ -24,14 +24,14 @@ TEST(DAG, precedes)
     EXPECT_FALSE(b->precedes(*a));
 
     // Add b as a parent to a
-    addParent(a, b);
+    add_parent(a, b);
 
     EXPECT_TRUE(b->precedes(*a));
     EXPECT_FALSE(a->precedes(*b));
     EXPECT_FALSE(a->precedes(*a));
     EXPECT_FALSE(b->precedes(*b));
 
-    addParent(b, c);
+    add_parent(b, c);
 
     EXPECT_TRUE(c->precedes(*a));
     EXPECT_TRUE(c->precedes(*b));
@@ -45,11 +45,11 @@ TEST(DAG, connectCircular)
     NodeRef c(new DAGNode("c"));
 
     // Add b as a parent to a
-    addParent(a, b);
-    addParent(b, c);
+    add_parent(a, b);
+    add_parent(b, c);
 
     // this should not be allowed
-    EXPECT_THROW(addParent(c, a), std::runtime_error);
+    EXPECT_THROW(add_parent(c, a), std::runtime_error);
 }
 
 TEST(DAG, unattach)
@@ -59,13 +59,13 @@ TEST(DAG, unattach)
     NodeRef c(new DAGNode("c"));
 
     // Add b as a parent to a
-    addParent(c, b);
-    addParent(a, b);
+    add_parent(c, b);
+    add_parent(a, b);
 
     EXPECT_TRUE(b->precedes(*a));
     EXPECT_TRUE(b->precedes(*c));
 
-    a->removeParent(*b);
+    a->remove_parent(*b);
     EXPECT_FALSE(b->precedes(*a));
     EXPECT_TRUE(b->precedes(*c));
 }

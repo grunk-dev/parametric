@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 
-project(parametric VERSION 0.0.1)
+project(parametric VERSION 0.2.0)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 

@@ -53,10 +53,15 @@ public:
         return value.is_initialized();
     }
 
+    void Clear()
+    {
+        value.reset();
+    }
+
 protected:
     void invalidateSelf()
     {
-        value.reset();
+        Clear();
     }
 
 private:

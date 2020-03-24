@@ -54,7 +54,7 @@ public:
      * @param child The node to which "parent" is added as a parent.
      * @param parent The parent node to be added.
      */
-    friend void addParent(const NodeRef& child, const NodeRef& parent)
+    friend void add_parent(const NodeRef& child, const NodeRef& parent)
     {
 
         if (!child || !parent) {
@@ -86,7 +86,7 @@ public:
      * @brief Sets the identifier of the node
      * @param id The identifier string.
      */
-    void SetId(const std::string& id)
+    void set_id(const std::string& id)
     {
         _id = id;
     }
@@ -192,7 +192,7 @@ public:
      * @brief Removes the node "parent" from the current node.
      * @param parent The node to be removed
      */
-    void removeParent(const DAGNode& parent)
+    void remove_parent(const DAGNode& parent)
     {
         // remove myself from parent
         auto& p_childs  = parent.childs;
@@ -246,7 +246,7 @@ public:
     {
         for (auto parent : parents) {
             if (parent) {
-                removeParent(*parent);
+                remove_parent(*parent);
             }
         }
     }

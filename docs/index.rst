@@ -9,5 +9,6 @@ Docs
 
    usage
    concept
+   examples
    api
    genindex

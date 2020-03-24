@@ -170,7 +170,7 @@ param<T> new_param()
 /// @private
 /// Disable connecting two values
 template <class C1, class C2>
-void addParent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, const std::shared_ptr<parametric::impl::param_holder<C2>>)
+void add_parent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, const std::shared_ptr<parametric::impl::param_holder<C2>>)
 {
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }
@@ -276,6 +276,16 @@ public:
         return p_holder.expired();
     }
 
+    /**
+     * @brief Clears the value of the interface parameter
+     *
+     * This is required in the initialization of output parameters
+     */
+    void invalidate()
+    {
+        p_holder.lock()->Clear();
+    }
+
 private:
     std::weak_ptr<impl::param_holder<T>> p_holder;
 };
@@ -286,7 +296,7 @@ private:
  * A compute node has to
  *  - inherit from parametric::ComputeNode
  *  - have a (private) parametric::InterfaceParam object for each input and output parameter
- *  - register the input and output parameters using ComputeNode::DefineInput and ComputeNode::DefineOutput
+ *  - register the input and output parameters using ComputeNode::depends_on and ComputeNode::computes
  *  - override the ComputeNode::eval method to perform the computation
  *  - be constructed with parametric::new_node  (Args &&... args)
  *
@@ -297,9 +307,9 @@ private:
  *  {
  *  public:
  *    DivComputer(const parametric::param<double>& op1, const parametric::param<double>& op2) : v1(op1), v2(op2) {
- *      DefineInput(v1);
- *      DefineInput(v2);
- *      DefineOutput(theresult, parametric::param<double>("result"));
+ *      depends_on(v1);
+ *      depends_on(v2);
+ *      computes(theresult, parametric::param<double>("result"));
  *    }
  *
  *    parametric::param<double> result() const {return theresult;}
@@ -330,40 +340,41 @@ public:
     virtual ~ComputeNode() {}
 
     /**
-     * @brief DefineInput must be called in the derived classes constructor
+     * @brief depends_on must be called in the derived classes constructor
      * to register input parameters.
      */
     template <typename T>
-    void DefineInput(const InterfaceParam<T>& p)
+    void depends_on(const InterfaceParam<T>& p)
     {
         inputs.push_back(p.param().node_pointer());
     }
 
     /**
-     * @brief DefineOutput must be called in the derived classes constructor
+     * @brief computes must be called in the derived classes constructor
      * to register output parameters.
      */
     template <typename T>
-    void DefineOutput(parametric::InterfaceParam<T>& intf_param, const parametric::param<T>& initial)
+    void computes(parametric::InterfaceParam<T>& intf_param, const parametric::param<T>& initial)
     {
         intf_param = initial;
+        intf_param.invalidate();
         outputs.push_back(initial.node_pointer());
     }
 
     /// @private
-    static void Connect(const std::shared_ptr<ComputeNode>& c)
+    static void connect(const std::shared_ptr<ComputeNode>& c)
     {
         assert(c);
         for (const auto& input : c->inputs) {
-            addParent(c, input);
+            add_parent(c, input);
         }
         for (const auto& output : c->outputs) {
-            addParent(output, c);
+            add_parent(output, c);
         }
     }
 
     /// @private
-    static void ReleaseNodes(const std::shared_ptr<ComputeNode>& c)
+    static void release_nodes(const std::shared_ptr<ComputeNode>& c)
     {
         if (!c) return;
 
@@ -401,7 +412,7 @@ public:
     compute_node_ptr(T* t)
         : wrapped(t)
     {
-        T::Connect(wrapped);
+        T::connect(wrapped);
     }
 
     /**
@@ -413,7 +424,7 @@ public:
 
     ~compute_node_ptr()
     {
-        T::ReleaseNodes(wrapped);
+        T::release_nodes(wrapped);
     }
 
 private:
@@ -471,9 +482,9 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
         {
             // connect inputs
             static_foreach(_parameters, [this](const auto & parm) {
-                DefineInput(parm);
+                depends_on(parm);
             });
-            DefineOutput(_resultNode, parametric::param<rtype>("result"));
+            computes(_resultNode, parametric::param<rtype>("result"));
         }
 
         void eval() const

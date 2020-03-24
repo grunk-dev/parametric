@@ -28,6 +28,14 @@ namespace parametric
             return *data;
         }
 
+        T& value()
+        {
+            if (!data) {
+                throw std::runtime_error("Value not initialized");
+            }
+            return *data;
+        }
+
         operator T const& () const
         {
             return value();

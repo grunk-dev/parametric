@@ -66,6 +66,14 @@ public:
     }
 
     /**
+     * @brief Write access to the value
+     */
+    T& Value()
+    {
+        return m_holder->AccessValue();
+    }
+
+    /**
      * @brief Sets the value of the parameter.
      *
      * The value will only be changed only, if the new value is different
@@ -199,10 +207,19 @@ public:
     /**
      * @brief Returns the resulting parameter from the interface
      */
-    parametric::param<T> Param() const
+    const parametric::param<T> Param() const
     {
         return  parametric::param<T>(p_holder.lock());
     }
+
+    /**
+     * @brief Returns the resulting parameter from the interface
+     */
+    parametric::param<T> Param()
+    {
+        return  parametric::param<T>(p_holder.lock());
+    }
+
 
     /**
      * @brief Conversion to a parameter
@@ -230,7 +247,7 @@ public:
     void SetValue(const T& v)
     {
         if (!Expired()) {
-            Param().SetValue(v);
+            p_holder.lock()->SetValue(v);
         }
     }
 
@@ -240,7 +257,7 @@ public:
     const T& Value() const
     {
         assert(!Expired());
-        return Param().Value();
+        return p_holder.lock()->Value();
     }
 
     /**

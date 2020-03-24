@@ -33,6 +33,13 @@ public:
 
         return value.value();
     }
+
+    ResultType& AccessValue()
+    {
+        invalidate();
+        return value.value();
+    }
+
     void SetValue(const ResultType& v)
     {
         if (!value.is_initialized() || v != value.value()) {

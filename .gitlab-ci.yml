@@ -3,31 +3,19 @@ image: ubuntu:18.04
 build:
   stage: build
   before_script:
-     - apt-get -qq update && apt -qq -y install make cmake g++ git
-  script:
-    - mkdir build && cd build
-    - cmake ..
-    - cmake --build .
-  artifacts:
-    expire_in: 2 hrs
-    paths:
-      - build/
-      
-docs:
-  stage: build
-  before_script:
      - apt-get -qq update && apt -qq -y install make cmake g++ git doxygen python3-pip
      - pip3 install Sphinx sphinx-rtd-theme breathe m2r
   script:
     - mkdir build && cd build
-    - cmake -DPARAMETRIC_BUILD_DOCS=ON ..
+    - cmake -DPARAMETRIC_BUILD_DOCS=ON -DCMAKE_INSTALL_PREFIX=../parametric-current ..
+    - cmake --build .
     - cmake --build . --target Sphinx
-    - cd ..
-    - mv build/docs/html parametric-docs
-    - tar czf parametric-docs.tar.gz parametric-docs
+    - cmake --build . --target install
   artifacts:
+    expire_in: 2 hrs
     paths:
-      - parametric-docs.tar.gz
+      - build/
+      - parametric-current/
 
 # run tests using the binary built before
 test:
@@ -35,3 +23,24 @@ test:
   script:
     - cd build/tests
     - ./runUnitTests
+
+docs:
+  stage: deploy
+  dependencies:
+    - build
+  script:
+    - mv build/docs/html parametric-docs
+    - tar czf parametric-docs.tar.gz parametric-docs
+  artifacts:
+    paths:
+      - parametric-docs.tar.gz
+
+package:
+  stage: deploy
+  dependencies:
+    - build
+  script:
+    - tar czf parametric-current.tar.gz parametric-current
+  artifacts:
+    paths:
+      - parametric-current.tar.gz

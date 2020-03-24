@@ -28,10 +28,10 @@ public:
 
     void eval() const
     {
-        if (!m_result_pow.Expired())
-            m_result_pow.SetValue(::pow(m_op1, m_op2));
-        if (!m_result_div.Expired()) {
-            m_result_div.SetValue(m_op1 / m_op2);
+        if (!m_result_pow.expired())
+            m_result_pow.set_value(::pow(m_op1, m_op2));
+        if (!m_result_div.expired()) {
+            m_result_div.set_value(m_op1 / m_op2);
         }
     }
 
@@ -113,12 +113,12 @@ TEST(CustomClass, lifeTime)
         pow_result = node->pow();
     }
     // no computation has be performed yet
-    EXPECT_FALSE(pow_result.IsValid());
+    EXPECT_FALSE(pow_result.is_valid());
 
     // compute b**2
     // This triggers the computation, requiring
     // node and b to be still alive
     EXPECT_NEAR(16., pow_result, 1e-12);
-    EXPECT_TRUE(pow_result.IsValid());
+    EXPECT_TRUE(pow_result.is_valid());
 
 }

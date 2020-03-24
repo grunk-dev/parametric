@@ -60,7 +60,7 @@ public:
     /**
      * @brief Returns the current value of the parameter
      */
-    const T& Value() const
+    const T& value() const
     {
         return m_holder->Value();
     }
@@ -68,7 +68,7 @@ public:
     /**
      * @brief Write access to the value
      */
-    T& Value()
+    T& value()
     {
         return m_holder->AccessValue();
     }
@@ -91,7 +91,7 @@ public:
      *
      * @param value The value to be set.
      */
-    void SetValue(const T& value)
+    void set_value(const T& value)
     {
         return m_holder->SetValue(value);
     }
@@ -101,7 +101,7 @@ public:
      */
     operator const T& () const
     {
-        return Value();
+        return value();
     }
 
     /**
@@ -116,7 +116,7 @@ public:
     /**
      * @brief Sets the identifier of the parameter
      */
-    void SetId(const std::string& id)
+    void set_id(const std::string& id)
     {
         m_holder->SetId(id);
     }
@@ -124,7 +124,7 @@ public:
     /**
      * @brief Indicates, whether the parameter contains a value (valid) or not (invalid)
      */
-    bool IsValid() const
+    bool is_valid() const
     {
         return m_holder->IsValid();
     }
@@ -207,7 +207,7 @@ public:
     /**
      * @brief Returns the resulting parameter from the interface
      */
-    const parametric::param<T> Param() const
+    const parametric::param<T> param() const
     {
         return  parametric::param<T>(p_holder.lock());
     }
@@ -215,7 +215,7 @@ public:
     /**
      * @brief Returns the resulting parameter from the interface
      */
-    parametric::param<T> Param()
+    parametric::param<T> param()
     {
         return  parametric::param<T>(p_holder.lock());
     }
@@ -226,7 +226,7 @@ public:
      */
     operator parametric::param<T>() const
     {
-        return Param();
+        return param();
     }
 
     /**
@@ -244,9 +244,9 @@ public:
     /**
      * @brief Sets the value of the parameter, equal to param::SetValue
      */
-    void SetValue(const T& v)
+    void set_value(const T& v)
     {
-        if (!Expired()) {
+        if (!expired()) {
             p_holder.lock()->SetValue(v);
         }
     }
@@ -254,9 +254,9 @@ public:
     /**
      * @brief Returns the value of the parameter, equal to param::Value
      */
-    const T& Value() const
+    const T& value() const
     {
-        assert(!Expired());
+        assert(!expired());
         return p_holder.lock()->Value();
     }
 
@@ -265,13 +265,13 @@ public:
      */
     operator const T& () const
     {
-        return Value();
+        return value();
     }
 
     /**
      * @brief Expired returns, whether the reference to the parameter node is still valid
      */
-    bool Expired() const
+    bool expired() const
     {
         return p_holder.expired();
     }
@@ -305,8 +305,8 @@ private:
  *    parametric::param<double> result() const {return theresult;}
  *
  *    void eval() const {
- *        if (theresult.Expired() == false)
- *          theresult.SetValue(v1.Value() / v2.Value());
+ *        if (theresult.expired() == false)
+ *          theresult.set_value(v1.value() / v2.value());
  *    }
  *
  *  private:
@@ -336,7 +336,7 @@ public:
     template <typename T>
     void DefineInput(const InterfaceParam<T>& p)
     {
-        inputs.push_back(p.Param().node_pointer());
+        inputs.push_back(p.param().node_pointer());
     }
 
     /**
@@ -478,11 +478,11 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 
         void eval() const
         {
-            if(!_resultNode.Expired()) {
-                _resultNode.SetValue(
+            if(!_resultNode.expired()) {
+                _resultNode.set_value(
                     apply(std::forward<const Fn>(_wrapped_function),
                       _parameters,
-                      [](const auto& parm){return parm.Value();}
+                      [](const auto& parm){return parm.value();}
                     )
                  );
             }

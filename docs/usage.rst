@@ -112,8 +112,8 @@ Here's an example to define a custom compute node:
 
         void eval() const override
         {
-            if (!theresult.Expired())
-                theresult.SetValue(v1.Value() / v2.Value());
+            if (!theresult.expired())
+                theresult.set_value(v1.value() / v2.value());
         }
 
     private:

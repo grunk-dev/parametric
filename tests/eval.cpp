@@ -68,7 +68,6 @@ TEST(Eval, writeAccess)
     };
 
     auto xy_sum = [](const XY& xy) {
-        std::cout << "sum" << std::endl;
         return xy.X() + xy.Y();
     };
 
@@ -77,11 +76,11 @@ TEST(Eval, writeAccess)
 
     EXPECT_EQ(8, sum);
 
-    xy.Value().SetX(10);
+    xy.value().SetX(10);
     EXPECT_EQ(13, sum);
 
     // create invalid param, accessing the value is therefore not possible
     parametric::param<XY> xy2("xy2");
-    EXPECT_THROW(xy2.Value().SetX(10), std::runtime_error);
+    EXPECT_THROW(xy2.value().SetX(10), std::runtime_error);
 }
 

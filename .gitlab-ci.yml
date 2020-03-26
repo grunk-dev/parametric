@@ -22,7 +22,10 @@ test:
   stage: test
   script:
     - cd build/tests
-    - ./runUnitTests
+    - ./runUnitTests --gtest_output="xml:report.xml"
+  artifacts:
+    reports:
+      junit: build/tests/report.xml
 
 docs:
   stage: deploy

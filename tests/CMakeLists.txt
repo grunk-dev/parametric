@@ -7,6 +7,8 @@ endif()
 
 enable_testing()
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
+set(GOOGLE_TEST_INDIVIDUAL ON)
 include(AddGoogleTest)
 
 set(TESTSOURCES

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="logo.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient2581"
+       inkscape:collect="always">
+      <stop
+         id="stop2577"
+         offset="0"
+         style="stop-color:#a71b13;stop-opacity:1" />
+      <stop
+         id="stop2579"
+         offset="1"
+         style="stop-color:#d98f00;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient2500"
+       osb:paint="gradient">
+      <stop
+         style="stop-color:#db88b9;stop-opacity:1;"
+         offset="0"
+         id="stop2496" />
+      <stop
+         style="stop-color:#db88b9;stop-opacity:0;"
+         offset="1"
+         id="stop2498" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2581"
+       id="linearGradient2583"
+       gradientUnits="userSpaceOnUse"
+       x1="25.702385"
+       y1="200.99405"
+       x2="147.7887"
+       y2="13.139881" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="738.51941"
+     inkscape:cy="529.00829"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="false"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <sodipodi:guide
+       position="97.139881,213.17857"
+       orientation="0,1"
+       id="guide838"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="99.785712,163.28572"
+       orientation="1,0"
+       id="guide854"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="160.26191,148.35566"
+       orientation="0,1"
+       id="guide877"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#301442;fill-opacity:1;stroke:#010000;stroke-width:0.37041664;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect815"
+       width="196.54761"
+       height="213.93451"
+       x="1.889886"
+       y="13.517858" />
+    <g
+       id="g964"
+       style="stroke:#d6d5f6;fill-opacity:1;fill:url(#linearGradient2583);stroke-opacity:1;stroke-width:0.9;stroke-miterlimit:4;stroke-dasharray:none"
+       inkscape:export-filename="C:\Users\sigg_ma\parametric-logo.png"
+       inkscape:export-xdpi="86.006752"
+       inkscape:export-ydpi="86.006752">
+      <path
+         id="path817"
+         style="fill:url(#linearGradient2583);fill-opacity:1.0;stroke:#d6d5f6;stroke-width:7.93700797;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 378.57227,154.48828 a 68.031496,68.031496 0 0 0 -68.03321,68.03125 68.031496,68.031496 0 0 0 53.7461,66.47852 v 89.80664 H 287.84375 L 268.80469,357.8125 a 68.031496,68.031496 0 0 0 14.9414,-42.43555 68.031496,68.031496 0 0 0 -68.03125,-68.03125 68.031496,68.031496 0 0 0 -68.03125,68.03125 68.031496,68.031496 0 0 0 68.03125,68.03125 68.031496,68.031496 0 0 0 33.50196,-8.91797 l 20.83593,22.97461 v 72.76954 h 75.17969 l -29.8789,32.94726 a 68.031496,68.031496 0 0 0 -33.21094,-8.69336 68.031496,68.031496 0 0 0 -68.03125,68.03125 68.031496,68.031496 0 0 0 68.03125,68.03125 68.031496,68.031496 0 0 0 68.03125,-68.03125 68.031496,68.031496 0 0 0 -15.14844,-42.75195 l 43.30859,-47.75391 44.58399,49.16211 a 68.031496,68.031496 0 0 0 -12.80664,39.62891 68.031496,68.031496 0 0 0 68.03125,68.03125 68.031496,68.031496 0 0 0 68.03125,-68.03125 68.031496,68.031496 0 0 0 -68.03125,-68.03125 68.031496,68.031496 0 0 0 -36.58008,10.68359 l -30.12891,-33.22265 h 71.3711 v -76.6875 l 19.18554,-21.1543 a 68.031496,68.031496 0 0 0 39.15235,12.44336 68.031496,68.031496 0 0 0 68.03125,-68.03125 68.031496,68.031496 0 0 0 -68.03125,-68.03125 68.031496,68.031496 0 0 0 -68.03125,68.03125 68.031496,68.031496 0 0 0 10.98633,37.03906 l -22.63868,24.96094 H 390 v -89.22852 a 68.031496,68.031496 0 0 0 56.60352,-67.05664 68.031496,68.031496 0 0 0 -68.03125,-68.03125 z"
+         transform="scale(0.26458333)" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#d6d5f6;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="32.505955"
+       y="189.27678"
+       id="text2575"
+       inkscape:export-filename="C:\Users\sigg_ma\parametric-logo.png"
+       inkscape:export-xdpi="86.006752"
+       inkscape:export-ydpi="86.006752"><tspan
+         sodipodi:role="line"
+         id="tspan2573"
+         x="32.505955"
+         y="189.27678"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:19.75555611px;font-family:Comfortaa;-inkscape-font-specification:'Comfortaa Bold';fill:#d6d5f6;stroke-width:0.26458332;fill-opacity:1;">&lt;par&gt;ametric</tspan></text>
+  </g>
+</svg>

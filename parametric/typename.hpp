@@ -1,6 +1,8 @@
 #ifndef TYPENAME_HPP
 #define TYPENAME_HPP
 
+#include <typeinfo>
+
 /**
  * @brief TypeName provides an interface to
  * access the string representation of T

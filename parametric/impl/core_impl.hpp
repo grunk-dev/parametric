@@ -59,7 +59,7 @@ public:
     }
 
 protected:
-    void invalidateSelf()
+    void invalidateSelf() override
     {
         Clear();
     }

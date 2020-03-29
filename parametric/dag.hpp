@@ -10,8 +10,7 @@
 #include <memory>
 #include <vector>
 #include <type_traits> // for std::false_type
-
-#include <cassert>
+#include <string>
 
 namespace parametric
 {

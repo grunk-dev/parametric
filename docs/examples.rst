@@ -14,3 +14,11 @@ Custom compute nodes
 
 .. literalinclude :: ../examples/custom_computenode.cpp
    :language: cpp
+
+A parametric CAD example
+------------------------
+
+This example requires OCE (OpenCASCADE Community Edition) to build.
+
+.. literalinclude :: ../examples/parametric_cad.cpp
+   :language: cpp

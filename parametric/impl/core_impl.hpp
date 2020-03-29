@@ -4,6 +4,8 @@
 #include <parametric/dag.hpp>
 #include <parametric/impl/optional.hpp>
 
+#include <cassert>
+
 namespace parametric {
 namespace impl
 {

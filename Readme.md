@@ -4,6 +4,8 @@ Parametric is a conceptual C++ library for parametric lazy evaluation of functio
 
 The result is only computed, if it is required (lazy evaluation). If any input parameter has changed, the result will be invalidated and the computation is computed again.
 
+[Read the documentation](https://sc-hpc.pages.gitlab.dlr.de/parametric/) to learn more.
+
 ## A simple example ##
 
 ```c++

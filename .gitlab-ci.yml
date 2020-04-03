@@ -37,6 +37,14 @@ docs:
   artifacts:
     paths:
       - parametric-docs.tar.gz
+      
+pages:
+  stage: deploy
+  script:
+    - mv build/docs/html public
+  artifacts:
+    paths:
+      - public
 
 package:
   stage: deploy

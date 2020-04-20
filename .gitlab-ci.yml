@@ -4,7 +4,7 @@ build:
   stage: build
   before_script:
      - apt-get -qq update && apt -qq -y install make cmake g++ git doxygen python3-pip
-     - pip3 install 'Sphinx>=2.4.0,<3.0.0' sphinx-rtd-theme 'breathe<4.16.0' m2r
+     - pip3 install 'Sphinx>=2.4.0,<3.0.0' sphinx-rtd-theme 'breathe<4.15.0' m2r
   script:
     - mkdir build && cd build
     - cmake -DPARAMETRIC_BUILD_DOCS=ON -DCMAKE_INSTALL_PREFIX=../parametric-current ..

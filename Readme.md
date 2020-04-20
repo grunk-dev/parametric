@@ -1,7 +1,7 @@
 # Parametric #
 
 [![pipeline status](https://gitlab.dlr.de/sc-hpc/parametric/badges/master/pipeline.svg)](https://gitlab.dlr.de/sc-hpc/parametric/commits/master)
-[![documentation](https://img.shields.io/badge/docs-online-blue)](https://sc-hpc.pages.gitlab.dlr.de/parametric/)
+[![documentation](https://img.shields.io/badge/docs-online-blue)](https://sc-hpc-iao.pages.gitlab.dlr.de/parametric/)
 
 Parametric is a conceptual C++ library for parametric lazy evaluation of functions. The base concept are parameters from which computational expensive parametric results are derived. 
 

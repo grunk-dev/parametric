@@ -1,10 +1,8 @@
-image: ubuntu:18.04
-
 build:
   stage: build
+  image: conanio/gcc72
   before_script:
-     - apt-get -qq update && apt -qq -y install make g++ git doxygen python3-pip snapd
-     - snap install cmake
+     - sudo apt-get -qq update && sudo apt -qq -y install make git doxygen python3-pip
      - pip3 install 'Sphinx>=2.4.0,<3.0.0' sphinx-rtd-theme 'breathe<4.15.0' m2r
   script:
     - mkdir build && cd build
@@ -21,6 +19,7 @@ build:
 # run tests using the binary built before
 test:
   stage: test
+  image: ubuntu:18.04
   script:
     - cd build/tests
     - ./runUnitTests --gtest_output="xml:report.xml"
@@ -30,12 +29,14 @@ test:
 
 benchmark:
   stage: test
+  image: ubuntu:18.04
   script:
     - cd build/benchmarks
     - ./benchmarks
 
 docs:
   stage: deploy
+  image: ubuntu:18.04
   dependencies:
     - build
   script:
@@ -47,6 +48,7 @@ docs:
       
 pages:
   stage: deploy
+  image: ubuntu:18.04
   script:
     - mv build/docs/html public
   artifacts:
@@ -55,6 +57,7 @@ pages:
 
 package:
   stage: deploy
+  image: ubuntu:18.04
   dependencies:
     - build
   script:

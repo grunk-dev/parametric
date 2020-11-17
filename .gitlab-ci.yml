@@ -3,7 +3,8 @@ image: ubuntu:18.04
 build:
   stage: build
   before_script:
-     - apt-get -qq update && apt -qq -y install make cmake g++ git doxygen python3-pip
+     - apt-get -qq update && apt -qq -y install make g++ git doxygen python3-pip snapd
+     - snap install cmake
      - pip3 install 'Sphinx>=2.4.0,<3.0.0' sphinx-rtd-theme 'breathe<4.15.0' m2r
   script:
     - mkdir build && cd build

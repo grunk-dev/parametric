@@ -11,6 +11,7 @@
 #include <vector>
 #include <type_traits> // for std::false_type
 #include <string>
+#include <stdexcept>
 
 namespace parametric
 {
@@ -25,6 +26,14 @@ class DAGNode;
  * @brief A shared pointer to a DAG node
  */
 typedef std::shared_ptr<parametric::DAGNode> NodeRef;
+
+
+/**
+     * @brief Adds the node "parent" as parent to the node "child"
+     * @param child The node to which "parent" is added as a parent.
+     * @param parent The parent node to be added.
+     */
+void add_parent(const NodeRef& child, const NodeRef& parent);
 
 /**
  * @brief This class provides a basis node of a directed acyclic graph (DAG)
@@ -155,7 +164,7 @@ public:
             }
         }
         else {
-            for (NodeRef parent : parents) {
+            for (const NodeRef& parent : parents) {
                 parent->accept(v, depth + 1, dir);
             }
         }
@@ -181,7 +190,7 @@ public:
             }
         }
         else {
-            for (NodeRef parent : parents) {
+            for (const NodeRef& parent : parents) {
                 parent->accept(v, depth + 1, dir);
             }
         }
@@ -243,7 +252,7 @@ public:
 
     virtual ~DAGNode()
     {
-        for (auto parent : parents) {
+        for (const auto& parent : parents) {
             if (parent) {
                 remove_parent(*parent);
             }

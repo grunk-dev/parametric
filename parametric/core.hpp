@@ -68,7 +68,7 @@ public:
     /**
      * @brief Write access to the value
      */
-    T& value()
+    T& change_value()
     {
         return m_holder->AccessValue();
     }

@@ -18,7 +18,7 @@ namespace parametric
 {
 
 template <typename T>
-class InterfaceParam;
+class OutputParam;
 
 /**
  * @brief This class encapsulates an arbitrary type to be used
@@ -118,7 +118,7 @@ public:
      */
     void set_id(const std::string& id)
     {
-        m_holder->SetId(id);
+        m_holder->set_id(id);
     }
 
     /**
@@ -130,7 +130,7 @@ public:
     }
 
 private:
-    friend InterfaceParam<T>;
+    friend OutputParam<T>;
     param(const std::shared_ptr<impl::param_holder<T>>& holder)
         : m_holder(holder)
     {}
@@ -140,21 +140,21 @@ private:
 
 /**
  * @brief Convenience function to create a parameter of type T with value v
- */
-template <class T>
-param<T> new_param(const T& v)
-{
-    return param<T>(v, TypeName<T>::Get());
-}
-
-/**
- * @brief Convenience function to create a parameter of type T with value v
  * and identifier id
  */
 template <class T>
 param<T> new_param(const T& v, const std::string& id)
 {
     return param<T>(v, id);
+}
+
+/**
+ * @brief Convenience function to create a parameter of type T with value v
+ */
+template <class T>
+param<T> new_param(const T& v)
+{
+    return parametric::new_param(v, TypeName<T>::Get());
 }
 
 /**
@@ -188,19 +188,19 @@ void add_parent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, cons
  * it has to be checked with InterfaceParam::Expired() for validity.
  */
 template <class T>
-class InterfaceParam
+class OutputParam
 {
 public:
     /**
      * @brief Creates interface parameter placeholder
      */
-    InterfaceParam()
+    OutputParam()
     {}
 
     /**
      * @brief Creates interface parameter referencing parameter p
      */
-    explicit InterfaceParam(const parametric::param<T>& p)
+    explicit OutputParam(const parametric::param<T>& p)
         : p_holder(p.node_pointer())
     {}
 
@@ -232,14 +232,14 @@ public:
     /**
      * @brief Assigns the parameter p to the interface
      */
-    InterfaceParam<T>& operator=(const parametric::param<T>& p)
+    OutputParam<T>& operator=(const parametric::param<T>& p)
     {
         p_holder = p.node_pointer();
         return *this;
     }
 
     /// @private
-    InterfaceParam<T>& operator=(const InterfaceParam<T>& p) = delete;
+    OutputParam<T>& operator=(const OutputParam<T>& p) = delete;
 
     /**
      * @brief Sets the value of the parameter, equal to param::SetValue
@@ -295,7 +295,7 @@ private:
  *
  * A compute node has to
  *  - inherit from parametric::ComputeNode
- *  - have a (private) parametric::InterfaceParam object for each input and output parameter
+ *  - have a (private) parametric::param object for each input and output parameter
  *  - register the input and output parameters using ComputeNode::depends_on and ComputeNode::computes
  *  - override the ComputeNode::eval method to perform the computation
  *  - be constructed with parametric::new_node  (Args &&... args)
@@ -320,8 +320,8 @@ private:
  *    }
  *
  *  private:
- *    const parametric::InterfaceParam<double> v1, v2;
- *    mutable parametric::InterfaceParam<double> theresult;
+ *    const parametric::param<double> v1, v2;
+ *    mutable parametric::OutputParam<double> theresult;
  *  };
  *  \endcode
  *
@@ -344,9 +344,9 @@ public:
      * to register input parameters.
      */
     template <typename T>
-    void depends_on(const InterfaceParam<T>& p)
+    void depends_on(const parametric::param<T>& p)
     {
-        inputs.push_back(p.param().node_pointer());
+        inputs.push_back(p.node_pointer());
     }
 
     /**
@@ -354,7 +354,7 @@ public:
      * to register output parameters.
      */
     template <typename T>
-    void computes(parametric::InterfaceParam<T>& intf_param, const parametric::param<T>& initial)
+    void computes(parametric::OutputParam<T>& intf_param, const parametric::param<T>& initial)
     {
         intf_param = initial;
         intf_param.invalidate();
@@ -506,8 +506,8 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 
     private:
         Fn _wrapped_function;
-        std::tuple<parametric::InterfaceParam<Args>...> _parameters;
-        mutable parametric::InterfaceParam<rtype> _resultNode;
+        std::tuple<parametric::param<Args>...> _parameters;
+        mutable parametric::OutputParam<rtype> _resultNode;
     };
 
     auto computeNode = new_node<ComputeWrapperNode>(std::forward<Fn>(wrapped_function),

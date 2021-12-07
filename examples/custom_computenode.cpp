@@ -26,9 +26,9 @@ public:
     }
 
 private:
-    // We have to define InterfaceParam for all inputs and output parameters
-    const parametric::InterfaceParam<double> v1, v2;
-    mutable parametric::InterfaceParam<double> theresult;
+    // We have to define all inputs and output parameters
+    const parametric::param<double> v1, v2;
+    mutable parametric::OutputParam<double> theresult;
 };
 
 int main()

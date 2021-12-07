@@ -10,6 +10,16 @@ namespace parametric {
 namespace impl
 {
 
+struct No {};
+template<typename T, typename Arg> No operator== (const T&, const Arg&);
+
+template<typename T, typename Arg = T>
+struct EqualityOperatorExists
+{
+    enum { value = !std::is_same<decltype(std::declval<T>() == std::declval<Arg>()), No>::value };
+};
+
+
 template <class ResultType>
 class param_holder : public DAGNode
 {
@@ -26,11 +36,11 @@ public:
 
     const ResultType& Value() const
     {
-        if (!value.is_initialized()) {
+        if (!IsValid()) {
             eval();
             // this assertion should only fail, if the node was not connected to its compute node
             // and therefore compute fails
-            assert(value.is_initialized());
+            assert(IsValid());
         }
 
         return value.value();
@@ -42,22 +52,36 @@ public:
         return value.value();
     }
 
-    void SetValue(const ResultType& v)
+    template<class T = ResultType>
+    typename std::enable_if<EqualityOperatorExists<T>::value>::type
+    SetValue(const ResultType& v)
     {
-        if (!value.is_initialized() || v != value.value()) {
+        if (!IsValid() || !(v == value.value())) {
             value = v;
             invalidate();
+            validFlag = true;
+        }
+    }
+
+    template<class T = ResultType>
+    typename std::enable_if<!EqualityOperatorExists<T>::value>::type
+    SetValue(const ResultType& v)
+    {
+        if (!IsValid()) {
+            value = v;
+            invalidate();
+            validFlag = true;
         }
     }
 
     bool IsValid() const
     {
-        return value.is_initialized();
+        return validFlag;
     }
 
     void Clear()
     {
-        value.reset();
+        validFlag = false;
     }
 
 protected:
@@ -77,9 +101,11 @@ private:
             NodeRef p = parents[0];
             p->eval();
         }
+        validFlag = true;
     }
 
     optional<ResultType> value;
+    mutable bool validFlag{false};
 };
 
 } // namespace impl

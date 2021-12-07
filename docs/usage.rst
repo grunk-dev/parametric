@@ -117,14 +117,14 @@ Here's an example to define a custom compute node:
         }
 
     private:
-        const parametric::InterfaceParam<double> v1, v2;
-        mutable parametric::InterfaceParam<double> theresult;
+        const parametric::param<double> v1, v2;
+        mutable parametric::OutputParam<double> theresult;
     };
 
 The important ingredients are:
 
  1. The class must be derived from ``parametric::ComputeNode``
- 2. The class must have  a (private) parametric::InterfaceParam object for each input and output parameter
+ 2. The class must have  a (private) ``parametric::param``  object for each input and and a ``parametric::OutputParam`` for each output parameter
  3. Input and output parameters must be registered using ``ComputeNode::depends_on`` and ``ComputeNode::computes``
  4. The class must override the ``ComputeNode::eval`` method to perform the actual computation
 

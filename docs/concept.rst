@@ -22,7 +22,7 @@ Compute nodes can have mulitple input and output parameters. A small parametric 
    :align: center
 
 In this figure, parameters are visualized as circles, compute nodes as boxes. The small blue rectangles of each
-compute node are so called *interface parameters*, which connect parameters with compute nodes.
+compute node are so called *output parameters*, which hold a reference to each output.
 
 Parameters are realized by the class ``parametric::param``. A parameter object contains
 

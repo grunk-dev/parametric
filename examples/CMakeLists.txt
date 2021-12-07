@@ -8,8 +8,10 @@ endif()
 
 add_executable(tutorial tutorial.cpp)
 add_executable(custom_computenode custom_computenode.cpp)
+add_executable(parametric_struct parametric_struct.cpp)
 target_link_libraries(tutorial PRIVATE parametric)
 target_link_libraries(custom_computenode PRIVATE parametric)
+target_link_libraries(parametric_struct PRIVATE parametric)
 
 # a CAD example
 find_package(OCE QUIET)

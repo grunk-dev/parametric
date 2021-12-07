@@ -31,10 +31,11 @@ The role of each object is described at the :ref:`design concept <concepts>` sec
 .. doxygenfunction:: parametric::new_param(const T&, const std::string&)
 .. doxygenfunction:: parametric::new_param(const T&)
 .. doxygenfunction:: parametric::new_param()
+.. doxygenfunction:: parametric::new_parametric_struct
 
 .. doxygenfunction:: parametric::eval
 
-.. doxygenclass:: parametric::InterfaceParam
+.. doxygenclass:: parametric::OutputParam
    :members:   
 
 .. doxygenclass:: parametric::ComputeNode

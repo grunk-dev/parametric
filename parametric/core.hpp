@@ -176,29 +176,26 @@ void add_parent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, cons
 }
 
 /**
- * @brief The interface parameter is used to define
- * the in- and outputs in ComputeNodes.
+ * @brief The output parameter is used to define
+ * theoutputs in ComputeNodes.
  *
- * Interface paramters thus define the parametric interface
- * of a compute node.
- *
- * Output interface parameters store a reference to an output parameter.
+ * Technically output parameters store a reference the resulting output parametric::param.
  * If an output parameter is not used in the code or no reference exist to it,
- * the interface output will be expired. Before setting an output value,
- * it has to be checked with InterfaceParam::Expired() for validity.
+ * the output will be expired. Before setting an output value,
+ * it has to be checked with OutputParam::Expired() for validity.
  */
 template <class T>
 class OutputParam
 {
 public:
     /**
-     * @brief Creates interface parameter placeholder
+     * @brief Creates output parameter placeholder
      */
     OutputParam()
     {}
 
     /**
-     * @brief Creates interface parameter referencing parameter p
+     * @brief Creates output parameter referencing parameter p
      */
     explicit OutputParam(const parametric::param<T>& p)
         : p_holder(p.node_pointer())
@@ -213,7 +210,7 @@ public:
     }
 
     /**
-     * @brief Returns the resulting parameter from the interface
+     * @brief Returns the resulting parameter from the output
      */
     parametric::param<T> param()
     {
@@ -230,7 +227,7 @@ public:
     }
 
     /**
-     * @brief Assigns the parameter p to the interface
+     * @brief Assigns the parameter p to the output
      */
     OutputParam<T>& operator=(const parametric::param<T>& p)
     {
@@ -277,7 +274,7 @@ public:
     }
 
     /**
-     * @brief Clears the value of the interface parameter
+     * @brief Clears the value of the output parameter
      *
      * This is required in the initialization of output parameters
      */
@@ -511,7 +508,76 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
     };
 
     auto computeNode = new_node<ComputeWrapperNode>(std::forward<Fn>(wrapped_function),
-                                                    std::forward<const parametric::param<Args>&>(parameterArgs)...);
+                                                    parameterArgs...);
+    return computeNode->result();
+}
+
+/**
+ * @brief This function creates a parametric version from a structure
+ * or an object that consists of parameters
+ *
+ * It propagates mutation of the member parameters to the object itself.
+ *
+ * The first argument is the structure/object to be wrapped,
+ * the following arguments are all parameters, which the object depends on
+ *
+ * Here's an example:
+ *
+ * \code{cpp}
+ * struct AStruct
+ * {
+ *   parametric::param<int> a{10, "a"};
+ *   parametric::param<int> b{100, "a"};
+ * };
+ *
+ * auto structSum = [](const AStruct& s) -> int {
+ *   return s.a.value() + s.b.value();
+ * };
+ *
+ * AStruct s;
+ * auto parametricS = parametric::new_parametric_struct(s, s.a, s.b);
+ * auto sum = parametric::eval(structSum, parametricS);
+ * \endcode
+ *
+ * The best practice is to create a helper function for each structure
+ * that contains parameters by creating a template specialization
+ * of parametric::new_param as follows:
+ *
+ * \code{cpp}
+ * template<>
+ * parametric::param<AStruct> parametric::new_param(const AStruct& s)
+ * {
+ *   return parametric::new_parametric_struct(s, s.a, s.b);
+ * }
+ * \endcode
+ */
+template<class T, typename... Args>
+parametric::param<T>
+new_parametric_struct(const T& the_struct, const parametric::param<Args>& ... parametric_members)
+{
+    class ParametricStructBuilder : public  parametric::ComputeNode
+    {
+    public:
+        ParametricStructBuilder(const T& parms, const parametric::param<Args>&... t ) {
+            // connect inputs
+            std::tuple<const parametric::param<Args>&...> _parameters(t...);
+
+            static_foreach(_parameters, [this](const auto & parm) {
+                this->depends_on(parm);
+            });
+            computes(out, parametric::param<T>(parms, TypeName<T>::Get()));
+        }
+
+        parametric::param<T> result()
+        {
+            return out.param();
+        }
+
+    private:
+        mutable parametric::OutputParam<T> out;
+    };
+
+    auto computeNode = parametric::new_node<ParametricStructBuilder>(the_struct, parametric_members...);
     return computeNode->result();
 }
 

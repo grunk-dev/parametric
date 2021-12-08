@@ -14,6 +14,7 @@ target_compile_features(parametric INTERFACE cxx_std_14)
 
 include(GNUInstallDirs)
 
+add_subdirectory(benchmarks)
 add_subdirectory(examples)
 add_subdirectory(tests)
 add_subdirectory(docs)

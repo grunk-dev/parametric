@@ -15,6 +15,12 @@ Custom compute nodes
 .. literalinclude :: ../examples/custom_computenode.cpp
    :language: cpp
 
+Parametric structures / compositions
+--------------------
+
+.. literalinclude :: ../examples/parametric_struct.cpp
+   :language: cpp
+
 A parametric CAD example
 ------------------------
 

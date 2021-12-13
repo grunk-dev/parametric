@@ -65,7 +65,7 @@ int main()
     BRepTools::Write(result, "result1.brep");
 
     std::cout << "change width of cylinder -> cylinder must be recomputed" << std::endl;
-    cyl_parms.value().SetW(8);
+    cyl_parms.change_value().SetW(8);
     BRepTools::Write(result, "result2.brep");
 
     std::cout << "change width of box -> box must be recomputed" << std::endl;

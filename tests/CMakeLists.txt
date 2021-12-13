@@ -16,6 +16,8 @@ set(TESTSOURCES
   dag.cpp
   eval.cpp
   customclass.cpp
+  invalidator.cpp
+  parametric_struct.cpp
 )
 
 add_executable(runUnitTests ${TESTSOURCES})

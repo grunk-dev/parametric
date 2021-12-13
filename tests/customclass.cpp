@@ -37,12 +37,12 @@ public:
 
 private:
     // Inputs Args
-    const parametric::InterfaceParam<double> m_op1;
+    const parametric::param<double> m_op1;
     double m_op2;
 
     // Outputs
-    mutable parametric::InterfaceParam<double> m_result_pow;
-    mutable parametric::InterfaceParam<double> m_result_div;
+    mutable parametric::OutputParam<double> m_result_pow;
+    mutable parametric::OutputParam<double> m_result_div;
 };
 
 

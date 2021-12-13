@@ -76,11 +76,11 @@ TEST(Eval, writeAccess)
 
     EXPECT_EQ(8, sum);
 
-    xy.value().SetX(10);
+    xy.change_value().SetX(10);
     EXPECT_EQ(13, sum);
 
     // create invalid param, accessing the value is therefore not possible
     parametric::param<XY> xy2("xy2");
-    EXPECT_THROW(xy2.value().SetX(10), std::runtime_error);
+    EXPECT_THROW(xy2.change_value().SetX(10), std::runtime_error);
 }
 

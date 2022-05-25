@@ -65,3 +65,11 @@ package:
   artifacts:
     paths:
       - parametric-current.tar.gz
+
+conan:
+  stage: deploy
+  script:
+    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
+    - conan create . paradigms/testing
+    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload parametric/0.1@paradigms/testing --all --remote=gitlab
+

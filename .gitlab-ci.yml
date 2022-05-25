@@ -1,6 +1,8 @@
 build:
   stage: build
   image: conanio/gcc72
+  tags:
+    - docker
   before_script:
      - sudo apt-get -qq update && sudo apt -qq -y install make git doxygen python3-pip
      - pip3 install 'Sphinx>=2.4.0,<3.0.0' sphinx-rtd-theme 'breathe<4.15.0' m2r 'mistune==0.8.4'
@@ -20,6 +22,8 @@ build:
 test:
   stage: test
   image: ubuntu:18.04
+  tags:
+    - docker
   script:
     - cd build/tests
     - ./runUnitTests --gtest_output="xml:report.xml"
@@ -37,6 +41,8 @@ benchmark:
 docs:
   stage: deploy
   image: ubuntu:18.04
+  tags:
+    - docker
   dependencies:
     - build
   script:
@@ -49,6 +55,8 @@ docs:
 pages:
   stage: deploy
   image: ubuntu:18.04
+  tags:
+    - docker
   script:
     - mv build/docs/html public
   artifacts:
@@ -58,6 +66,8 @@ pages:
 package:
   stage: deploy
   image: ubuntu:18.04
+  tags:
+    - docker
   dependencies:
     - build
   script:
@@ -68,6 +78,8 @@ package:
 
 conan:
   stage: deploy
+  tags:
+    - docker
   script:
     - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
     - conan create . paradigms/testing

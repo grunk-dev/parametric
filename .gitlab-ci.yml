@@ -80,6 +80,7 @@ package:
 
 conan:
   stage: deploy
+  image: conanio/gcc72
   tags:
     - docker
   script:

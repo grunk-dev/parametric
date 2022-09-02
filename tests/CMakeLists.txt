@@ -18,6 +18,7 @@ set(TESTSOURCES
   customclass.cpp
   invalidator.cpp
   parametric_struct.cpp
+  serialize.cpp
 )
 
 add_executable(runUnitTests ${TESTSOURCES})

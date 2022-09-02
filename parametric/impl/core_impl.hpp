@@ -7,6 +7,12 @@
 #include <cassert>
 
 namespace parametric {
+
+template <typename T>
+std::string serialize(T const&){
+    throw std::logic_error("Not implemented");
+}
+
 namespace impl
 {
 
@@ -32,6 +38,21 @@ public:
     param_holder(const std::string& id)
         : DAGNode(id)
     {
+    }
+
+    virtual std::string serialize() const override 
+    {
+        if (parents.size() == 0) {
+
+            // a root
+            if (value.is_initialized()) {
+                return parametric::serialize(value.value());
+            } else {
+                return TypeName<ResultType>::Get();
+            }
+        }
+
+        return "";
     }
 
     const ResultType& Value() const

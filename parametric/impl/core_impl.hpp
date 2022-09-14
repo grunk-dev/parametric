@@ -3,15 +3,11 @@
 
 #include <parametric/dag.hpp>
 #include <parametric/impl/optional.hpp>
+#include <parametric/serialization.hpp>
 
 #include <cassert>
 
 namespace parametric {
-
-template <typename T>
-std::string serialize(T const&){
-    throw std::logic_error("Not implemented");
-}
 
 namespace impl
 {

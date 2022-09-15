@@ -57,6 +57,12 @@ public:
         : _id(id)
     {}
 
+    /**
+     * @brief This virtual function can be overwritten for serializing 
+     * and deserializing nodes to std::string. 
+     * 
+     * @return std::string 
+     */
     virtual std::string serialize() const {
         return "";
     }

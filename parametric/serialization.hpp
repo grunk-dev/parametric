@@ -91,18 +91,6 @@ public:
     }
 
     /**
-     * @brief getter for the dirty flag
-     * 
-     * @return true if the stacks are dirty, because non-const 
-               references to the stacks have been returned previously
-     * @return false true if the stacks not dirty, and the stacks are
-               up to date.
-     */
-    bool is_dirty(){
-        return dirty;
-    }
-
-    /**
      * @brief returns a reference to the stack holding all string representations of 
      * compute nodes of the tree. Since this is a non-const reference, the 
      * Serializer is left in "dirty" state after a call to this function. 
@@ -113,6 +101,18 @@ public:
     {
         dirty = true;
         return compute_nodes;
+    }
+
+    /**
+     * @brief getter for the dirty flag
+     * 
+     * @return true if the stacks are dirty, because non-const 
+               references to the stacks have been returned previously
+     * @return false true if the stacks not dirty, and the stacks are
+               up to date.
+     */
+    bool is_dirty(){
+        return dirty;
     }
 
     /**

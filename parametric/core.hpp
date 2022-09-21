@@ -51,6 +51,11 @@ public:
         : m_holder(std::make_shared<impl::param_holder<T>>(id))
     {}
 
+    template <typename... Args>
+    param(in_place_t, Args const&... args, std::string const& id)
+        : m_holder(std::make_shared<impl::param_holder<T>>(in_place_t(), args..., id))
+    {}
+
     /// @private
     const std::shared_ptr<impl::param_holder<T>> node_pointer() const
     {
@@ -173,6 +178,22 @@ template <class T>
 param<T> new_param()
 {
     return param<T>(TypeName<T>::Get());
+}
+
+/**
+ * @brief Convenience function create a parameter of type T with value v.
+ * The value will be constructed in place, thus avoiding unncessary copies
+ * 
+ * @tparam T the type held by the parameter
+ * @tparam Args Constructor argument types of T
+ * @param args the arguments forwarded to the constructor of T
+ * @param id the identifier id
+ * @return param<T> the created parameter
+ */
+template <typename T, typename... Args>
+param<T> make_param(Args const&... args, std::string const& id){
+    static_assert(std::is_constructible<T, Args...>::value, "make_param: T is not constructible from given arguments");
+    return parametric::param<T>(in_place_t(), args..., id);
 }
 
 /// @private

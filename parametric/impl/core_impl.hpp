@@ -3,10 +3,12 @@
 
 #include <parametric/dag.hpp>
 #include <parametric/impl/optional.hpp>
+#include <parametric/serialization.hpp>
 
 #include <cassert>
 
 namespace parametric {
+
 namespace impl
 {
 
@@ -32,6 +34,21 @@ public:
     param_holder(const std::string& id)
         : DAGNode(id)
     {
+    }
+
+    virtual std::string serialize() const override 
+    {
+        if (parents.size() == 0) {
+
+            // a root
+            if (value.is_initialized()) {
+                return parametric::serialize(value.value());
+            } else {
+                return TypeName<ResultType>::Get();
+            }
+        }
+
+        return "";
     }
 
     const ResultType& Value() const

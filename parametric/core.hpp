@@ -114,6 +114,14 @@ public:
     }
 
     /**
+     * @brief Gets the identifier of the parameter
+     */
+    std::string id() const
+    {
+        return m_holder->id();
+    }
+
+    /**
      * @brief Sets the identifier of the parameter
      */
     void set_id(const std::string& id)

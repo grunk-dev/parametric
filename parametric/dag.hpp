@@ -58,6 +58,16 @@ public:
     {}
 
     /**
+     * @brief This virtual function can be overwritten for serializing 
+     * and deserializing nodes to std::string. 
+     * 
+     * @return std::string 
+     */
+    virtual std::string serialize() const {
+        return "";
+    }
+
+    /**
      * @brief Adds the node "parent" as parent to the node "child"
      * @param child The node to which "parent" is added as a parent.
      * @param parent The parent node to be added.
@@ -159,13 +169,15 @@ public:
         if (dir == Direction::down) {
             for (std::weak_ptr<DAGNode>& child : childs) {
                 if (NodeRef c = child.lock()) {
-                    c->accept(v, depth + 1, dir);
+                    auto const& cc = *c; // const ref to child
+                    cc.accept(v, depth + 1, dir);
                 }
             }
         }
         else {
             for (const NodeRef& parent : parents) {
-                parent->accept(v, depth + 1, dir);
+                auto const& p = *parent; // const ref to parent
+                p.accept(v, depth + 1, dir);
             }
         }
     }

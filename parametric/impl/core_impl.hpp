@@ -12,6 +12,8 @@ namespace parametric {
 namespace impl
 {
 
+
+
 struct No {};
 template<typename T, typename Arg> No operator== (const T&, const Arg&);
 
@@ -50,6 +52,13 @@ public:
 
         return "";
     }
+
+    // in-place constructor
+    template <typename... Args>
+    param_holder(in_place_t, Args const&... args, std::string const& id)
+        : DAGNode(id)
+        , value(in_place_t(), args...)
+    {}
 
     const ResultType& Value() const
     {

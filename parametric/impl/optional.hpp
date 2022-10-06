@@ -7,10 +7,13 @@
 namespace parametric
 {
 
+    struct in_place_t {};
+
     // a optional class similar to std::optional
     template <typename T> class optional
     {
     public:
+
         optional()
             : data(nullptr)
         {
@@ -20,6 +23,13 @@ namespace parametric
             : data(new T(t))
         {
         }
+
+        // in-place constructor
+        template <typename... Args>
+        optional(in_place_t, Args const&... args)
+            : data(std::make_unique<T>(args...))
+        {}
+
         const T& value() const
         {
             if (!data) {

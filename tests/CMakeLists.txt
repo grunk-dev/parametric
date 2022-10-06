@@ -17,6 +17,7 @@ set(TESTSOURCES
   eval.cpp
   customclass.cpp
   invalidator.cpp
+  param.cpp
   parametric_struct.cpp
   serialize.cpp
 )

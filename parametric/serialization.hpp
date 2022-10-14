@@ -18,7 +18,7 @@ namespace parametric {
  * @return std::string A serialized string
  */
 template <typename T>
-std::string serialize(T const&){
+inline std::string serialize(T const&){
     throw std::logic_error("Not implemented");
 }
 

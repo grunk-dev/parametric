@@ -82,7 +82,7 @@ create-conan-package:
   stage: deploy
   image: conanio/gcc72
   except:
-    - main
+    - master
   tags:
     - docker
   script:
@@ -92,7 +92,7 @@ create-and-upload-conan-package:
   stage: deploy
   image: conanio/gcc72
   only:
-    - main
+    - master
   tags:
     - docker
   script:

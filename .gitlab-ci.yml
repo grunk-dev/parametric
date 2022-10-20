@@ -78,13 +78,27 @@ package:
     paths:
       - parametric-current.tar.gz
 
-conan:
+create-conan-package:
   stage: deploy
   image: conanio/gcc72
+  except:
+    - main
   tags:
     - docker
   script:
-    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
     - conan create . paradigms/testing
-    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload parametric/0.1@paradigms/testing --all --remote=gitlab
+
+create-and-upload-conan-package:
+  stage: deploy
+  image: conanio/gcc72
+  only:
+    - main
+  tags:
+    - docker
+  script:
+    - conan create . paradigms/testing
+# parse version string from cmake
+    - PARAMETRIC_VERSION = $(grep -oP "project\(parametric VERSION \K(.*)+(?=\))" CMakeLists.txt)
+    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
+    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload parametric/$PARAMETRIC_VERSION --all --remote=gitlab
 

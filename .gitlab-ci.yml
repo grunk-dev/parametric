@@ -100,5 +100,5 @@ create-and-upload-conan-package:
 # parse version string from cmake
     - PARAMETRIC_VERSION=$(grep -oP "project\(parametric VERSION \K(.*)+(?=\))" CMakeLists.txt)
     - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
-    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload parametric/$PARAMETRIC_VERSION --all --remote=gitlab
+    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION --all --remote=gitlab
 

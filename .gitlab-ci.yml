@@ -118,17 +118,24 @@ create-conan-package-ubuntu:
   except:
     - master
   stage: deploy
+  tags:
+  - ubuntu
+  - docker
+  image: conanio/gcc7-ubuntu18.04
   before_script: *configure_libcxx
   script:
   # I don't know why I have to explicitly set libcxx here for clang to pick it up...
-    - conan create . -s compiler.libcxx=libstdc++11
-  <<: *ubuntu_config
+  - conan create . -s compiler.libcxx=libstdc++11
 
 create-and-upload-conan-development-package-ubuntu:
 # This job creates the current development conan package. Runs with every commit on main branch
   only:
     - master
   stage: deploy
+  tags:
+  - ubuntu
+  - docker
+  image: conanio/gcc7-ubuntu18.04
   before_script: *configure_libcxx
   script:
   # I don't know why I have to explicitly set libcxx here for clang to pick it up...
@@ -137,7 +144,6 @@ create-and-upload-conan-development-package-ubuntu:
     - PARAMETRIC_VERSION=$(grep -oP "project\(parametric VERSION \K(.*)+(?=\))" CMakeLists.txt)
     - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
     - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION@paradigms/testing --all --remote=gitlab
-  <<: *ubuntu_config
 
 create-and-upload-conan-package-ubuntu:
 # This job creates new release packages. It should only run on git tags
@@ -146,6 +152,10 @@ create-and-upload-conan-package-ubuntu:
   except:
     - branches
   stage: deploy
+  tags:
+  - ubuntu
+  - docker
+  image: conanio/gcc7-ubuntu18.04
   before_script: *configure_libcxx
   script:
   # I don't know why I have to explicitly set libcxx here for clang to pick it up...
@@ -154,46 +164,6 @@ create-and-upload-conan-package-ubuntu:
     - PARAMETRIC_VERSION=$(grep -oP "project\(parametric VERSION \K(.*)+(?=\))" CMakeLists.txt)
     - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
     - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION --all --remote=gitlab
-  <<: *ubuntu_config
-
-
-create-conan-package-windows:
-# This job tests the package creation. It should run on all feature branches, not on main branch
-  except:
-    - master
-  stage: deploy
-  before_script: *configure_msvc
-  script:
-    - conan create .
-  <<: *windows_config
-
-create-and-upload-conan-development-package-windows:
-# This job creates the current development conan package. Runs with every commit on main branch
-  only:
-    - master
-  stage: deploy
-  before_script: *configure_msvc
-  script:
-    - conan create . paradigms/testing
-    - $PARAMETRIC_VERSION=(Get-Content CMakeLists.txt | Select-String -Pattern "project\(parametric VERSION (.*)+(?=\))").Matches.Groups.Captures[1].Value
-    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
-    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION@paradigms/testing --all --remote=gitlab
-  <<: *windows_config
-
-create-and-upload-conan-package-windows:
-# This job creates new release packages. It should only run on git tags
-  only:
-    - tags
-  except:
-    - branches
-  stage: deploy
-  before_script: *configure_msvc
-  script:
-    - conan create .
-    - $PARAMETRIC_VERSION=(Get-Content CMakeLists.txt | Select-String -Pattern "project\(parametric VERSION (.*)+(?=\))").Matches.Groups.Captures[1].Value
-    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
-    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION --all --remote=gitlab
-  <<: *windows_config
 
 docs:
   stage: deploy

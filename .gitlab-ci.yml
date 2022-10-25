@@ -1,104 +1,235 @@
-build:
-  stage: build
-  image: conanio/gcc72
-  tags:
-    - docker
-  before_script:
-     - sudo apt-get -qq update && sudo apt -qq -y install make git doxygen python3-pip
-     - pip3 install 'Sphinx>=2.4.0,<3.0.0' sphinx-rtd-theme 'breathe<4.15.0' m2r 'mistune==0.8.4'
-  script:
-    - mkdir build && cd build
-    - cmake -DCMAKE_BUILD_TYPE=Release -DPARAMETRIC_BUILD_DOCS=ON -DCMAKE_INSTALL_PREFIX=../parametric-current ..
-    - cmake --build .
-    - cmake --build . --target Sphinx
-    - cmake --build . --target install
-  artifacts:
-    expire_in: 2 hrs
-    paths:
-      - build/
-      - parametric-current/
+# YAML anchors
 
-# run tests using the binary built before
-test:
-  stage: test
-  image: ubuntu:18.04
+.ubuntu_config: &ubuntu_config
   tags:
-    - docker
+  - ubuntu
+  - docker
+  image: conanio/$COMPILER-ubuntu18.04
+  variables:
+    BUILD_DIR: build-$BUILD_TYPE-$COMPILER
+  parallel:
+    matrix:
+     - BUILD_TYPE: [Debug, Release]
+       COMPILER: [gcc7, gcc12, clang10, clang14] # one old one new
+
+.windows_config: &windows_config
+  tags:
+  - windows
+  - docker
+  image: abrarov/msvc-$COMPILER
+  variables:
+    BUILD_DIR: build-$BUILD_TYPE-$COMPILER
+    #workaround: have had concurrency problems, where jobs use the same image https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4793 and thus the same git repo
+    # using GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/$CI_PROJECT_PATH is not unique, because for some reason both Debug builds get the same $CI_CONCURRENT_ID 0
+    # and both Release builds get the same $CI_CONCURRENT_ID 1.
+    GIT_CLONE_PATH: $CI_BUILDS_DIR/$BUILD_TYPE-$COMPILER/$CI_PROJECT_PATH
+  parallel:
+    matrix:
+     - BUILD_TYPE: [Debug, Release]
+       COMPILER: ["2017", "2022"] # one old one new
+
+.configure_libcxx: &configure_libcxx
+# setup and update conan profile. Specifically, for GCC and Clang set compiler.libcxx
+  - |
+    conan profile new default --detect --force
+    if [ $COMPILER == *"gcc"* ] || [ $COMPILER == *"clang"* ]; then 
+      conan profile update settings.compiler.libcxx=libstdc++11 default
+    fi; 
+
+.configure_msvc: &configure_msvc
+# this is a bit hacky...
+# 1. call vcvars64.bat, which is in a different location depending on the compiler version
+# 2. create the environment in CMD and store the environment in a temporary file
+# 3. recreate the environment in Powershell from the temporary file.
+  - if ($COMPILER -eq 2017) { cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat`" && set > %temp%\vcvars.txt" }
+  - if ($COMPILER -eq 2022) { cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat`" && set > %temp%\vcvars.txt" }
+  - Get-Content "$env:temp\vcvars.txt" | Foreach-Object { if ($_ -match "^(.*?)=(.*)$") { Set-Content "env:\$($matches[1])" $matches[2] } }
+# 4. Install conan
+  - choco install conan -y
+# 5. Add conan to Path. I don't understand why I have to set the path explicitly and can't just call refreshenv in Powershell...
+  - $env:Path = "C:\Program Files\Conan\conan;$env:Path"
+
+# CI Jobs
+
+build-ubuntu:
+  #note: variables BUILD_DIR, BUILD_TYPE and COMPILER will be populated thru yaml anchor "ubuntu_config"
+  stage: build
+  before_script:
+  # setup and update conan profile. Specifically, for GCC set compiler.libcxx
+  - *configure_libcxx 
+  - sudo apt-get -qq update && sudo apt -qq -y install make git doxygen python3-pip
+  - pip3 install 'Sphinx>=2.4.0,<3.0.0' sphinx-rtd-theme 'breathe<4.15.0' m2r 'mistune==0.8.4'
   script:
-    - cd build/tests
-    - ./runUnitTests --gtest_output="xml:report.xml"
+  - mkdir $BUILD_DIR && cd $BUILD_DIR
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPARAMETRIC_BUILD_DOCS=ON -DCMAKE_INSTALL_PREFIX=../parametric-current
+  - cmake --build .
+  - cmake --build . --target Sphinx
+  - cmake --build . --target install
+  artifacts:
+    paths:
+    - $BUILD_DIR
+    - parametric-current/
+  <<: *ubuntu_config
+
+test-ubuntu:
+  #note: variables BUILD_DIR, BUILD_TYPE and COMPILER will be populated thru yaml anchor "ubuntu_config"
+  tags:
+  - ubuntu
+  - docker
+  image: conanio/$COMPILER-ubuntu18.04
+  stage: test
+  script:
+  - cd $BUILD_DIR/tests
+  - ./runUnitTests --gtest_output="xml:report.xml"
   artifacts:
     reports:
       junit: build/tests/report.xml
+  <<: *ubuntu_config
 
-benchmark:
-  stage: test
-  image: ubuntu:18.04
-  tags:
-    - docker
+build-windows:
+  #note: variables BUILD_DIR, BUILD_TYPE and COMPILER will be populated thru yaml anchor "windows_config"
+  stage: build
+  before_script: *configure_msvc
   script:
-    - cd build/benchmarks
-    - ./benchmarks
+  - mkdir $BUILD_DIR && cd $BUILD_DIR
+  - cmake .. -DPARAMETRIC_BUILD_DOCS=ON -DCMAKE_INSTALL_PREFIX=../parametric-current
+  - cmake --build . --config $BUILD_TYPE
+  - cmake --build . --target Sphinx
+  - cmake --build . --target install
+  artifacts:
+    paths:
+    - $BUILD_DIR
+  <<: *windows_config
+
+test-windows:
+  #note: variables BUILD_DIR, BUILD_TYPE and COMPILER will be populated thru yaml anchor "windows_config"
+  tags:
+  - windows
+  - docker
+  image: abrarov/msvc-$COMPILER
+  stage: test
+  script:
+  - cd $BUILD_DIR
+  - cd tests\$BUILD_TYPE
+  - ./runUnitTests --gtest_output="xml:report.xml"
+  <<: *windows_config
+
+create-conan-package-ubuntu:
+# This job tests the package creation. It should run on all feature branches, not on main branch
+  except:
+    - master
+  stage: deploy
+  before_script: *configure_libcxx
+  script:
+  # I don't know why I have to explicitly set libcxx here for clang to pick it up...
+    - conan create . -s compiler.libcxx=libstdc++11
+  <<: *ubuntu_config
+
+create-and-upload-conan-development-package-ubuntu:
+# This job creates the current development conan package. Runs with every commit on main branch
+  only:
+    - master
+  stage: deploy
+  before_script: *configure_libcxx
+  script:
+  # I don't know why I have to explicitly set libcxx here for clang to pick it up...
+    - conan create . paradigms/testing -s compiler.libcxx=libstdc++11
+# parse version string from cmake
+    - PARAMETRIC_VERSION=$(grep -oP "project\(parametric VERSION \K(.*)+(?=\))" CMakeLists.txt)
+    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
+    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION@paradigms/testing --all --remote=gitlab
+  <<: *ubuntu_config
+
+create-and-upload-conan-package-ubuntu:
+# This job creates new release packages. It should only run on git tags
+  only:
+    - tags
+  except:
+    - branches
+  stage: deploy
+  before_script: *configure_libcxx
+  script:
+  # I don't know why I have to explicitly set libcxx here for clang to pick it up...
+    - conan create . -s compiler.libcxx=libstdc++11
+# parse version string from cmake
+    - PARAMETRIC_VERSION=$(grep -oP "project\(parametric VERSION \K(.*)+(?=\))" CMakeLists.txt)
+    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
+    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION --all --remote=gitlab
+  <<: *ubuntu_config
+
+
+create-conan-package-windows:
+# This job tests the package creation. It should run on all feature branches, not on main branch
+  except:
+    - master
+  stage: deploy
+  before_script: *configure_msvc
+  script:
+    - conan create .
+  <<: *windows_config
+
+create-and-upload-conan-development-package-windows:
+# This job creates the current development conan package. Runs with every commit on main branch
+  only:
+    - master
+  stage: deploy
+  before_script: *configure_msvc
+  script:
+    - conan create . paradigms/testing
+    - $PARAMETRIC_VERSION=(Get-Content CMakeLists.txt | Select-String -Pattern "project\(parametric VERSION (.*)+(?=\))").Matches.Groups.Captures[1].Value
+    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
+    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION@paradigms/testing --all --remote=gitlab
+  <<: *windows_config
+
+create-and-upload-conan-package-windows:
+# This job creates new release packages. It should only run on git tags
+  only:
+    - tags
+  except:
+    - branches
+  stage: deploy
+  before_script: *configure_msvc
+  script:
+    - conan create .
+    - $PARAMETRIC_VERSION=(Get-Content CMakeLists.txt | Select-String -Pattern "project\(parametric VERSION (.*)+(?=\))").Matches.Groups.Captures[1].Value
+    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
+    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION --all --remote=gitlab
+  <<: *windows_config
 
 docs:
   stage: deploy
   image: ubuntu:18.04
   tags:
-    - docker
-  dependencies:
-    - build
+  - ubuntu
+  - docker
   script:
-    - mv build/docs/html parametric-docs
-    - tar czf parametric-docs.tar.gz parametric-docs
+  - mv  build-Release-gcc7/docs/html parametric-docs
+  - tar czf parametric-docs.tar.gz parametric-docs
   artifacts:
     paths:
-      - parametric-docs.tar.gz
+    - parametric-docs.tar.gz
       
 pages:
   stage: deploy
   image: ubuntu:18.04
   tags:
-    - docker
+  - ubuntu
+  - docker
   script:
-    - mv build/docs/html public
+  - mv build-Release-gcc7/docs/html public
   artifacts:
     paths:
-      - public
+    - public
 
 package:
   stage: deploy
   image: ubuntu:18.04
   tags:
-    - docker
-  dependencies:
-    - build
+  - ubuntu
+  - docker
   script:
-    - tar czf parametric-current.tar.gz parametric-current
+  - tar czf parametric-current.tar.gz parametric-current
   artifacts:
     paths:
-      - parametric-current.tar.gz
-
-create-conan-package:
-  stage: deploy
-  image: conanio/gcc72
-  except:
-    - master
-  tags:
-    - docker
-  script:
-    - conan create . paradigms/testing
-
-create-and-upload-conan-package:
-  stage: deploy
-  image: conanio/gcc72
-  only:
-    - master
-  tags:
-    - docker
-  script:
-    - conan create .
-# parse version string from cmake
-    - PARAMETRIC_VERSION=$(grep -oP "project\(parametric VERSION \K(.*)+(?=\))" CMakeLists.txt)
-    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
-    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION --all --remote=gitlab
+    - parametric-current.tar.gz
 

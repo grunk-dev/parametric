@@ -57,7 +57,7 @@ build-ubuntu:
   before_script:
   # setup and update conan profile. Specifically, for GCC set compiler.libcxx
   - *configure_libcxx 
-  - sudo apt-get -qq update && sudo apt -qq -y install make git doxygen python3-pip
+  - sudo apt-get -qq update && sudo apt -qq -y install doxygen
   - pip3 install 'Sphinx>=2.4.0,<3.0.0' sphinx-rtd-theme 'breathe<4.15.0' m2r 'mistune==0.8.4'
   script:
   - mkdir $BUILD_DIR && cd $BUILD_DIR

@@ -127,24 +127,6 @@ create-conan-package:
   # I don't know why I have to explicitly set libcxx here for clang to pick it up...
   - conan create . -s compiler.libcxx=libstdc++11
 
-create-and-upload-conan-development-package:
-# This job creates the current development conan package. Runs with every commit on main branch
-  only:
-    - master
-  stage: deploy
-  tags:
-  - ubuntu
-  - docker
-  image: conanio/gcc7-ubuntu18.04
-  before_script: *configure_libcxx
-  script:
-  # I don't know why I have to explicitly set libcxx here for clang to pick it up...
-    - conan create . paradigms/testing -s compiler.libcxx=libstdc++11
-# parse version string from cmake
-    - PARAMETRIC_VERSION=$(grep -oP "project\(parametric VERSION \K(.*)+(?=\))" CMakeLists.txt)
-    - conan remote add gitlab ${CI_API_V4_URL}/projects/21487/packages/conan
-    - CONAN_LOGIN_USERNAME=ci_user CONAN_PASSWORD=${CI_JOB_TOKEN} conan upload -c parametric/$PARAMETRIC_VERSION@paradigms/testing --all --remote=gitlab
-
 create-and-upload-conan-package:
 # This job creates new release packages. It should only run on git tags
   only:

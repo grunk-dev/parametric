@@ -14,7 +14,7 @@ namespace TupleTools_private
         (void)std::initializer_list<char> {((void)f(std::integral_constant<unsigned, Is>()), '0')...};
     }
 
-    template <class Tuple, class F, typename ElemFun, size_t... Is>
+    template <class Tuple, class F, typename ElemFun, std::size_t... Is>
     constexpr auto apply_impl(F f, Tuple t, ElemFun ef,
                               std::index_sequence<Is...>)
     {

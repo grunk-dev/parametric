@@ -166,6 +166,8 @@ pages:
   tags:
   - ubuntu
   - docker
+  only:
+    - master
   script:
   - mv build-Release-gcc7/docs/html public
   artifacts:
@@ -178,6 +180,8 @@ package:
   tags:
   - ubuntu
   - docker
+  only:
+    - master
   script:
   - tar czf parametric-current.tar.gz parametric-current
   artifacts:

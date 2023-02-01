@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <parametric/dag.hpp>
+#include <parametric/typename.hpp>
 
 #include <stack>
 #include <unordered_map>
@@ -19,7 +20,7 @@ namespace parametric {
  */
 template <typename T>
 inline std::string serialize(T const&){
-    throw std::logic_error("Not implemented");
+    throw std::logic_error(std::string("No specialization for parametric::serialize found for data type \"") + TypeName<T>::Get() + "\".");
 }
 
 // forward declaration

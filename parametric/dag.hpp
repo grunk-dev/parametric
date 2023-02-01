@@ -63,9 +63,10 @@ public:
      * 
      * @return std::string 
      */
-    virtual std::string serialize() const {
-        return "";
-    }
+    virtual std::string serialize() const
+    {
+        throw std::logic_error("DAGNode::serialize is not implemented by the derived class.");
+    };
 
     /**
      * @brief Adds the node "parent" as parent to the node "child"

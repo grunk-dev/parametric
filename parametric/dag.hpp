@@ -239,7 +239,7 @@ public:
     /**
      * @brief returns the number of parents
      */
-    int num_parents() const {
+    size_t num_parents() const {
         return parents.size();
     }
 
@@ -247,7 +247,7 @@ public:
      * @brief returns the number of children
      */
 
-    int num_children() const {
+    size_t num_children() const {
         return childs.size();
     }
 

@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <parametric/dag.hpp>
+#include <parametric/typename.hpp>
 
 #include <stack>
 #include <unordered_map>
@@ -19,7 +20,7 @@ namespace parametric {
  */
 template <typename T>
 inline std::string serialize(T const&){
-    throw std::logic_error("Not implemented");
+    throw std::logic_error(std::string("No specialization for parametric::serialize found for data type \"") + TypeName<T>::Get() + "\".");
 }
 
 // forward declaration
@@ -184,12 +185,14 @@ private:
                 return;
             }
 
-            std::string str = n.serialize();
-            if (!str.empty()) {
+            bool is_root_parameter = (n.num_parents() == 0);
+            bool is_compute_node = ((depth % 2) == 1);
 
-                bool is_parameter = ((depth % 2) == 0);
+            if (is_root_parameter || is_compute_node) {
 
-                if (is_parameter) {
+                std::string str = n.serialize();
+
+                if (is_root_parameter) {
                     parameters.push({n.id(), str});
                 } else {
                     compute_nodes.push({n.id(), str});

@@ -40,17 +40,8 @@ public:
 
     virtual std::string serialize() const override 
     {
-        if (parents.size() == 0) {
-
-            // a root
-            if (value.is_initialized()) {
-                return parametric::serialize(value.value());
-            } else {
-                return TypeName<ResultType>::Get();
-            }
-        }
-
-        return "";
+        // this triggers evaluation of the node
+        return parametric::serialize(Value());
     }
 
     // in-place constructor

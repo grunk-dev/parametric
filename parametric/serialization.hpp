@@ -185,12 +185,14 @@ private:
                 return;
             }
 
-            std::string str = n.serialize();
-            if (!str.empty()) {
+            bool is_root_parameter = (n.num_parents() == 0);
+            bool is_compute_node = ((depth % 2) == 1);
 
-                bool is_parameter = ((depth % 2) == 0);
+            if (is_root_parameter || is_compute_node) {
 
-                if (is_parameter) {
+                std::string str = n.serialize();
+
+                if (is_root_parameter) {
                     parameters.push({n.id(), str});
                 } else {
                     compute_nodes.push({n.id(), str});

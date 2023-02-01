@@ -237,6 +237,21 @@ public:
     }
 
     /**
+     * @brief returns the number of parents
+     */
+    int num_parents() const {
+        return parents.size();
+    }
+
+    /**
+     * @brief returns the number of children
+     */
+
+    int num_children() const {
+        return childs.size();
+    }
+
+    /**
      * @brief Invalidates this node and all other childs
      */
     void invalidate()

@@ -1,10 +1,11 @@
-from conans import ConanFile, CMake
-from conans.tools import load
+from os.path import join
+from conan import ConanFile
+from conan.tools.files import load, copy
 import re
 
-def get_version():
+def get_version(conanfile=None):
     try:
-        content = load("CMakeLists.txt")
+        content = load(conanfile, "CMakeLists.txt")
         version = re.search("project\(parametric VERSION (.*)\)", content).group(1)
         return version.strip()
     except Exception as e:
@@ -21,7 +22,10 @@ class ParametricConan(ConanFile):
     exports_sources = "parametric/*"
     no_copy_source = True
 
+    def package_id(self):
+         self.info.clear()
+
     def package(self):
-        self.copy("*.hpp", dst="include/", excludes=("optional.hpp", "core_impl.hpp"))
-        self.copy("optional.hpp", dst="include/impl/optional.hpp")
-        self.copy("core_impl.hpp", dst="include/impl/core_impl.hpp")
+        copy(self, "*.hpp", self.source_folder, join(self.package_folder, "include/"), excludes=("optional.hpp", "core_impl.hpp"))
+        copy(self, "optional.hpp", self.source_folder, join(self.package_folder, "include/impl/optional.hpp"))
+        copy(self, "core_impl.hpp", self.source_folder, join(self.package_folder, "include/impl/core_impl.hpp"))

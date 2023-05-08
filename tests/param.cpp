@@ -19,6 +19,7 @@ public:
         
         Counter& operator=(Counter const&){
             m_copy_counter++;
+            return *this;
         }
 
         Counter(Counter&&){
@@ -27,6 +28,7 @@ public:
         
         Counter& operator=(Counter&&){
             m_move_counter++;
+            return *this;
         }
 
         ~Counter() {
@@ -89,4 +91,53 @@ TEST_F(Param, param_copy){
     EXPECT_EQ(m_copy_counter, 0);
     EXPECT_EQ(m_move_counter, 0);
     EXPECT_EQ(m_dtor_counter, 1);
+}
+
+namespace {
+
+    class Add : public parametric::ComputeNode
+    {
+    public:
+        Add(const parametric::param<double>& a, const parametric::param<double> b)
+            : _a(a), _b(b)
+            , _resultNode(parametric::new_param<double>())
+        {
+            depends_on(_a);
+            depends_on(_b);
+            computes(_resultNode, parametric::param<double>("result"));
+        }
+
+        void eval() const
+        {
+            if(!_resultNode.expired()) {
+                _resultNode.set_value(
+                    _a + _b
+                 );
+            }
+        }
+
+        parametric::param<double> result() const
+        {
+            return _resultNode;
+        }
+
+    private:
+        parametric::param<double> _a;
+        parametric::param<double> _b;
+        mutable parametric::OutputParam<double> _resultNode;
+    };
+}
+
+TEST_F(Param, compute_node_ptr_move)
+{
+    auto a = parametric::new_param(1.1);
+    auto b = parametric::new_param(2.2);
+
+    auto c = [&]{
+        auto tmp = parametric::new_node<Add>(a, b);
+        return std::move(tmp);
+        // tmp destructor is called here. This should not 
+        // release the nodes of the moved-to compute node ptr.
+    }();
+    EXPECT_NEAR(c->result().value(), 3.3, 1e-14);
 }

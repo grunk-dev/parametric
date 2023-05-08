@@ -450,7 +450,9 @@ public:
 
     ~compute_node_ptr()
     {
-        T::release_nodes(wrapped);
+        if (wrapped.use_count() == 1) {
+            T::release_nodes(wrapped);
+        }
     }
 
 private:

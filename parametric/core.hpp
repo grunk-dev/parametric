@@ -439,6 +439,7 @@ public:
         : wrapped(t)
     {
         T::connect(wrapped);
+        use_count = wrapped.use_count();
     }
 
     /**
@@ -450,12 +451,17 @@ public:
 
     ~compute_node_ptr()
     {
-        if (wrapped.use_count() == 1) {
+        if (wrapped.use_count() == use_count) {
             T::release_nodes(wrapped);
         }
     }
 
 private:
+    int use_count; // store the use_count of wrapped after connecting 
+                   // parents and children. This is needed to know when 
+                   // to release the nodes in the dtor: If wrapped.use_count()
+                   // is higher than this value, the compute_node_ptr has been
+                   // copied or moved and the nodes should not yet be released.
     std::shared_ptr<T> wrapped;
 };
 

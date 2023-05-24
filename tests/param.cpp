@@ -90,3 +90,52 @@ TEST_F(Param, param_copy){
     EXPECT_EQ(m_move_counter, 0);
     EXPECT_EQ(m_dtor_counter, 1);
 }
+
+namespace {
+    class Point
+    {
+    public:
+        Point() = default;
+
+        void setX(double x) {m_x = x;}
+        void setY(double y) {m_y = y;}
+
+        double getX() const { return m_x;}
+        double getY() const {return m_y;}
+
+
+    private:
+        double m_x, m_y;
+    };
+
+    double length(const Point& p)
+    {
+        return sqrt(p.getX()*p.getX() + p.getY()*p.getY());
+    }
+
+}
+
+TEST_F(Param, Setter)
+{
+    auto x = parametric::new_param(3.);
+    auto y = parametric::new_param(4.);
+
+    auto point = parametric::eval(
+        [](double x, double y) {
+            Point p;
+            p.setX(x);
+            p.setY(y);
+            return p;
+        },
+        x, y
+    );
+
+    auto len = parametric::eval(length, point);
+
+    EXPECT_NEAR(len.value(), 5, 1e-8);
+
+    x.change_value() = 40.;
+    y.change_value() = 30.;
+
+    EXPECT_NEAR(len.value(), 50, 1e-8);
+}

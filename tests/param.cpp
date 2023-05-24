@@ -1,6 +1,6 @@
 #include <parametric/core.hpp>
 #include <gtest/gtest.h>
-
+#include <math.h>
 
 class Param : public ::testing::Test 
 {

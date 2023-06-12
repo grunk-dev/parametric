@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 #include <type_traits> // for std::false_type
 #include <string>
@@ -287,6 +288,30 @@ public:
         }
     }
 
+    using ClonedNodeMap = std::unordered_map<DAGNode const*, std::shared_ptr<DAGNode>>; /**< @private */
+    
+    /**
+     * @brief Override this function to deep-copy a node
+     *
+     * The optional input cloned_nodes is used to keep track of the already cloned nodes. This way
+     * redundant clones can be avoided.
+     * 
+     */
+    virtual std::shared_ptr<DAGNode> clone(
+        std::shared_ptr<ClonedNodeMap> cloned_nodes = std::make_shared<ClonedNodeMap>()
+    ) 
+    {
+        auto& cloned = (*cloned_nodes)[this];
+        if (!cloned) {
+            cloned = std::make_shared<DAGNode>(*this);
+            cloned->childs.clear(); // we are only cloning in direction of ancestors
+            for (auto& parent : cloned->parents) {
+                parent = parent->clone(cloned_nodes);
+                parent->childs.push_back(cloned);
+            }
+        }
+        return cloned;
+    }
 
 private:
     std::string _id; /**< @private */

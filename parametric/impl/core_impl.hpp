@@ -2,10 +2,12 @@
 #define CORE_IMPL_HPP
 
 #include <parametric/dag.hpp>
-#include <parametric/impl/optional.hpp>
 #include <parametric/serialization.hpp>
 
+#include <memory>
+#include <optional>
 #include <cassert>
+#include <stdexcept>
 
 namespace parametric {
 
@@ -25,16 +27,16 @@ struct EqualityOperatorExists
 
 
 template <class ResultType>
-class param_holder : public DAGNode
+class param_holder : public ClonableDAGNode<param_holder<ResultType>>
 {
 public:
     param_holder(const ResultType& v, const std::string& id)
-        : DAGNode(id)
+        : ClonableDAGNode<param_holder<ResultType>>(id)
         , value(v)
     {
     }
     param_holder(const std::string& id)
-        : DAGNode(id)
+        : ClonableDAGNode<param_holder<ResultType>>(id)
     {
     }
 
@@ -46,9 +48,9 @@ public:
 
     // in-place constructor
     template <typename... Args>
-    param_holder(in_place_t, Args const&... args, std::string const& id)
-        : DAGNode(id)
-        , value(in_place_t(), args...)
+    param_holder(std::in_place_t, Args const&... args, std::string const& id)
+        : ClonableDAGNode<param_holder<ResultType>>(id)
+        , value(std::in_place_t(), args...)
     {}
 
     const ResultType& Value() const
@@ -60,22 +62,28 @@ public:
             assert(IsValid());
         }
 
-        return value.value();
+        if (value) {
+            return *value;
+        }
+        throw std::runtime_error("value not initialized");
     }
 
     ResultType& AccessValue()
     {
-        invalidate();
-        return value.value();
+        this->invalidate();
+        if (value) {
+            return *value;
+        }
+        throw std::runtime_error("value not initialized");
     }
 
     template<class T = ResultType>
     typename std::enable_if<EqualityOperatorExists<T>::value>::type
     SetValue(const ResultType& v)
     {
-        if (!IsValid() || !(v == value.value())) {
+        if (!IsValid() || !(v == *value)) {
             value = v;
-            invalidate();
+            this->invalidate();
             validFlag = true;
         }
     }
@@ -86,7 +94,7 @@ public:
     {
         if (!IsValid()) {
             value = v;
-            invalidate();
+            this->invalidate();
             validFlag = true;
         }
     }
@@ -112,16 +120,16 @@ private:
     {
         // TODO: Here we need a mutex to avoid multiple threads computing
         // The same value
-        assert(parents.size() <= 1);
+        assert(this->parents.size() <= 1);
 
-        if (parents.size() > 0) {
-            NodeRef p = parents[0];
+        if (this->parents.size() > 0) {
+            NodeRef p = this->parents[0];
             p->eval();
         }
         validFlag = true;
     }
 
-    optional<ResultType> value;
+    std::optional<ResultType> value;
     mutable bool validFlag{false};
 };
 

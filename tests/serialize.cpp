@@ -12,7 +12,7 @@ namespace {
         double age;
     };
 
-    class Bar : public parametric::ComputeNode
+    class Bar : public parametric::ComputeNode<Bar>
     {
     public:
         Bar(

@@ -95,7 +95,7 @@ TEST_F(Param, param_copy){
 
 namespace {
 
-    class Add : public parametric::ComputeNode
+    class Add : public parametric::ComputeNode<Add>
     {
     public:
         Add(const parametric::param<double>& a, const parametric::param<double> b)

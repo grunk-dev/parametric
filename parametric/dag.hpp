@@ -289,28 +289,23 @@ public:
     }
 
     using ClonedNodeMap = std::unordered_map<DAGNode const*, std::shared_ptr<DAGNode>>; /**< @private */
-    
+    static std::shared_ptr<ClonedNodeMap> new_cloned_node_map() {
+        return std::make_shared<ClonedNodeMap>();
+    }
+
     /**
-     * @brief Override this function to deep-copy a node
+     * @brief This function deep-copies a node together with all of its ancestors, while maintaining
+     * parent-child-relations
      *
      * The optional input cloned_nodes is used to keep track of the already cloned nodes. This way
      * redundant clones can be avoided.
      * 
      */
     virtual std::shared_ptr<DAGNode> clone(
-        std::shared_ptr<ClonedNodeMap> cloned_nodes = std::make_shared<ClonedNodeMap>()
-    ) 
+        std::shared_ptr<ClonedNodeMap> cloned_nodes = new_cloned_node_map()
+    ) const
     {
-        auto& cloned = (*cloned_nodes)[this];
-        if (!cloned) {
-            cloned = std::make_shared<DAGNode>(*this);
-            cloned->childs.clear(); // we are only cloning in direction of ancestors
-            for (auto& parent : cloned->parents) {
-                parent = parent->clone(cloned_nodes);
-                parent->childs.push_back(cloned);
-            }
-        }
-        return cloned;
+        throw std::runtime_error("DAGNode: No implementation for virtual method \"clone\" found.\n");
     }
 
 private:
@@ -325,6 +320,29 @@ protected:
      * specific invalidation logic of the node
      */
     virtual void invalidateSelf() {}
+};
+
+template <typename Derived>
+struct ClonableDAGNode : public DAGNode
+{
+    ClonableDAGNode(std::string const& id) : DAGNode(id) {}
+
+    std::shared_ptr<DAGNode> clone(
+        std::shared_ptr<DAGNode::ClonedNodeMap> cloned_nodes = DAGNode::new_cloned_node_map()
+    ) const override 
+    {
+        auto& cloned = (*cloned_nodes)[this];
+        if (!cloned) {
+            auto c = std::make_shared<Derived>(static_cast<Derived const&>(*this));
+            c->parents.clear();
+            c->childs.clear(); // we are only cloning in direction of ancestors
+            for (auto& parent : parents) {
+                add_parent(c, parent->clone(cloned_nodes));
+            }
+            cloned = c;
+        }
+        return cloned;
+    }
 };
 
 } // namespace parametric

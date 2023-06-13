@@ -34,7 +34,7 @@ enum struct BinaryOp {
     div
 };
 
-class MyBinaryOperation : public parametric::ComputeNode
+class MyBinaryOperation : public parametric::ComputeNode<MyBinaryOperation>
 {
 public:
     MyBinaryOperation(const char* id,

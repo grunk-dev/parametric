@@ -5,7 +5,7 @@
 
 
 // an example, how we can also use multiple outputs
-class CustomComputer : public parametric::ComputeNode
+class CustomComputer : public parametric::ComputeNode<CustomComputer>
 {
 public:
     CustomComputer(const parametric::param<double>& op1, double op2)
@@ -122,3 +122,49 @@ TEST(CustomClass, lifeTime)
     EXPECT_TRUE(pow_result.is_valid());
 
 }
+
+TEST(CustomClass, clone)
+{
+    // original parametric tree
+    auto a = parametric::new_param(4.0);
+    auto n = parametric::new_node<CustomComputer>(a, 2.0);
+    auto b = n->pow();
+    auto c = n->div();
+
+    // cloned parametric tree
+    auto cloned_nodes = parametric::DAGNode::new_cloned_node_map();
+    auto x = a.clone(cloned_nodes);
+    auto y = b.clone(cloned_nodes);
+    auto z = c.clone(cloned_nodes);
+
+    // check parent-child relations
+    EXPECT_TRUE(a.node_pointer()->precedes(*b.node_pointer()));
+    EXPECT_TRUE(a.node_pointer()->precedes(*c.node_pointer()));
+    EXPECT_TRUE(x.node_pointer()->precedes(*y.node_pointer()));
+    EXPECT_TRUE(x.node_pointer()->precedes(*z.node_pointer()));
+    EXPECT_FALSE(a.node_pointer()->precedes(*y.node_pointer()));
+    EXPECT_FALSE(a.node_pointer()->precedes(*z.node_pointer()));
+    EXPECT_FALSE(x.node_pointer()->precedes(*b.node_pointer()));
+    EXPECT_FALSE(x.node_pointer()->precedes(*c.node_pointer()));
+
+    // y,z should be copies of a,b and behave the same
+    EXPECT_NEAR(b.value(), 16., 1e-12);
+    EXPECT_NEAR(c.value(), 2., 1e-12);
+    EXPECT_NEAR(y.value(), 16., 1e-12);
+    // EXPECT_NEAR(z.value(), 2., 1e-12);
+
+    // // changing a should change b and c, but not y and z
+    // x.change_value() = 3.;
+
+    // EXPECT_TRUE(b.is_valid());
+    // EXPECT_NEAR(b.value(), 16., 1e-12);
+    // EXPECT_TRUE(c.is_valid());
+    // EXPECT_NEAR(c.value(), 2., 1e-12);
+
+    // EXPECT_FALSE(y.is_valid());
+    // EXPECT_NEAR(y.value(), 9., 1e-12);
+    // EXPECT_FALSE(z.is_valid());
+    // EXPECT_NEAR(z.value(), 1.5, 1e-12);
+
+}
+

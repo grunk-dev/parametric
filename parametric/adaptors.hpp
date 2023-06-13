@@ -7,7 +7,6 @@
 #ifndef PARAMETRIC_ADAPTORS_HPP
 #define PARAMETRIC_ADAPTORS_HPP
 
-#include <parametric/impl/optional.hpp>
 #include <parametric/dag.hpp>
 #include <parametric/core.hpp>
 

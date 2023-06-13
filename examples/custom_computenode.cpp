@@ -3,7 +3,7 @@
 
 // Lets define a custom compute node that
 // simply computes a division of two values
-class DivComputer : public parametric::ComputeNode
+class DivComputer : public parametric::ComputeNode<DivComputer>
 {
 public:
     DivComputer(const parametric::param<double>& op1, const parametric::param<double>& op2)

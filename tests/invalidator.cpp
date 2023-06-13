@@ -45,7 +45,7 @@ public:
 
     float get_result() const
     {
-        if (!my_result.is_initialized()) {
+        if (!my_result) {
             my_result = parms.a.value() + parms.b.value();
         }
 
@@ -53,7 +53,7 @@ public:
     }
 
 private:
-    mutable parametric::optional<float> my_result;
+    mutable std::optional<float> my_result;
 
 public:
     const MyParms& parms;

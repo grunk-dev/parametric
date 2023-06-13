@@ -52,8 +52,8 @@ public:
     {}
 
     template <typename... Args>
-    param(in_place_t, Args const&... args, std::string const& id)
-        : m_holder(std::make_shared<impl::param_holder<T>>(in_place_t(), args..., id))
+    param(std::in_place_t, Args const&... args, std::string const& id)
+        : m_holder(std::make_shared<impl::param_holder<T>>(std::in_place_t(), args..., id))
     {}
 
     /// @private
@@ -142,6 +142,18 @@ public:
         return m_holder->IsValid();
     }
 
+    param<T> clone(
+        std::shared_ptr<DAGNode::ClonedNodeMap> cloned_nodes = DAGNode::new_cloned_node_map()
+    ) const 
+    {
+        auto p = param(
+            std::static_pointer_cast<impl::param_holder<T>>(
+                m_holder->clone(cloned_nodes)
+            )
+        );
+        return p;
+    }
+
 private:
     friend OutputParam<T>;
     param(const std::shared_ptr<impl::param_holder<T>>& holder)
@@ -193,7 +205,7 @@ param<T> new_param()
 template <typename T, typename... Args>
 param<T> make_param(Args const&... args, std::string const& id){
     static_assert(std::is_constructible<T, Args...>::value, "make_param: T is not constructible from given arguments");
-    return parametric::param<T>(in_place_t(), args..., id);
+    return parametric::param<T>(std::in_place_t(), args..., id);
 }
 
 /// @private
@@ -320,7 +332,7 @@ private:
  * @brief This class is the base class to define arbitrary compute nodes.
  *
  * A compute node has to
- *  - inherit from parametric::ComputeNode
+ *  - inherit from parametric::ComputeNode<YourClass>
  *  - have a (private) parametric::param object for each input and output parameter
  *  - register the input and output parameters using ComputeNode::depends_on and ComputeNode::computes
  *  - override the ComputeNode::eval method to perform the computation
@@ -329,13 +341,13 @@ private:
  *  Example:
  *  \code{cpp}
  *  // define computing node
- *  class DivComputer : public parametric::ComputeNode
+ *  class DivComputer : public parametric::ComputeNode<DivComputer>
  *  {
  *  public:
  *    DivComputer(const parametric::param<double>& op1, const parametric::param<double>& op2) : v1(op1), v2(op2) {
- *      depends_on(v1);
- *      depends_on(v2);
- *      computes(theresult, parametric::param<double>("result"));
+ *      this->depends_on(v1);
+ *      this->depends_on(v2);
+ *      this->computes(theresult, parametric::param<double>("result"));
  *    }
  *
  *    parametric::param<double> result() const {return theresult;}
@@ -360,7 +372,8 @@ private:
  *  auto result = computer->result();
  * \endcode
  */
-class ComputeNode : public DAGNode
+template <typename Derived>
+class ComputeNode : public ClonableDAGNode<Derived>
 {
 public:
     virtual ~ComputeNode() {}
@@ -410,7 +423,7 @@ public:
 
 protected:
     ComputeNode()
-        : DAGNode("")
+        : ClonableDAGNode<Derived>("")
     {
     }
 
@@ -507,7 +520,7 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 
     using rtype = typename std::result_of<Fn(Args...)>::type;
 
-    class ComputeWrapperNode : public parametric::ComputeNode
+    class ComputeWrapperNode : public parametric::ComputeNode<ComputeWrapperNode>
     {
     public:
         ComputeWrapperNode(Fn&& ff, const parametric::param<Args>&... t)
@@ -516,9 +529,9 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
         {
             // connect inputs
             static_foreach(_parameters, [this](const auto & parm) {
-                depends_on(parm);
+                this->depends_on(parm);
             });
-            computes(_resultNode, parametric::param<rtype>("result"));
+            this->computes(_resultNode, parametric::param<rtype>("result"));
         }
 
         void eval() const
@@ -592,7 +605,7 @@ template<class T, typename... Args>
 parametric::param<T>
 new_parametric_struct(const T& the_struct, const parametric::param<Args>& ... parametric_members)
 {
-    class ParametricStructBuilder : public  parametric::ComputeNode
+    class ParametricStructBuilder : public  parametric::ComputeNode<ParametricStructBuilder>
     {
     public:
         ParametricStructBuilder(const T& parms, const parametric::param<Args>&... t ) {
@@ -602,7 +615,7 @@ new_parametric_struct(const T& the_struct, const parametric::param<Args>& ... pa
             static_foreach(_parameters, [this](const auto & parm) {
                 this->depends_on(parm);
             });
-            computes(out, parametric::param<T>(parms, TypeName<T>::Get()));
+            this->computes(out, parametric::param<T>(parms, TypeName<T>::Get()));
         }
 
         parametric::param<T> result()

@@ -142,20 +142,33 @@ TEST(CustomClass, clone)
     EXPECT_NEAR(b.value(), 16., 1e-12);
     EXPECT_NEAR(c.value(), 2., 1e-12);
     EXPECT_NEAR(y.value(), 16., 1e-12);
-    // EXPECT_NEAR(z.value(), 2., 1e-12);
+    EXPECT_NEAR(z.value(), 2., 1e-12);
 
-    // // changing a should change b and c, but not y and z
-    // x.change_value() = 3.;
+    // changing x should change y and z, but not b and c
+    x.change_value() = 3.;
 
-    // EXPECT_TRUE(b.is_valid());
-    // EXPECT_NEAR(b.value(), 16., 1e-12);
-    // EXPECT_TRUE(c.is_valid());
-    // EXPECT_NEAR(c.value(), 2., 1e-12);
+    EXPECT_TRUE(b.is_valid());
+    EXPECT_NEAR(b.value(), 16., 1e-12);
+    EXPECT_TRUE(c.is_valid());
+    EXPECT_NEAR(c.value(), 2., 1e-12);
 
-    // EXPECT_FALSE(y.is_valid());
-    // EXPECT_NEAR(y.value(), 9., 1e-12);
-    // EXPECT_FALSE(z.is_valid());
-    // EXPECT_NEAR(z.value(), 1.5, 1e-12);
+    EXPECT_FALSE(y.is_valid());
+    EXPECT_NEAR(y.value(), 9., 1e-12);
+    EXPECT_TRUE(z.is_valid());
+    EXPECT_NEAR(z.value(), 1.5, 1e-12);
+
+    // changing a should change b and c, but not x and y
+    a.change_value() = 5.;
+
+    EXPECT_FALSE(b.is_valid());
+    EXPECT_NEAR(b.value(), 25., 1e-12);
+    EXPECT_TRUE(c.is_valid());
+    EXPECT_NEAR(c.value(), 2.5, 1e-12);
+
+    EXPECT_TRUE(y.is_valid());
+    EXPECT_NEAR(y.value(), 9., 1e-12);
+    EXPECT_TRUE(z.is_valid());
+    EXPECT_NEAR(z.value(), 1.5, 1e-12);
 
 }
 

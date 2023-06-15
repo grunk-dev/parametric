@@ -413,12 +413,7 @@ public:
     decltype(auto) res() const { 
         assert(this->childs.size() == std::tuple_size_v<Results>);
         using value_type = typename std::tuple_element_t<i, Results>::value_type;
-        auto& child = this->childs[i];
-        if (!child.expired()) {
-            return dynamic_cast<impl::param_holder<value_type>&>(*(child.lock()));
-        } else {
-            throw std::logic_error("Cannot cast input node to parameter.\n");
-        }
+        return std::dynamic_pointer_cast<impl::param_holder<value_type>>(this->childs[i].lock());
     }
 
     decltype(auto) args_tuple() const {
@@ -536,12 +531,13 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
         
         void eval() const override final
         {
-            this->template res<0>().set_value(
-                std::apply(
-                    std::forward<const Fn>(_wrapped_function),
-                    this->args_tuple()
-                )
-            );
+            if (auto r = this->template res<0>(); r)
+                r->set_value(
+                    std::apply(
+                        std::forward<const Fn>(_wrapped_function),
+                        this->args_tuple()
+                    )
+                );
         }
 
     private:

@@ -51,16 +51,20 @@ public:
     {
         switch (operation) {
             case BinaryOp::plus:
-                res<0>().set_value(arg<0>().value() + arg<1>().value());
+                if (auto r = res<0>(); r)
+                    r->set_value(arg<0>().value() + arg<1>().value());
                 return;
             case BinaryOp::minus:
-                res<0>().set_value(arg<0>().value() - arg<1>().value());
+                if (auto r = res<0>(); r)
+                    r->set_value(arg<0>().value() - arg<1>().value());
                 return;
             case BinaryOp::mult:
-                res<0>().set_value(arg<0>().value() * arg<1>().value());
+                if (auto r = res<0>(); r)
+                    r->set_value(arg<0>().value() * arg<1>().value());
                 return;
             case BinaryOp::div:
-                res<0>().set_value(arg<0>().value() / arg<1>().value());
+                if (auto r = res<0>(); r)
+                    r->set_value(arg<0>().value() / arg<1>().value());
                 return;
             default:
                 throw std::logic_error("Not implemented\n");

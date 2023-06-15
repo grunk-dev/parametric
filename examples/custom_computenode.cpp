@@ -9,7 +9,8 @@ public:
     // Overriding eval does the actual computation
     void eval() const override
     {
-        res<0>().set_value(arg<0>().value() / arg<1>().value());
+        if (auto r = res<0>(); r)
+            r->set_value(arg<0>().value() / arg<1>().value());
     }
 
 };

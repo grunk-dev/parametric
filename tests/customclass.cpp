@@ -14,8 +14,10 @@ public:
 
     void eval() const
     {
-        res<0>().set_value(::pow(arg<0>().value(), m_op2));
-        res<1>().set_value(arg<0>().value() / m_op2);
+        if (auto r0 = res<0>(); r0)
+            r0->set_value(::pow(arg<0>().value(), m_op2));
+        if (auto r1 = res<1>(); r1)
+            r1->set_value(arg<0>().value() / m_op2);
     }
 
 private:

@@ -68,6 +68,10 @@ public:
         return m_holder;
     }
 
+    const NodeRef compute_node() const {
+        return m_holder->compute_node();
+    }
+
     /**
      * @brief Returns the current value of the parameter
      */

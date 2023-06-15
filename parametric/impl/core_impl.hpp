@@ -109,6 +109,17 @@ public:
         validFlag = false;
     }
 
+    const NodeRef compute_node() const {
+        // TODO: Here we need a mutex to avoid multiple threads computing
+        // The same value
+        assert(this->parents.size() <= 1);
+
+        if (this->parents.size() > 0) {
+            return this->parents[0];
+        }
+        return nullptr;
+    }
+
 protected:
     void invalidateSelf() override
     {
@@ -118,12 +129,7 @@ protected:
 private:
     void eval() const override
     {
-        // TODO: Here we need a mutex to avoid multiple threads computing
-        // The same value
-        assert(this->parents.size() <= 1);
-
-        if (this->parents.size() > 0) {
-            NodeRef p = this->parents[0];
+        if (auto p = compute_node(); p) {
             p->eval();
         }
         validFlag = true;

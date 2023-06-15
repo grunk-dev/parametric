@@ -58,7 +58,7 @@ TEST(Serialize, CustomComputeNode)
 
     std::string expected = 
         "{\n    \"name\": \"Bar\",\n    \"inputs\": \n    [\n        \"x\"\n        \"y\n    ]\n}\n";
-    EXPECT_EQ(z.node_pointer()->serialize(), expected);
+    EXPECT_EQ(z.compute_node()->serialize(), expected);
 }
 
 TEST(Serialize, Serializer)

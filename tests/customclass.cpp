@@ -5,54 +5,43 @@
 
 
 // an example, how we can also use multiple outputs
-class CustomComputer : public parametric::ComputeNode<CustomComputer>
+class CustomComputer : public parametric::ComputeNode<CustomComputer, parametric::Results<double, double>, parametric::Arguments<double>>
 {
 public:
-    CustomComputer(const parametric::param<double>& op1, double op2)
-        : m_op1(op1), m_op2(op2)
-    {
-        depends_on(m_op1);
-        computes(m_result_pow, parametric::param<double>("result_pow"));
-        computes(m_result_div, parametric::param<double>("result_div"));
-    }
-
-    parametric::param<double> pow() const
-    {
-        return m_result_pow;
-    }
-
-    parametric::param<double> div() const
-    {
-        return m_result_div;
-    }
+    CustomComputer(double op2)
+        : m_op2(op2)
+    {}
 
     void eval() const
     {
-        if (!m_result_pow.expired())
-            m_result_pow.set_value(::pow(m_op1, m_op2));
-        if (!m_result_div.expired()) {
-            m_result_div.set_value(m_op1 / m_op2);
-        }
+        res<0>().set_value(::pow(arg<0>().value(), m_op2));
+        res<1>().set_value(arg<0>().value() / m_op2);
     }
 
 private:
-    // Inputs Args
-    const parametric::param<double> m_op1;
     double m_op2;
-
-    // Outputs
-    mutable parametric::OutputParam<double> m_result_pow;
-    mutable parametric::OutputParam<double> m_result_div;
 };
+
+decltype(auto) custom_compute(parametric::param<double> op1, double op2){
+
+    struct CustomResult {
+        decltype(auto) pow() { return std::get<0>(parms); }
+        decltype(auto) div() { return std::get<1>(parms); }
+        std::tuple<parametric::param<double>, parametric::param<double>> parms;
+    };
+
+    auto ptr = std::make_shared<CustomComputer>(op2);
+    return CustomResult{parametric::compute(ptr, op1)};
+}
 
 
 TEST(CustomClass, multipleOuts)
 {
     auto b = parametric::new_param(4.0, "b");
 
-    auto node = parametric::new_node<CustomComputer>(b, 2.0);
-    auto pow_result = node->pow();
-    auto div_result = node->div();
+    auto node = custom_compute(b, 2.0);
+    auto pow_result = node.pow();
+    auto div_result = node.div();
 
     EXPECT_NEAR(16., pow_result, 1e-12);
     EXPECT_NEAR(2.0, div_result, 1e-12);
@@ -73,9 +62,9 @@ TEST(CustomClass, nestedScope)
         // We create the compute node in an inner scope
         // We want to test, wether the computation is still done
         // I.e. the node is not destroyed
-        auto node = parametric::new_node<CustomComputer>(b, 2.0);
-        pow_result = node->pow();
-        div_result = node->div();
+        auto node = custom_compute(b, 2.0);
+        pow_result = node.pow();
+        div_result = node.div();
     }
 
     EXPECT_NEAR(16., pow_result, 1e-12);
@@ -92,8 +81,8 @@ TEST(CustomClass, multipleComputer)
 
     // compute (b**2) / 2
     // This includes nesting of two compute nodes
-    auto pow_result = parametric::new_node<CustomComputer>(b, 2.0)->pow();
-    auto div_result = parametric::new_node<CustomComputer>(pow_result, 2.0)->div();
+    auto pow_result = custom_compute(b, 2.0).pow();
+    auto div_result = custom_compute(pow_result, 2.0).div();
 
     EXPECT_NEAR(16., pow_result, 1e-12);
     EXPECT_NEAR(8.0, div_result, 1e-12);
@@ -109,8 +98,8 @@ TEST(CustomClass, lifeTime)
 
     {
         auto b = parametric::new_param(4.0);
-        auto node = parametric::new_node<CustomComputer>(b, 2.0);
-        pow_result = node->pow();
+        auto node = custom_compute(b, 2.0);
+        pow_result = node.pow();
     }
     // no computation has be performed yet
     EXPECT_FALSE(pow_result.is_valid());
@@ -127,9 +116,9 @@ TEST(CustomClass, clone)
 {
     // original parametric tree
     auto a = parametric::new_param(4.0);
-    auto n = parametric::new_node<CustomComputer>(a, 2.0);
-    auto b = n->pow();
-    auto c = n->div();
+    auto n = custom_compute(a, 2.0);
+    auto b = n.pow();
+    auto c = n.div();
 
     // cloned parametric tree
     auto cloned_nodes = parametric::DAGNode::new_cloned_node_map();

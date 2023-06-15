@@ -34,49 +34,42 @@ enum struct BinaryOp {
     div
 };
 
-class MyBinaryOperation : public parametric::ComputeNode<MyBinaryOperation>
+class MyBinaryOperation : public parametric::ComputeNode<MyBinaryOperation, 
+                                                         parametric::Results<MyDouble>,
+                                                         parametric::Arguments<MyDouble, MyDouble>>
 {
 public:
-    MyBinaryOperation(const char* id,
-                      BinaryOp op,
-                      parametric::param<MyDouble> const& l,
-                      parametric::param<MyDouble> const& r
+    MyBinaryOperation(std::string const& id,
+                      BinaryOp op
     )
      : operation(op)
-     , left(l)
-     , right(r)
     {
-        set_id(id);
-        depends_on(left);
-        depends_on(right);
-        computes(output, parametric::param<MyDouble>(id));
+        this->set_id(id);
     }
 
     void eval() const override 
     {
-        if (!output.expired()) {
-            switch (operation) {
-                case BinaryOp::plus:
-                    output.set_value(left.value() + right.value());
-                    return;
-                case BinaryOp::minus:
-                    output.set_value(left.value() - right.value());
-                    return;
-                case BinaryOp::mult:
-                    output.set_value(left.value() * right.value());
-                    return;
-                case BinaryOp::div:
-                    output.set_value(left.value() / right.value());
-                    return;
-                default:
-                    throw std::logic_error("Not implemented\n");
-            }
+        switch (operation) {
+            case BinaryOp::plus:
+                res<0>().set_value(arg<0>().value() + arg<1>().value());
+                return;
+            case BinaryOp::minus:
+                res<0>().set_value(arg<0>().value() - arg<1>().value());
+                return;
+            case BinaryOp::mult:
+                res<0>().set_value(arg<0>().value() * arg<1>().value());
+                return;
+            case BinaryOp::div:
+                res<0>().set_value(arg<0>().value() / arg<1>().value());
+                return;
+            default:
+                throw std::logic_error("Not implemented\n");
         }
     }
 
     std::string serialize() const override 
     {
-        std::string out = left.id();
+        std::string out = arg<0>().id();
         switch (operation) {
             default:
             case BinaryOp::plus:
@@ -93,19 +86,12 @@ public:
                     break;
                 throw std::logic_error("Not implemented\n");
         }
-        out += right.id();
+        out += arg<1>().id();
         return out;
-    }
-
-    parametric::param<MyDouble> result() const {
-        return output;
     }
 
 private:
     BinaryOp operation;
-    parametric::param<MyDouble> const left;
-    parametric::param<MyDouble> const right;
-    parametric::OutputParam<MyDouble> mutable output;
 };
 
 parametric::param<MyDouble> my_eval(const char* id, 
@@ -114,7 +100,8 @@ parametric::param<MyDouble> my_eval(const char* id,
                                     parametric::param<MyDouble> const& right
 )
 {
-    return parametric::compute_node_ptr<MyBinaryOperation>(new MyBinaryOperation(id, op, left, right))->result();
+    auto ptr = std::make_shared<MyBinaryOperation>(id, op);
+    return parametric::compute(ptr, left, right);
 }
 
 namespace parametric {

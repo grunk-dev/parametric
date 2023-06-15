@@ -12,37 +12,19 @@ namespace {
         double age;
     };
 
-    class Bar : public parametric::ComputeNode<Bar>
+    class Bar : public parametric::ComputeNode<Bar, parametric::Results<Foo>, parametric::Arguments<Foo, Foo>>
     {
     public:
-        Bar(
-            parametric::param<Foo> const& l, 
-            parametric::param<Foo> const& r, 
-            std::string const& id
-        )
-         : left(l)
-         , right(r)
+        Bar(std::string const& id)
         {
             set_id(id);
-            depends_on(left);
-            depends_on(right);
-            computes(output, parametric::param<Foo>(id));
         }
 
         std::string serialize() const override
         {
             return "{\n    \"name\": \"Bar\",\n    \"inputs\": \n    [\n        \"" +
-                   left.id() + "\"\n        \"" + right.id() + "\n    ]\n}\n";
+                   arg<0>().id() + "\"\n        \"" + arg<1>().id() + "\n    ]\n}\n";
         }
-
-        parametric::param<Foo> get() const {
-            return output;
-        }
-
-    private:
-        parametric::param<Foo> const left;
-        parametric::param<Foo> const right;
-        parametric::OutputParam<Foo> mutable output;
     };
 }
 
@@ -72,11 +54,11 @@ TEST(Serialize, CustomComputeNode)
 {
     auto x = parametric::new_param(Foo{"XYZ", 44.3}, "x");
     auto y = parametric::new_param(Foo{"ABC", 1.23}, "y");
-    auto z = parametric::new_node<Bar>(x, y, "z");
+    auto z = parametric::compute(std::make_shared<Bar>("z"), x, y);
 
     std::string expected = 
         "{\n    \"name\": \"Bar\",\n    \"inputs\": \n    [\n        \"x\"\n        \"y\n    ]\n}\n";
-    EXPECT_EQ(z->serialize(), expected);
+    EXPECT_EQ(z.node_pointer()->serialize(), expected);
 }
 
 TEST(Serialize, Serializer)
@@ -84,8 +66,8 @@ TEST(Serialize, Serializer)
     // create a dependency tree
     auto a= parametric::new_param(Foo{"XYZ", 44.3}, "a");
     auto b = parametric::new_param(Foo{"ABC", 1.23}, "b");
-    auto c = parametric::new_node<Bar>(a, b, "c")->get();
-    auto d = parametric::new_node<Bar>(b, c, "d")->get();
+    auto c = parametric::compute(std::make_shared<Bar>("z"), a, b);
+    auto d = parametric::compute(std::make_shared<Bar>("d"), b, c);
 
     // create a serializer for d
     parametric::Serializer s(*(d.node_pointer()));

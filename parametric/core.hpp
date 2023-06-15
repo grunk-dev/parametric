@@ -10,6 +10,8 @@
 #include <parametric/impl/core_impl.hpp>
 
 #include <memory>
+#include <type_traits>
+#include <utility>
 #include <vector>
 #include <exception>
 #include <cassert>
@@ -33,6 +35,10 @@ template <typename T>
 class param
 {
 public:
+
+    using value_type = T;
+
+
     /**
      * @brief Creates a **valid** parameter from a value and an identifier.
      *
@@ -67,7 +73,7 @@ public:
      */
     const T& value() const
     {
-        return m_holder->Value();
+        return m_holder->value();
     }
 
     /**
@@ -75,7 +81,7 @@ public:
      */
     T& change_value()
     {
-        return m_holder->AccessValue();
+        return m_holder->access_value();
     }
 
     /**
@@ -98,7 +104,7 @@ public:
      */
     void set_value(const T& value)
     {
-        return m_holder->SetValue(value);
+        return m_holder->set_value(value);
     }
 
     /**
@@ -110,11 +116,11 @@ public:
     }
 
     /**
-     * @brief Sets the value of the parameter, see param::SetValue
+     * @brief Sets the value of the parameter, see param::set_value
      */
     param<T>& operator=(const T& other)
     {
-        m_holder->SetValue(other);
+        m_holder->set_value(other);
         return *this;
     }
 
@@ -280,12 +286,12 @@ public:
     OutputParam<T>& operator=(const OutputParam<T>& p) = delete;
 
     /**
-     * @brief Sets the value of the parameter, equal to param::SetValue
+     * @brief Sets the value of the parameter, equal to param::set_value
      */
     void set_value(const T& v)
     {
         if (!expired()) {
-            p_holder.lock()->SetValue(v);
+            p_holder.lock()->set_value(v);
         }
     }
 
@@ -372,126 +378,123 @@ private:
  *  auto result = computer->result();
  * \endcode
  */
-template <typename Derived>
+template <typename... T>
+using Arguments = std::tuple<param<T> const&...>;
+
+template <typename... R>
+using Results = std::tuple<param<R>...>;
+
+// new ComputeNode implementation. Users must
+// - inherit this class
+// - override eval, using the arg an res member functions
+template <typename Derived, typename Results, typename Arguments>
 class ComputeNode : public ClonableDAGNode<Derived>
 {
 public:
-    virtual ~ComputeNode() {}
+    using results_type = Results;
+    using arguments_type = Arguments;
 
-    /**
-     * @brief depends_on must be called in the derived classes constructor
-     * to register input parameters.
-     */
-    template <typename T>
-    void depends_on(const parametric::param<T>& p)
-    {
-        inputs.push_back(p.node_pointer());
+    ComputeNode() : ClonableDAGNode<Derived>("") {}; // make this private? better way to deal with ctor args?
+    virtual ~ComputeNode(){}
+    virtual void eval() const {};
+
+    static Results initialize_results() {
+        return initialize_results_impl(std::make_index_sequence<std::tuple_size_v<Results>>{});
     }
 
-    /**
-     * @brief computes must be called in the derived classes constructor
-     * to register output parameters.
-     */
-    template <typename T>
-    void computes(parametric::OutputParam<T>& intf_param, const parametric::param<T>& initial)
-    {
-        intf_param = initial;
-        intf_param.invalidate();
-        outputs.push_back(initial.node_pointer());
+    template <int i>
+    decltype(auto) arg() const { 
+        assert(this->parents.size() == std::tuple_size_v<Arguments>);
+        using value_type = typename std::decay_t<std::tuple_element_t<i, Arguments>>::value_type;
+        return dynamic_cast<impl::param_holder<value_type>&>(*(this->parents[i]));
     }
 
-    /// @private
-    static void connect(const std::shared_ptr<ComputeNode>& c)
-    {
-        assert(c);
-        for (const auto& input : c->inputs) {
-            add_parent(c, input);
-        }
-        for (const auto& output : c->outputs) {
-            add_parent(output, c);
+    template <int i>
+    decltype(auto) res() const { 
+        assert(this->childs.size() == std::tuple_size_v<Results>);
+        using value_type = typename std::tuple_element_t<i, Results>::value_type;
+        auto& child = this->childs[i];
+        if (!child.expired()) {
+            return dynamic_cast<impl::param_holder<value_type>&>(*(child.lock()));
+        } else {
+            throw std::logic_error("Cannot cast input node to parameter.\n");
         }
     }
 
-    /// @private
-    static void release_nodes(const std::shared_ptr<ComputeNode>& c)
-    {
-        if (!c) return;
-
-        c->inputs.clear();
-        c->outputs.clear();
+    decltype(auto) args_tuple() const {
+        return args_tuple_impl(std::make_index_sequence<std::tuple_size_v<Arguments>>{});
     }
-
-protected:
-    ComputeNode()
-        : ClonableDAGNode<Derived>("")
-    {
-    }
-
-    std::vector<std::shared_ptr<DAGNode> > inputs;  /**< @private */
-    std::vector<std::shared_ptr<DAGNode> > outputs; /**< @private */
-};
-
-/**
- * @brief This class handles to correct memory management of compute nodes
- *
- * It ensures the correct connection if inputs and outputs
- * To create a compute node, use ```parametric::new_node<MyComputeNode>(arg1, arg2)```
- */
-template <class T>
-class compute_node_ptr
-{
-public:
-
-    /**
-     * Wraps a raw pointer to a compute node
-     *
-     * @param t Pointer to a compute node created with ``new``
-     */
-    template<typename ... Args>
-    compute_node_ptr(T* t)
-        : wrapped(t)
-    {
-        T::connect(wrapped);
-        use_count = wrapped.use_count();
-    }
-
-    /**
-     * @brief The operator allows to access the wrapped objects members
-     */
-    std::shared_ptr<T> operator->() {
-        return wrapped;
-    }
-
-    ~compute_node_ptr()
-    {
-        if (wrapped.use_count() == use_count) {
-            T::release_nodes(wrapped);
-        }
-    }
-
 private:
-    int use_count; // store the use_count of wrapped after connecting 
-                   // parents and children. This is needed to know when 
-                   // to release the nodes in the dtor: If wrapped.use_count()
-                   // is higher than this value, the compute_node_ptr has been
-                   // copied or moved and the nodes should not yet be released.
-    std::shared_ptr<T> wrapped;
+
+    template <size_t... i>
+    static Results initialize_results_impl(std::index_sequence<i...>) {
+        return Results(parametric::new_param<typename std::tuple_element_t<i, Results>::value_type>()...);
+    };
+
+    template <size_t... i>
+    decltype(auto) args_tuple_impl(std::index_sequence<i...>) const {
+        return std::make_tuple(arg<i>().value()...);
+    }
 };
 
-/**
- * @brief Similar to std::shared_ptr, this function
- * should be used to correctly create a compute node
- *
- * Example:
- * \code{cpp}
- * parametric::new_node<MyComputeNode>(arg1, arg2)
- * \endcode
- */
-template <typename T, typename ... Args>
-parametric::compute_node_ptr<T> new_node(Args&& ... args)
-{
-    return compute_node_ptr<T>(new T(std::forward<Args>(args) ... ));
+namespace {
+
+    template <typename R>
+    struct compute_return_value_impl{};
+
+    template <typename... Rs>
+    struct compute_return_value_impl<Results<Rs...>> {
+        using type = Results<Rs...>;
+    };
+
+    template <typename R>
+    struct compute_return_value_impl<Results<R>> {
+        using type = std::tuple_element_t<0, Results<R>>;
+    };
+
+    template <>
+    struct compute_return_value_impl<Results<>> {
+        using type = std::shared_ptr<DAGNode>;
+    };
 }
+
+template <typename C>
+using compute_return_value = typename compute_return_value_impl<typename C::results_type>::type;
+
+// factory function that returns all output parameters of a compute node
+template <typename C, typename... Args>
+compute_return_value<C> compute(std::shared_ptr<C> const& ptr, param<Args>... args)
+{ 
+    constexpr size_t nresults = std::tuple_size_v<typename C::results_type>;
+
+    // connect ptr to arguments
+    (add_parent(ptr, args.node_pointer()), ...);
+
+    if constexpr (nresults > 0) {
+
+        auto res = C::initialize_results();
+
+        // connect res to ptr
+        std::apply([&](auto& ...x){(..., add_parent(x.node_pointer(), ptr));}, res);
+
+        if constexpr (nresults == 1) {
+            return std::get<0>(res);
+        } else {
+            return res;
+        }
+    } else {
+        return ptr;
+    }
+}
+
+template <typename C, typename... Args>
+compute_return_value<C> compute(param<Args>... args)
+{
+    auto ptr = std::shared_ptr<C>();
+    
+    return compute(ptr, args...);
+}
+
 
 /**
  * @brief This function creates a parametric version from a "normal" function
@@ -514,52 +517,38 @@ parametric::compute_node_ptr<T> new_node(Args&& ... args)
  * \endcode
  */
 template<typename Fn, typename... Args>
-constexpr parametric::param<typename std::result_of<Fn(Args...)>::type>
+constexpr decltype(auto)
 eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 {
 
-    using rtype = typename std::result_of<Fn(Args...)>::type;
+    using rtype = typename std::invoke_result<Fn, Args...>::type;
 
-    class ComputeWrapperNode : public parametric::ComputeNode<ComputeWrapperNode>
+    class ComputeWrapperNode
+     : public parametric::ComputeNode<
+        ComputeWrapperNode,
+        Results<rtype>,
+        Arguments<Args...>
+       >
     {
     public:
-        ComputeWrapperNode(Fn&& ff, const parametric::param<Args>&... t)
-            : _wrapped_function(ff), _parameters(t...)
-            , _resultNode(parametric::new_param<rtype>())
-        {
-            // connect inputs
-            static_foreach(_parameters, [this](const auto & parm) {
-                this->depends_on(parm);
-            });
-            this->computes(_resultNode, parametric::param<rtype>("result"));
-        }
 
-        void eval() const
+        ComputeWrapperNode(Fn f) : _wrapped_function(f) {}
+        
+        void eval() const override final
         {
-            if(!_resultNode.expired()) {
-                _resultNode.set_value(
-                    apply(std::forward<const Fn>(_wrapped_function),
-                      _parameters,
-                      [](const auto& parm){return parm.value();}
-                    )
-                 );
-            }
-        }
-
-        parametric::param<rtype> result() const
-        {
-            return _resultNode;
+            this->template res<0>().set_value(
+                std::apply(
+                    std::forward<const Fn>(_wrapped_function),
+                    this->args_tuple()
+                )
+            );
         }
 
     private:
         Fn _wrapped_function;
-        std::tuple<parametric::param<Args>...> _parameters;
-        mutable parametric::OutputParam<rtype> _resultNode;
     };
 
-    auto computeNode = new_node<ComputeWrapperNode>(std::forward<Fn>(wrapped_function),
-                                                    parameterArgs...);
-    return computeNode->result();
+    return compute(std::make_shared<ComputeWrapperNode>(wrapped_function), parameterArgs...);
 }
 
 /**
@@ -605,30 +594,12 @@ template<class T, typename... Args>
 parametric::param<T>
 new_parametric_struct(const T& the_struct, const parametric::param<Args>& ... parametric_members)
 {
-    class ParametricStructBuilder : public  parametric::ComputeNode<ParametricStructBuilder>
-    {
-    public:
-        ParametricStructBuilder(const T& parms, const parametric::param<Args>&... t ) {
-            // connect inputs
-            std::tuple<const parametric::param<Args>&...> _parameters(t...);
-
-            static_foreach(_parameters, [this](const auto & parm) {
-                this->depends_on(parm);
-            });
-            this->computes(out, parametric::param<T>(parms, TypeName<T>::Get()));
+    return parametric::eval(
+        [](auto const&... args){
+            return T{args...}; //To Do: this works only for composite types.
+                               //        might be better to have user provide a factory function?
         }
-
-        parametric::param<T> result()
-        {
-            return out.param();
-        }
-
-    private:
-        mutable parametric::OutputParam<T> out;
-    };
-
-    auto computeNode = parametric::new_node<ParametricStructBuilder>(the_struct, parametric_members...);
-    return computeNode->result();
+    );
 }
 
 } // namespace parametric

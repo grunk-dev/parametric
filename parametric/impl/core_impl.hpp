@@ -32,7 +32,7 @@ class param_holder : public ClonableDAGNode<param_holder<ResultType>>
 public:
     param_holder(const ResultType& v, const std::string& id)
         : ClonableDAGNode<param_holder<ResultType>>(id)
-        , value(v)
+        , m_value(v)
     {
     }
     param_holder(const std::string& id)
@@ -43,17 +43,17 @@ public:
     virtual std::string serialize() const override 
     {
         // this triggers evaluation of the node
-        return parametric::serialize(Value());
+        return parametric::serialize(value());
     }
 
     // in-place constructor
     template <typename... Args>
     param_holder(std::in_place_t, Args const&... args, std::string const& id)
         : ClonableDAGNode<param_holder<ResultType>>(id)
-        , value(std::in_place_t(), args...)
+        , m_value(std::in_place_t(), args...)
     {}
 
-    const ResultType& Value() const
+    const ResultType& value() const
     {
         if (!IsValid()) {
             eval();
@@ -62,27 +62,27 @@ public:
             assert(IsValid());
         }
 
-        if (value) {
-            return *value;
+        if (m_value) {
+            return *m_value;
         }
         throw std::runtime_error("value not initialized");
     }
 
-    ResultType& AccessValue()
+    ResultType& access_value()
     {
         this->invalidate();
-        if (value) {
-            return *value;
+        if (m_value) {
+            return *m_value;
         }
         throw std::runtime_error("value not initialized");
     }
 
     template<class T = ResultType>
     typename std::enable_if<EqualityOperatorExists<T>::value>::type
-    SetValue(const ResultType& v)
+    set_value(const ResultType& v)
     {
-        if (!IsValid() || !(v == *value)) {
-            value = v;
+        if (!IsValid() || !(v == *m_value)) {
+            m_value = v;
             this->invalidate();
             validFlag = true;
         }
@@ -90,10 +90,10 @@ public:
 
     template<class T = ResultType>
     typename std::enable_if<!EqualityOperatorExists<T>::value>::type
-    SetValue(const ResultType& v)
+    set_value(const ResultType& v)
     {
         if (!IsValid()) {
-            value = v;
+            m_value = v;
             this->invalidate();
             validFlag = true;
         }
@@ -129,7 +129,7 @@ private:
         validFlag = true;
     }
 
-    std::optional<ResultType> value;
+    std::optional<ResultType> m_value;
     mutable bool validFlag{false};
 };
 

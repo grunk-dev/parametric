@@ -479,12 +479,19 @@ template<class T, typename... Args>
 parametric::param<T>
 new_parametric_struct(const T& the_struct, const parametric::param<Args>& ... parametric_members)
 {
-    return parametric::eval(
-        [](auto const&... args){
-            return T{args...}; //To Do: this works only for composite types.
-                               //        might be better to have user provide a factory function?
-        }
-    );
+    // just need a type derived from ClonableDAGNode<Connector>
+    struct Connector : public ComputeNode<Connector,void, void> {};
+
+    auto c = std::make_shared<Connector>();
+    auto t = param<T>(the_struct, "");
+
+    // connect c to arguments
+    (add_parent(c, parametric_members.node_pointer()), ...);
+
+    // connect t to c
+    add_parent(t.node_pointer(), c);
+
+    return t;
 }
 
 } // namespace parametric

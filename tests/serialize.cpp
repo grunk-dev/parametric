@@ -66,8 +66,13 @@ TEST(Serialize, Serializer)
     // create a dependency tree
     auto a= parametric::new_param(Foo{"XYZ", 44.3}, "a");
     auto b = parametric::new_param(Foo{"ABC", 1.23}, "b");
-    auto c = parametric::compute(std::make_shared<Bar>("z"), a, b);
+    auto c = parametric::compute(std::make_shared<Bar>("c"), a, b);
     auto d = parametric::compute(std::make_shared<Bar>("d"), b, c);
+
+    //TODO: Previously Bar was configured, such that it propagates ids properly to its outputs.
+    //With the new design: Is this kind of configuration still possible?
+    c.set_id("c");
+    d.set_id("d");
 
     // create a serializer for d
     parametric::Serializer s(*(d.node_pointer()));

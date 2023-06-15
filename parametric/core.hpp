@@ -19,9 +19,6 @@
 namespace parametric
 {
 
-template <typename T>
-class OutputParam;
-
 /**
  * @brief This class encapsulates an arbitrary type to be used
  * as a parameter.
@@ -165,10 +162,10 @@ public:
     }
 
 private:
-    friend OutputParam<T>;
     param(const std::shared_ptr<impl::param_holder<T>>& holder)
         : m_holder(holder)
     {}
+
 
     std::shared_ptr<impl::param_holder<T>> m_holder;
 };
@@ -225,118 +222,6 @@ void add_parent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, cons
 {
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }
-
-/**
- * @brief The output parameter is used to define
- * theoutputs in ComputeNodes.
- *
- * Technically output parameters store a reference the resulting output parametric::param.
- * If an output parameter is not used in the code or no reference exist to it,
- * the output will be expired. Before setting an output value,
- * it has to be checked with OutputParam::Expired() for validity.
- */
-template <class T>
-class OutputParam
-{
-public:
-    /**
-     * @brief Creates output parameter placeholder
-     */
-    OutputParam()
-    {}
-
-    /**
-     * @brief Creates output parameter referencing parameter p
-     */
-    explicit OutputParam(const parametric::param<T>& p)
-        : p_holder(p.node_pointer())
-    {}
-
-    /**
-     * @brief Returns the resulting parameter from the interface
-     */
-    const parametric::param<T> param() const
-    {
-        return  parametric::param<T>(p_holder.lock());
-    }
-
-    /**
-     * @brief Returns the resulting parameter from the output
-     */
-    parametric::param<T> param()
-    {
-        return  parametric::param<T>(p_holder.lock());
-    }
-
-
-    /**
-     * @brief Conversion to a parameter
-     */
-    operator parametric::param<T>() const
-    {
-        return param();
-    }
-
-    /**
-     * @brief Assigns the parameter p to the output
-     */
-    OutputParam<T>& operator=(const parametric::param<T>& p)
-    {
-        p_holder = p.node_pointer();
-        return *this;
-    }
-
-    /// @private
-    OutputParam<T>& operator=(const OutputParam<T>& p) = delete;
-
-    /**
-     * @brief Sets the value of the parameter, equal to param::set_value
-     */
-    void set_value(const T& v)
-    {
-        if (!expired()) {
-            p_holder.lock()->set_value(v);
-        }
-    }
-
-    /**
-     * @brief Returns the value of the parameter, equal to param::Value
-     */
-    const T& value() const
-    {
-        assert(!expired());
-        return p_holder.lock()->Value();
-    }
-
-    /**
-     * @brief Returns the value of the parameter, equal to param::Value
-     */
-    operator const T& () const
-    {
-        return value();
-    }
-
-    /**
-     * @brief Expired returns, whether the reference to the parameter node is still valid
-     */
-    bool expired() const
-    {
-        return p_holder.expired();
-    }
-
-    /**
-     * @brief Clears the value of the output parameter
-     *
-     * This is required in the initialization of output parameters
-     */
-    void invalidate()
-    {
-        p_holder.lock()->Clear();
-    }
-
-private:
-    std::weak_ptr<impl::param_holder<T>> p_holder;
-};
 
 /**
  * @brief This class is the base class to define arbitrary compute nodes.

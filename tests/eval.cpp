@@ -84,3 +84,15 @@ TEST(Eval, writeAccess)
     EXPECT_THROW(xy2.change_value().SetX(10), std::runtime_error);
 }
 
+TEST(Eval, void_function)
+{
+    double x = 0.;
+    auto i = parametric::new_param(42.);
+    auto o = parametric::eval(
+        [&x](double o){ x=o; }, // this is a void lambda
+        i
+    );
+    EXPECT_EQ(x, 0.);
+    o->eval();
+    EXPECT_EQ(x, 42.);
+}

@@ -174,3 +174,33 @@ TEST(CustomClass, clone)
 
 }
 
+namespace {
+
+class MyVoidFun : public parametric::ComputeNode<MyVoidFun, parametric::Results<>, parametric::Arguments<double>>
+{
+public:
+
+    void eval() const override 
+    {
+        value = arg<0>().value();
+    }
+    
+    static double value;
+};
+
+double MyVoidFun::value = 0.;
+
+} // namespace
+
+TEST(CustomClass, void_function){
+    auto i = parametric::new_param(1.234);
+    auto o = parametric::compute<MyVoidFun>(i);
+
+    static_assert(std::is_same_v<decltype(o), std::shared_ptr<parametric::DAGNode>>);
+    EXPECT_EQ(MyVoidFun::value, 0.);
+    o->eval();
+    EXPECT_EQ(MyVoidFun::value, 1.234);
+
+    //reset
+    MyVoidFun::value = 0.;
+}

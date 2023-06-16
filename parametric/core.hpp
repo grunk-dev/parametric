@@ -502,7 +502,7 @@ compute_return_value<C> compute(std::shared_ptr<C> const& ptr, param<Args> const
 template <typename C, typename... Args>
 compute_return_value<C> compute(param<Args> const&... args)
 {
-    auto ptr = std::shared_ptr<C>();
+    auto ptr = std::make_shared<C>();
     
     return compute(ptr, args...);
 }
@@ -534,11 +534,12 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 {
 
     using rtype = typename std::invoke_result<Fn, Args...>::type;
+    using ResultsType = std::conditional_t<std::is_void_v<rtype>, Results<>, Results<rtype>>;
 
     class ComputeWrapperNode
      : public parametric::ComputeNode<
         ComputeWrapperNode,
-        Results<rtype>,
+        ResultsType,
         Arguments<Args...>
        >
     {
@@ -548,13 +549,21 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
         
         void eval() const override final
         {
-            if (auto r = this->template res<0>(); r)
+            if constexpr ( std::is_void_v<rtype> ) {
+                std::apply(
+                    std::forward<const Fn>(_wrapped_function),
+                    this->args_tuple()
+                );
+            } else {
+                if (auto r = this->template res<0>(); r) {
                 r->set_value(
                     std::apply(
                         std::forward<const Fn>(_wrapped_function),
                         this->args_tuple()
                     )
                 );
+            }
+            }
         }
 
     private:

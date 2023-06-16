@@ -25,11 +25,19 @@ namespace {
             return "{\n    \"name\": \"Bar\",\n    \"inputs\": \n    [\n        \"" +
                    arg<0>().id() + "\"\n        \"" + arg<1>().id() + "\n    ]\n}\n";
         }
+
+        void post_connect() const override 
+        {
+            // propagate the id of the compute node to the return value
+            if (auto r = res<0>(); r) {
+                r->set_id(id());
+            }
+        }
     };
 }
 
 namespace parametric {
-    template <> //why is template specialization needed? why does this not work with an overload?
+    template <>
     std::string serialize(Foo const& f)
     {
         std::ostringstream oss;
@@ -68,11 +76,6 @@ TEST(Serialize, Serializer)
     auto b = parametric::new_param(Foo{"ABC", 1.23}, "b");
     auto c = parametric::compute(std::make_shared<Bar>("c"), a, b);
     auto d = parametric::compute(std::make_shared<Bar>("d"), b, c);
-
-    //TODO: Previously Bar was configured, such that it propagates ids properly to its outputs.
-    //With the new design: Is this kind of configuration still possible?
-    c.set_id("c");
-    d.set_id("d");
 
     // create a serializer for d
     parametric::Serializer s(*(d.node_pointer()));

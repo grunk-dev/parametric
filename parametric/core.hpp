@@ -283,9 +283,11 @@ public:
     using results_type = Results;
     using arguments_type = Arguments;
 
-    ComputeNode() : ClonableDAGNode<Derived>("") {}; // make this private? better way to deal with ctor args?
+    ComputeNode() : ClonableDAGNode<Derived>("") {};
     virtual ~ComputeNode(){}
+
     virtual void eval() const {};
+    virtual void post_connect() const {};
 
     static Results initialize_results() {
         return initialize_results_impl(std::make_index_sequence<std::tuple_size_v<Results>>{});
@@ -323,19 +325,23 @@ private:
 
 namespace {
 
+    // Some template meta-programming to determine the return_type of parametric::compute
     template <typename R>
     struct compute_return_value_impl{};
 
+    // For more than one output, parametric::compute returns a Results instance
     template <typename... Rs>
     struct compute_return_value_impl<Results<Rs...>> {
         using type = Results<Rs...>;
     };
 
+    // For one output, parametric::compute returns a parameter - the first element of the Results instance
     template <typename R>
     struct compute_return_value_impl<Results<R>> {
         using type = std::tuple_element_t<0, Results<R>>;
     };
 
+    // For no outputs, parametric::compute returns a shared_ptr to the DAGNode representing the compute node.
     template <>
     struct compute_return_value_impl<Results<>> {
         using type = std::shared_ptr<DAGNode>;
@@ -351,22 +357,34 @@ compute_return_value<C> compute(std::shared_ptr<C> const& ptr, param<Args>... ar
 { 
     constexpr size_t nresults = std::tuple_size_v<typename C::results_type>;
 
-    // connect ptr to arguments
+    // make sure the post_connect callback is called at the end of this function using an RAII wrapper
+    struct raii {
+        std::shared_ptr<C> const& ptr;
+        ~raii() {
+            ptr->post_connect();
+        }
+    };
+    raii r{ptr};
+
+    // connect compute node to arguments
     (add_parent(ptr, args.node_pointer()), ...);
 
     if constexpr (nresults > 0) {
 
+        // initialize the results tuple
         auto res = C::initialize_results();
 
-        // connect res to ptr
+        // connect results to compute node
         std::apply([&](auto& ...x){(..., add_parent(x.node_pointer(), ptr));}, res);
 
         if constexpr (nresults == 1) {
+            // if there is just one result, don't return a tuple, but only a single parameter
             return std::get<0>(res);
         } else {
             return res;
         }
     } else {
+        // if there is no result, simply return the compute node pointer after it has been connected to the inputs
         return ptr;
     }
 }

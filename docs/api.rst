@@ -35,14 +35,11 @@ The role of each object is described at the :ref:`design concept <concepts>` sec
 
 .. doxygenfunction:: parametric::eval
 
-.. doxygenclass:: parametric::OutputParam
-   :members:   
-
 .. doxygenclass:: parametric::ComputeNode
    :members:
 
-
-.. doxygenfunction:: parametric::new_node
+.. doxygenfunction:: parametric::compute(std::shared_ptr<C> const&, param<Args> const&...)
+.. doxygenfunction:: parametric::compute(param<Args> const&...)
 
 .. _dag-api:
 

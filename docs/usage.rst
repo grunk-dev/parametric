@@ -97,43 +97,66 @@ Here's an example to define a custom compute node:
 
 .. code-block:: cpp
 
-    class DivComputer : public parametric::ComputeNode
+    class DivComputer : public parametric::ComputeNode<DivComputer, parametric::Results<double>, parametric::Arguments<double, double>>
     {
     public:
-        DivComputer(const parametric::param<double>& op1, const parametric::param<double>& op2)
-        : v1(op1), v2(op2)
-        {
-            depends_on(v1);
-            depends_on(v2);
-            computes(theresult, parametric::param<double>("result"));
-        }
-
-        parametric::param<double> result() const {return theresult;}
 
         void eval() const override
         {
-            if (!theresult.expired())
-                theresult.set_value(v1.value() / v2.value());
+            if (auto result = res<0>(); result) {
+                result->set_value(arg<0>().value() / arg<1>().value());
+            }
         }
-
-    private:
-        const parametric::param<double> v1, v2;
-        mutable parametric::OutputParam<double> theresult;
     };
 
 The important ingredients are:
 
- 1. The class must be derived from ``parametric::ComputeNode``
- 2. The class must have  a (private) ``parametric::param``  object for each input and and a ``parametric::OutputParam`` for each output parameter
- 3. Input and output parameters must be registered using ``ComputeNode::depends_on`` and ``ComputeNode::computes``
- 4. The class must override the ``ComputeNode::eval`` method to perform the actual computation
+ 1. The class must be derived from ``parametric::ComputeNode``, where the template arguments reflect the signature of the compute node.
+ 2. The class must override the ``ComputeNode::eval`` method to perform the actual computation
 
-To use this compute node,  is has to be constructed with ``parametric::new_node<ClassName> (arg1, arg2, ...)`` like in the following example:
+To use this compute node,  is has to be constructed and connected with ``parametric::comute<ClassName> (arg1, arg2, ...)`` like in the following example:
 
 .. code-block:: cpp
    :emphasize-lines: 3
 
     auto v1 = parametric::new_param(10.0, "v1");
     auto v2 = parametric::new_param(2.0, "v2");
-    auto divNode = parametric::new_node<DivComputer>(v1, v2);
-    auto result = divNode->result();
+    auto result = parametric::compute<DivComputer>(v1, v2);
+
+Depending on the signature, the return value of ``parametric::compute`` is 
+* either a ``parametric::param<T>``; if there is just one return value, 
+* a ``parametric::Results<R1, R2, ...>`` which is a tuple of ``parametric::param<R1>``, ``parametric::param<R2>``, ... ; if there is more than one return value,
+* a ``std::shared_ptr<DAGNode>`` pointing to the compute node, if there is no return value.
+
+
+In the above example, the compute node is default constructible. If this is not the case, we have to use another overload of ``parametric::compute``. 
+
+.. code-block:: cpp
+
+    class DivComputer : public parametric::ComputeNode<DivComputer, parametric::Results<double>, parametric::Arguments<double, double>>
+    {
+    public:
+
+        DivComputer(std::string const& id) : default_id(id) {}
+
+        void eval() const override
+        {
+            if (auto result = res<0>(); result) {
+                result->set_value(arg<0>().value() / arg<1>().value());
+            }
+        }
+
+        // overrides the post_connect callback to set a default id for the result right after the connection of inputs and outputs
+        void post_connect() const override {
+            if (auto result = res<0>(); result) {
+                result->set_id(default_id);
+            }
+        }
+
+    private:
+        std::string default_id;
+    };
+
+    auto v1 = parametric::new_param(10.0, "v1");
+    auto v2 = parametric::new_param(2.0, "v2");
+    auto result = parametric::compute(std::make_shared<DivComputer>("threepwood"), v1, v2);

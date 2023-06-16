@@ -3,32 +3,16 @@
 
 // Lets define a custom compute node that
 // simply computes a division of two values
-class DivComputer : public parametric::ComputeNode<DivComputer>
+class DivComputer : public parametric::ComputeNode<DivComputer, parametric::Results<double>, parametric::Arguments<double, double>>
 {
 public:
-    DivComputer(const parametric::param<double>& op1, const parametric::param<double>& op2)
-        : v1(op1), v2(op2)
-    {
-        // Our result depends on v1 and v2
-        depends_on(v1);
-        depends_on(v2);
-        // The class compute "theresult", which we must register here
-        computes(theresult, parametric::param<double>("result"));
-    }
-
-    parametric::param<double> result() const {return theresult;}
-
     // Overriding eval does the actual computation
     void eval() const override
     {
-        if (!theresult.expired())
-            theresult.set_value(v1.value() / v2.value());
+        if (auto r = res<0>(); r)
+            r->set_value(arg<0>().value() / arg<1>().value());
     }
 
-private:
-    // We have to define all inputs and output parameters
-    const parametric::param<double> v1, v2;
-    mutable parametric::OutputParam<double> theresult;
 };
 
 int main()
@@ -37,12 +21,8 @@ int main()
     auto v1 = parametric::new_param(10.0, "v1");
     auto v2 = parametric::new_param(2.0, "v2");
 
-    // now we are creating the compute node
-    auto divNode = parametric::new_node<DivComputer>(v1, v2);
-
-    // now lets get the result. we could also use both lines at once:
-    // auto result = parametric::new_node<DivComputer>(v1, v2)->result();
-    auto result = divNode->result();
+    // now we are creating the compute node and getting the result parameter
+    auto result = parametric::compute<DivComputer>(v1, v2);
 
     std::cout << "Expected result: 5" << std::endl;
     std::cout << "Actual result: " << result << std::endl;

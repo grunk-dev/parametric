@@ -34,7 +34,7 @@ namespace impl {
  * a dependency tree starting at one node. The class will traverse all ancestor
  * nodes, serialize them to a string and store the strings in two stacks. One
  * for the root parameters, and one for the compute nodes. 
- *
+ * 
  * The compute node stack will be in reverse topological order, so that 
  * popping from it will provide the compute nodes in topological order.
  *

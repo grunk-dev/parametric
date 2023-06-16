@@ -65,6 +65,12 @@ public:
         return m_holder;
     }
 
+    /**
+     * @brief returns a shared_ptr to the compute node, if this param is a computation result. If 
+     * it is an independent parameter, the returned pointer will be null.
+     * 
+     * @return const NodeRef 
+     */
     const NodeRef compute_node() const {
         return m_holder->compute_node();
     }

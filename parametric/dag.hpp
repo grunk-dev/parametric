@@ -86,11 +86,8 @@ public:
             throw std::runtime_error("Cannot attach node: cycles are not allowed.");
         }
 
-        // only attach if not already attached
-        if (std::find(std::begin(child->parents), std::end(child->parents), parent) == child->parents.end()) {
-            child->parents.push_back(parent);
-            parent->childs.push_back(child);
-        }
+        child->parents.push_back(parent);
+        parent->childs.push_back(child);
     }
 
     /**

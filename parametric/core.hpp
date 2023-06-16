@@ -380,9 +380,9 @@ namespace {
     struct compute_return_value_impl{};
 
     // For more than one output, parametric::compute returns a Results instance
-    template <typename... Rs>
-    struct compute_return_value_impl<Results<Rs...>> {
-        using type = Results<Rs...>;
+    template <typename R, typename... Rs>
+    struct compute_return_value_impl<Results<R, Rs...>> {
+        using type = Results<R, Rs...>;
     };
 
     // For one output, parametric::compute returns a parameter - the first element of the Results instance

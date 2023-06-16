@@ -3,6 +3,7 @@
 #include <parametric/core.hpp>
 #include <cmath>
 
+namespace {
 
 // an example, how we can also use multiple outputs
 class CustomComputer : public parametric::ComputeNode<CustomComputer, parametric::Results<double, double>, parametric::Arguments<double>>
@@ -12,7 +13,7 @@ public:
         : m_op2(op2)
     {}
 
-    void eval() const
+    void eval() const override
     {
         if (auto r0 = res<0>(); r0)
             r0->set_value(::pow(arg<0>().value(), m_op2));
@@ -24,17 +25,18 @@ private:
     double m_op2;
 };
 
-decltype(auto) custom_compute(parametric::param<double> op1, double op2){
+struct CustomResult {
+    parametric::param<double> const& pow() { return std::get<0>(parms); }
+    parametric::param<double> const& div() { return std::get<1>(parms); }
+    std::tuple<parametric::param<double>, parametric::param<double>> parms;
+};
 
-    struct CustomResult {
-        decltype(auto) pow() { return std::get<0>(parms); }
-        decltype(auto) div() { return std::get<1>(parms); }
-        std::tuple<parametric::param<double>, parametric::param<double>> parms;
-    };
-
-    auto ptr = std::make_shared<CustomComputer>(op2);
+CustomResult custom_compute(parametric::param<double> op1, double op2){
+    auto ptr = std::shared_ptr<CustomComputer>(new CustomComputer(op2));
     return CustomResult{parametric::compute(ptr, op1)};
 }
+
+} // namespace
 
 
 TEST(CustomClass, multipleOuts)

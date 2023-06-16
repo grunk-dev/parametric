@@ -83,55 +83,51 @@ parametric withour struct and our operations.
       div
    };
 
-   class MyBinaryOperation : public parametric::ComputeNode
+   class MyBinaryOperation : public parametric::ComputeNode<MyBinaryOperation, 
+                                                            parametric::Results<MyDouble>,
+                                                            parametric::Arguments<MyDouble, MyDouble>>
    {
    public:
-      MyBinaryOperation(const char* id,
-                        BinaryOp op,
-                        parametric::param<MyDouble> const& l,
-                        parametric::param<MyDouble> const& r
+      MyBinaryOperation(std::string const& id,
+                        BinaryOp op
       )
       : operation(op)
-      , left(l)
-      , right(r)
       {
-         set_id(id);
-         depends_on(left);
-         depends_on(right);
-         computes(output, parametric::param<MyDouble>(id));
+         this->set_id(id);
       }
 
       void eval() const override 
       {
-         if (!output.expired()) {
-               switch (operation) {
-                  case BinaryOp::plus:
-                     output.set_value(left.value() + right.value());
-                     return;
-                  case BinaryOp::minus:
-                     output.set_value(left.value() - right.value());
-                     return;
-                  case BinaryOp::mult:
-                     output.set_value(left.value() * right.value());
-                     return;
-                  case BinaryOp::div:
-                     output.set_value(left.value() / right.value());
-                     return;
-                  default:
-                     throw std::logic_error("Not implemented\n");
-               }
+         switch (operation) {
+               case BinaryOp::plus:
+                  if (auto r = res<0>(); r)
+                     r->set_value(arg<0>().value() + arg<1>().value());
+                  return;
+               case BinaryOp::minus:
+                  if (auto r = res<0>(); r)
+                     r->set_value(arg<0>().value() - arg<1>().value());
+                  return;
+               case BinaryOp::mult:
+                  if (auto r = res<0>(); r)
+                     r->set_value(arg<0>().value() * arg<1>().value());
+                  return;
+               case BinaryOp::div:
+                  if (auto r = res<0>(); r)
+                     r->set_value(arg<0>().value() / arg<1>().value());
+                  return;
+               default:
+                  throw std::logic_error("Not implemented\n");
          }
       }
 
-      parametric::param<MyDouble> result() const {
-         return output;
+      void post_connect() const override 
+      {
+         if (auto r = res<0>(); r)
+            r->set_id(id());
       }
 
    private:
       BinaryOp operation;
-      parametric::param<MyDouble> const left;
-      parametric::param<MyDouble> const right;
-      parametric::OutputParam<MyDouble> mutable output;
    };
 
    parametric::param<MyDouble> my_eval(const char* id, 
@@ -140,9 +136,8 @@ parametric withour struct and our operations.
                                        parametric::param<MyDouble> const& right
    )
    {
-      return parametric::compute_node_ptr<MyBinaryOperation>(
-         new MyBinaryOperation(id, op, left, right)
-      )->result();
+      auto ptr = std::make_shared<MyBinaryOperation>(id, op);
+      return parametric::compute(ptr, left, right);
    }
 
 A dependecy tree in parametric consists of alternating ``parametric::ComputeNode``\s 
@@ -150,9 +145,9 @@ and ``parametric::impl::param_holder<T>``\s, which both are derived
 from ``parametric::DAGNode``. 
 
 ``parametric::DAGNode`` has a virtual 
-``serialize`` method returning a string. The overwrite 
+``serialize`` method returning a string. The overridden 
 ``parametric::impl::param_holder<T>::serialize`` will return an empty string 
-for dependent parameters and will delegate to  the templated function
+for dependent parameters and will delegate to the templated function
 
 .. code-block:: cpp
 
@@ -179,7 +174,7 @@ compute node.
 
       std::string serialize() const override 
       {
-         std::string out = left.id();
+         std::string out = arg<0>().id();
          switch (operation) {
                default:
                case BinaryOp::plus:
@@ -196,7 +191,7 @@ compute node.
                      break;
                   throw std::logic_error("Not implemented\n");
          }
-         out += right.id();
+         out += arg<1>().id();
          return out;
       }
 
@@ -276,4 +271,4 @@ The output will look like this:
 
 This example can be extended by using a thirdparty serialization framework 
 like Boost::serialize, jsoncpp etc or by writing the functionality to deserialize 
-a string to a dependency tree.
+a string to a dependency tree by hand.

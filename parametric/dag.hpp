@@ -71,6 +71,11 @@ public:
 
     /**
      * @brief Adds the node "parent" as parent to the node "child"
+     *
+     * The list of children is unique, but the list of parents may contain duplicates. The rationale
+     * behind this is that a compute node could have the same parent for different arguments, e.g. b = a*a,
+     * but a parent must only invalidate their children once.
+     *
      * @param child The node to which "parent" is added as a parent.
      * @param parent The parent node to be added.
      */
@@ -86,8 +91,17 @@ public:
             throw std::runtime_error("Cannot attach node: cycles are not allowed.");
         }
 
+        auto predicate = [&child](auto const& c){
+            if (!c.expired()) {
+                return c.lock() == child;
+            }
+            return false;
+        };
+        if (std::find_if(std::begin(parent->childs), std::end(parent->childs), predicate ) == parent->childs.end()) {
+            parent->childs.push_back(child);
+        }
+
         child->parents.push_back(parent);
-        parent->childs.push_back(child);
     }
 
     /**
@@ -213,7 +227,7 @@ public:
      */
     void remove_parent(const DAGNode& parent)
     {
-        // remove myself from parent
+        // remove myself from parent. child list has unique entries
         auto& p_childs  = parent.childs;
         auto it_to_this = std::find_if(p_childs.begin(), p_childs.end(),
                                        [this](std::weak_ptr<DAGNode>& child) {
@@ -224,13 +238,15 @@ public:
             p_childs.erase(it_to_this);
         }
 
-        // remove parent from parent list
+        // remove parent from parent list. parent lists may have duplicate entries
         auto parentIt = std::find_if(std::begin(parents), std::end(parents), [&parent](const NodeRef& p) {
             return p.get() == &parent;
         });
-
-        if (parentIt != parents.end()) {
+        while ( parentIt != parents.end() ) {
             parents.erase(parentIt);
+            parentIt = std::find_if(std::begin(parents), std::end(parents), [&parent](const NodeRef& p) {
+                return p.get() == &parent;
+            });
         }
     }
 

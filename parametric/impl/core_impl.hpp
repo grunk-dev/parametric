@@ -2,10 +2,12 @@
 #define CORE_IMPL_HPP
 
 #include <parametric/dag.hpp>
-#include <parametric/impl/optional.hpp>
 #include <parametric/serialization.hpp>
 
+#include <memory>
+#include <optional>
 #include <cassert>
+#include <stdexcept>
 
 namespace parametric {
 
@@ -25,33 +27,33 @@ struct EqualityOperatorExists
 
 
 template <class ResultType>
-class param_holder : public DAGNode
+class param_holder : public ClonableDAGNode<param_holder<ResultType>>
 {
 public:
     param_holder(const ResultType& v, const std::string& id)
-        : DAGNode(id)
-        , value(v)
+        : ClonableDAGNode<param_holder<ResultType>>(id)
+        , m_value(v)
     {
     }
     param_holder(const std::string& id)
-        : DAGNode(id)
+        : ClonableDAGNode<param_holder<ResultType>>(id)
     {
     }
 
     virtual std::string serialize() const override 
     {
         // this triggers evaluation of the node
-        return parametric::serialize(Value());
+        return parametric::serialize(value());
     }
 
     // in-place constructor
     template <typename... Args>
-    param_holder(in_place_t, Args const&... args, std::string const& id)
-        : DAGNode(id)
-        , value(in_place_t(), args...)
+    param_holder(std::in_place_t, Args const&... args, std::string const& id)
+        : ClonableDAGNode<param_holder<ResultType>>(id)
+        , m_value(std::in_place_t(), args...)
     {}
 
-    const ResultType& Value() const
+    const ResultType& value() const
     {
         if (!IsValid()) {
             eval();
@@ -60,33 +62,39 @@ public:
             assert(IsValid());
         }
 
-        return value.value();
+        if (m_value) {
+            return *m_value;
+        }
+        throw std::runtime_error("value not initialized");
     }
 
-    ResultType& AccessValue()
+    ResultType& access_value()
     {
-        invalidate();
-        return value.value();
+        this->invalidate();
+        if (m_value) {
+            return *m_value;
+        }
+        throw std::runtime_error("value not initialized");
     }
 
     template<class T = ResultType>
     typename std::enable_if<EqualityOperatorExists<T>::value>::type
-    SetValue(const ResultType& v)
+    set_value(const ResultType& v)
     {
-        if (!IsValid() || !(v == value.value())) {
-            value = v;
-            invalidate();
+        if (!IsValid() || !(v == *m_value)) {
+            m_value = v;
+            this->invalidate();
             validFlag = true;
         }
     }
 
     template<class T = ResultType>
     typename std::enable_if<!EqualityOperatorExists<T>::value>::type
-    SetValue(const ResultType& v)
+    set_value(const ResultType& v)
     {
         if (!IsValid()) {
-            value = v;
-            invalidate();
+            m_value = v;
+            this->invalidate();
             validFlag = true;
         }
     }
@@ -101,6 +109,17 @@ public:
         validFlag = false;
     }
 
+    const NodeRef compute_node() const {
+        // TODO: Here we need a mutex to avoid multiple threads computing
+        // The same value
+        assert(this->parents.size() <= 1);
+
+        if (this->parents.size() > 0) {
+            return this->parents[0];
+        }
+        return nullptr;
+    }
+
 protected:
     void invalidateSelf() override
     {
@@ -110,18 +129,13 @@ protected:
 private:
     void eval() const override
     {
-        // TODO: Here we need a mutex to avoid multiple threads computing
-        // The same value
-        assert(parents.size() <= 1);
-
-        if (parents.size() > 0) {
-            NodeRef p = parents[0];
+        if (auto p = compute_node(); p) {
             p->eval();
         }
         validFlag = true;
     }
 
-    optional<ResultType> value;
+    std::optional<ResultType> m_value;
     mutable bool validFlag{false};
 };
 

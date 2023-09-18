@@ -12,7 +12,7 @@ target_include_directories(parametric INTERFACE
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_features(parametric INTERFACE cxx_std_14)
+target_compile_features(parametric INTERFACE cxx_std_17)
 
 include(GNUInstallDirs)
 

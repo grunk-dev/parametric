@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 #include <type_traits> // for std::false_type
 #include <string>
@@ -70,6 +71,11 @@ public:
 
     /**
      * @brief Adds the node "parent" as parent to the node "child"
+     *
+     * The list of children is unique, but the list of parents may contain duplicates. The rationale
+     * behind this is that a compute node could have the same parent for different arguments, e.g. b = a*a,
+     * but a parent must only invalidate their children once.
+     *
      * @param child The node to which "parent" is added as a parent.
      * @param parent The parent node to be added.
      */
@@ -85,11 +91,17 @@ public:
             throw std::runtime_error("Cannot attach node: cycles are not allowed.");
         }
 
-        // only attach if not already attached
-        if (std::find(std::begin(child->parents), std::end(child->parents), parent) == child->parents.end()) {
-            child->parents.push_back(parent);
+        auto predicate = [&child](auto const& c){
+            if (!c.expired()) {
+                return c.lock() == child;
+            }
+            return false;
+        };
+        if (std::find_if(std::begin(parent->childs), std::end(parent->childs), predicate ) == parent->childs.end()) {
             parent->childs.push_back(child);
         }
+
+        child->parents.push_back(parent);
     }
 
     /**
@@ -215,7 +227,7 @@ public:
      */
     void remove_parent(const DAGNode& parent)
     {
-        // remove myself from parent
+        // remove myself from parent. child list has unique entries
         auto& p_childs  = parent.childs;
         auto it_to_this = std::find_if(p_childs.begin(), p_childs.end(),
                                        [this](std::weak_ptr<DAGNode>& child) {
@@ -226,13 +238,15 @@ public:
             p_childs.erase(it_to_this);
         }
 
-        // remove parent from parent list
+        // remove parent from parent list. parent lists may have duplicate entries
         auto parentIt = std::find_if(std::begin(parents), std::end(parents), [&parent](const NodeRef& p) {
             return p.get() == &parent;
         });
-
-        if (parentIt != parents.end()) {
+        while ( parentIt != parents.end() ) {
             parents.erase(parentIt);
+            parentIt = std::find_if(std::begin(parents), std::end(parents), [&parent](const NodeRef& p) {
+                return p.get() == &parent;
+            });
         }
     }
 
@@ -287,6 +301,25 @@ public:
         }
     }
 
+    using ClonedNodeMap = std::unordered_map<DAGNode const*, std::shared_ptr<DAGNode>>; /**< @private */
+    static std::shared_ptr<ClonedNodeMap> new_cloned_node_map() {
+        return std::make_shared<ClonedNodeMap>();
+    }
+
+    /**
+     * @brief This function deep-copies a node together with all of its ancestors, while maintaining
+     * parent-child-relations
+     *
+     * The optional input cloned_nodes is used to keep track of the already cloned nodes. This way
+     * redundant clones can be avoided.
+     * 
+     */
+    virtual std::shared_ptr<DAGNode> clone(
+        std::shared_ptr<ClonedNodeMap> cloned_nodes = new_cloned_node_map()
+    ) const
+    {
+        throw std::runtime_error("DAGNode: No implementation for virtual method \"clone\" found.\n");
+    }
 
 private:
     std::string _id; /**< @private */
@@ -300,6 +333,29 @@ protected:
      * specific invalidation logic of the node
      */
     virtual void invalidateSelf() {}
+};
+
+template <typename Derived>
+struct ClonableDAGNode : public DAGNode
+{
+    ClonableDAGNode(std::string const& id) : DAGNode(id) {}
+
+    std::shared_ptr<DAGNode> clone(
+        std::shared_ptr<DAGNode::ClonedNodeMap> cloned_nodes = DAGNode::new_cloned_node_map()
+    ) const override 
+    {
+        auto& cloned = (*cloned_nodes)[this];
+        if (!cloned) {
+            auto c = std::make_shared<Derived>(static_cast<Derived const&>(*this));
+            c->parents.clear();
+            c->childs.clear(); // we are only cloning in direction of ancestors
+            for (auto& parent : parents) {
+                add_parent(c, parent->clone(cloned_nodes));
+            }
+            cloned = c;
+        }
+        return cloned;
+    }
 };
 
 } // namespace parametric

@@ -234,10 +234,26 @@ void add_parent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, cons
 template <typename... T>
 using Arguments = std::tuple<param<T> const&...>;
 
+namespace {
+
+    template <typename... Ts>
+    struct ResultsImpl 
+    {
+        using type = std::tuple<param<Ts>...>;
+    };
+
+    template <typename... Ts>
+    struct ResultsImpl<std::tuple<Ts...>>
+    {
+        using type = std::tuple<param<Ts>...>;
+    };
+
+} // anonymous namespace
+
 /// @private
 /// A type representing the ouptut arguments of a compute node
 template <typename... R>
-using Results = std::tuple<param<R>...>;
+using Results = typename ResultsImpl<R...>::type;
 
 /**
  * @brief This class is the base class to define arbitrary compute nodes.
@@ -320,6 +336,23 @@ public:
 
     /**
      * @brief returns the i-th input argument. This function must be called after the compute node has been 
+     * connected to its inputs via parametric::compute. It ignores the Argument list and expects the argument 
+     * type to be specified by the user. 
+     *
+     * Caution: UB if the value_type does not match the actual type of the i-th argument!
+     * 
+     * @tparam value_type the value_type of the i-th argument. 
+     * @param i the index of the input argument.
+     * @return A reference to an input parameter
+     */
+    template <typename value_type>
+    decltype(auto) arg(int i) const { 
+        assert(i < this->parents.size());
+        return dynamic_cast<impl::param_holder<value_type>&>(*(this->parents[i]));
+    }
+
+    /**
+     * @brief returns the i-th input argument. This function must be called after the compute node has been 
      * connected to its inputs via parametric::compute. 
      * 
      * @tparam i the index of the input argument.
@@ -329,7 +362,32 @@ public:
     decltype(auto) arg() const { 
         assert(this->parents.size() == std::tuple_size_v<Arguments>);
         using value_type = typename std::decay_t<std::tuple_element_t<i, Arguments>>::value_type;
-        return dynamic_cast<impl::param_holder<value_type>&>(*(this->parents[i]));
+        return this->arg<value_type>(i);
+    }
+
+    /**
+     * @brief returns a pointer to the i-th output argument. The function must be called after the compute node has been
+     * connected to its outputs via parametric::compute.
+     * 
+     * If the output parameter has already been deleted, the returned pointer will be null. This should be checked before 
+     * using the pointer. This overload ignores the Result list and requires the user to specify the type of the i-th result
+     *
+     * Caution: UB if the value_type does not match the actual type of the i-th result!
+     *
+     * Example:
+     * \code{cpp}
+     * if (auto result = res<double>(0); result) {
+     *     result->set_value(arg<double>(0).value() + arg<double>(1).value());
+     * }
+     * \endcode
+     * 
+     * @tparam i the index of the output argument.
+     * @return A shared_ptr to the output parameter
+     */
+    template <typename value_type>
+    decltype(auto) res(int i) const { 
+        assert(i < this->childs.size());
+        return std::dynamic_pointer_cast<impl::param_holder<value_type>>(this->childs[i].lock());
     }
 
     /**
@@ -353,7 +411,7 @@ public:
     decltype(auto) res() const { 
         assert(this->childs.size() == std::tuple_size_v<Results>);
         using value_type = typename std::tuple_element_t<i, Results>::value_type;
-        return std::dynamic_pointer_cast<impl::param_holder<value_type>>(this->childs[i].lock());
+        return this->res<value_type>(i);
     }
 
     /**
@@ -383,18 +441,18 @@ namespace {
 
     // Some template meta-programming to determine the return_type of parametric::compute
     template <typename R>
-    struct compute_return_value_impl{};
+    struct compute_return_value_impl;
 
     // For more than one output, parametric::compute returns a Results instance
-    template <typename R, typename... Rs>
-    struct compute_return_value_impl<Results<R, Rs...>> {
-        using type = Results<R, Rs...>;
+    template <typename R, typename U, typename... Rs>
+    struct compute_return_value_impl<std::tuple<R, U, Rs...>> {
+        using type = std::tuple<R, U, Rs...>;
     };
 
     // For one output, parametric::compute returns a parameter - the first element of the Results instance
     template <typename R>
-    struct compute_return_value_impl<Results<R>> {
-        using type = std::tuple_element_t<0, Results<R>>;
+    struct compute_return_value_impl<std::tuple<R>> {
+        using type = R;
     };
 
     // For no outputs, parametric::compute returns a shared_ptr to the DAGNode representing the compute node.
@@ -439,6 +497,58 @@ compute_return_value<C> compute(std::shared_ptr<C> const& ptr, param<Args> const
 
     // connect compute node to arguments
     (add_parent(ptr, args.node_pointer()), ...);
+
+    if constexpr (nresults > 0) {
+
+        // initialize the results tuple
+        auto res = C::initialize_results();
+
+        // connect results to compute node
+        std::apply([&](auto& ...x){(..., add_parent(x.node_pointer(), ptr));}, res);
+
+        if constexpr (nresults == 1) {
+            // if there is just one result, don't return a tuple, but only a single parameter
+            return std::get<0>(res);
+        } else {
+            return res;
+        }
+    } else {
+        // if there is no result, simply return the compute node pointer after it has been connected to the inputs
+        return ptr;
+    }
+}
+
+/**
+ * @brief This function should be used to connect compute nodes. Here, the inputs are a vector of params, all holding the same type.
+ *
+ * - it initializes the outputs of a compute node, if any.
+ * - it connects the compute node to its inputs and outputs
+ * - it calls the ComputeNode::post_connect callback.
+ * 
+ * @tparam C a class derived from parametric::ComputeNode<C, parametric::Results<R...>, parametric::Arguments<A...>>
+ * @tparam T The type of objects held by the input parameters
+ * @param ptr A shared_ptr to a C instance. It is assumed that this compute node has not been connected to its inputs and outputs yet.
+ * @param args The input parameters.
+ * @return compute_return_value<C> 
+ */
+template <typename C, typename T>
+compute_return_value<C> compute(std::shared_ptr<C> const& ptr, std::vector<param<T>> const& args)
+{ 
+    constexpr size_t nresults = std::tuple_size_v<typename C::results_type>;
+
+    // make sure the post_connect callback is called at the end of this function using an RAII wrapper
+    struct raii {
+        std::shared_ptr<C> const& ptr;
+        ~raii() {
+            ptr->post_connect();
+        }
+    };
+    raii r{ptr};
+
+    // connect compute node to arguments
+    for (auto const& arg : args) {
+        add_parent(ptr, arg.node_pointer());
+    }
 
     if constexpr (nresults > 0) {
 

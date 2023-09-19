@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 
-project(parametric VERSION 0.2.3)
+project(parametric VERSION 0.3.0)
 
 option(BUILD_PARAMETRIC_BENCHMARKS "Build benchmarks using Google Benchmark" OFF)
 

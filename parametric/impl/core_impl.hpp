@@ -82,6 +82,7 @@ public:
     set_value(const ResultType& v)
     {
         if (!IsValid() || !(v == *m_value)) {
+            m_value.reset();
             m_value = v;
             this->invalidate();
             validFlag = true;
@@ -93,6 +94,7 @@ public:
     set_value(const ResultType& v)
     {
         if (!IsValid()) {
+            m_value.reset();
             m_value = v;
             this->invalidate();
             validFlag = true;

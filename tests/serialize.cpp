@@ -26,7 +26,7 @@ namespace {
                    arg<0>().id() + "\"\n        \"" + arg<1>().id() + "\n    ]\n}\n";
         }
 
-        void post_connect() const override 
+        void post_connect() const 
         {
             // propagate the id of the compute node to the return value
             if (auto r = res<0>(); r) {

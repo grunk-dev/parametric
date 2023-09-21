@@ -359,7 +359,7 @@ public:
     void connect_inputs(Args&&... args)
     {
         auto ptr = this->shared_from_this();
-        (depends_on(args), ...);
+        (this->depends_on(args), ...);
     }
 
     /**
@@ -398,9 +398,9 @@ public:
         constexpr size_t nresults = std::tuple_size_v<Results>;
         if constexpr (nresults > 0) {
             if constexpr (nresults > 1) {
-                std::apply([&](auto& ...x){(..., computes(x));}, res);
+                std::apply([&](auto& ...x){(..., this->computes(x));}, res);
             } else if constexpr (nresults == 1) {
-                computes(res);
+                this->computes(res);
             }
         }
     }

@@ -358,7 +358,6 @@ public:
     template <typename... Args>
     void connect_inputs(Args&&... args)
     {
-        auto ptr = this->shared_from_this();
         (this->depends_on(args), ...);
     }
 

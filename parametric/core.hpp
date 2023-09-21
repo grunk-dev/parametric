@@ -234,10 +234,56 @@ void add_parent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, cons
 template <typename... T>
 using Arguments = std::tuple<param<T> const&...>;
 
+namespace {
+
+    template <typename... Ts>
+    struct ResultsImpl 
+    {
+        using type = std::tuple<param<Ts>...>;
+    };
+
+    template <typename... Ts>
+    struct ResultsImpl<std::tuple<Ts...>>
+    {
+        using type = std::tuple<param<Ts>...>;
+    };
+
+} // anonymous namespace
+
 /// @private
 /// A type representing the ouptut arguments of a compute node
 template <typename... R>
-using Results = std::tuple<param<R>...>;
+using Results = typename ResultsImpl<R...>::type;
+
+namespace {
+
+    // Some template meta-programming to determine the return_type of parametric::compute
+    template <typename R>
+    struct compute_return_value_impl
+    {
+        using type = std::shared_ptr<DAGNode>;
+    };
+
+    // For more than one output, parametric::compute returns a Results instance
+    template <typename R, typename U, typename... Rs>
+    struct compute_return_value_impl<std::tuple<R, U, Rs...>> {
+        using type = std::tuple<R, U, Rs...>;
+    };
+
+    // For one output, parametric::compute returns a parameter - the first element of the Results instance
+    template <typename R>
+    struct compute_return_value_impl<std::tuple<R>> {
+        using type = R;
+    };
+
+    template <>
+    struct compute_return_value_impl<std::tuple<void>> {
+        using type = std::shared_ptr<DAGNode>;
+    };
+}
+
+template <typename T>
+using compute_return_value = typename compute_return_value_impl<T>::type;
 
 /**
  * @brief This class is the base class to define arbitrary compute nodes.
@@ -248,7 +294,11 @@ using Results = std::tuple<param<R>...>;
  * 
  * A compute node may
  *  - override the ComputeNode::eval method to perform the computation
- *  - override the ComputeNode::post_connect callback to perform some customization after the compute node has been connected to its inputs and outputs, e.g. setting default ids.
+ *  - customize parametric::compute by
+ *     - providing a custom void connect_inputs(args...) function to connect inputs to the compute node
+ *     - providing a custom R initialize_results() function to initialize the output parameters
+ *     - providing a custom void connect_results(R const&) function to connect the outputs to the compute node
+ *     - providing a custom void post_connect() callback to perform some customization after the compute node has been connected to its inputs and outputs, e.g. setting default ids.
  *
  * A compute node may have any number of inputs and outputs
  * 
@@ -285,7 +335,9 @@ using Results = std::tuple<param<R>...>;
  * \endcode
  */
 template <typename Derived, typename Results, typename Arguments>
-class ComputeNode : public ClonableDAGNode<Derived>
+class ComputeNode
+ : public ClonableDAGNode<Derived>
+ , public std::enable_shared_from_this<ComputeNode<Derived, Results, Arguments>>
 {
 public:
     using results_type = Results;
@@ -295,11 +347,63 @@ public:
     virtual ~ComputeNode(){}
 
     /**
-     * @brief override this method to perform the calculation. 
+     * @brief default implementation for connecting the inputs to the outputs.
+     *
+     * This function may be provided by the derived class to customize the behavior of 
+     * ::parametric::compute
      * 
-     * Use arg<i>() and res<i>() to query the inputs and outputs
+     * @tparam Args arguments forwarded from ::parametric::compute
+     * @param args input arguments that shall be connected to the compute node
      */
-    virtual void eval() const {};
+    template <typename... Args>
+    void connect_inputs(Args&&... args)
+    {
+        auto ptr = this->shared_from_this();
+        (this->depends_on(args), ...);
+    }
+
+    /**
+     * @brief default implementation for initializing the results of the compute node
+     *
+     * This function may be provided by the derived class to customize the behavior of 
+     * ::parametric::compute
+     * 
+     * @return compute_return_value<Results> a tuple of param<T> values for multi-output functions, 
+     *         a param<T> for single output functions or a shared_ptr to this for void functions
+     */
+    compute_return_value<Results> initialize_results() {
+        auto ret = initialize_results_impl(std::make_index_sequence<std::tuple_size_v<Results>>{});
+        constexpr size_t nresults = std::tuple_size_v<Results>;
+        if constexpr (nresults > 1) {
+            return ret;
+        } else if constexpr (nresults == 1) {
+            return std::get<0>(ret);
+        } else {
+            auto ptr = this->shared_from_this();
+            return ptr;
+        }
+    }
+
+    /**
+     * @brief default implementation for connecting the results of the compute node to the 
+     * compute node.
+     * 
+     * This function may be provided by the derived class to customize the behavior of 
+     * ::parametric::compute
+     * 
+     * @param res The results as returned by ::initialize_results
+     */
+    void connect_results(compute_return_value<Results> const& res)
+    {
+        constexpr size_t nresults = std::tuple_size_v<Results>;
+        if constexpr (nresults > 0) {
+            if constexpr (nresults > 1) {
+                std::apply([&](auto& ...x){(..., this->computes(x));}, res);
+            } else if constexpr (nresults == 1) {
+                this->computes(res);
+            }
+        }
+    }
 
     /**
      * @brief override this method as a post connection callback. 
@@ -309,13 +413,30 @@ public:
      * for the outputs using arg<i>() and res<i>().
      * 
      */
-    virtual void post_connect() const {};
+    void post_connect() const {};
 
-    ///@private 
-    /// initializes the results. This is called once in parametric::compute before the compute node
-    /// is connected to its inputs and outputs
-    static Results initialize_results() {
-        return initialize_results_impl(std::make_index_sequence<std::tuple_size_v<Results>>{});
+    /**
+     * @brief override this method to perform the calculation. 
+     * 
+     * Use arg<i>() and res<i>() to query the inputs and outputs
+     */
+    virtual void eval() const {};
+
+    /**
+     * @brief returns the i-th input argument. This function must be called after the compute node has been 
+     * connected to its inputs via parametric::compute. It ignores the Argument list and expects the argument 
+     * type to be specified by the user. 
+     *
+     * Caution: UB if the value_type does not match the actual type of the i-th argument!
+     * 
+     * @tparam value_type the value_type of the i-th argument. 
+     * @param i the index of the input argument.
+     * @return A reference to an input parameter
+     */
+    template <typename value_type>
+    decltype(auto) arg(int i) const { 
+        assert(i < this->parents.size());
+        return dynamic_cast<impl::param_holder<value_type>&>(*(this->parents[i]));
     }
 
     /**
@@ -329,7 +450,32 @@ public:
     decltype(auto) arg() const { 
         assert(this->parents.size() == std::tuple_size_v<Arguments>);
         using value_type = typename std::decay_t<std::tuple_element_t<i, Arguments>>::value_type;
-        return dynamic_cast<impl::param_holder<value_type>&>(*(this->parents[i]));
+        return this->arg<value_type>(i);
+    }
+
+    /**
+     * @brief returns a pointer to the i-th output argument. The function must be called after the compute node has been
+     * connected to its outputs via parametric::compute.
+     * 
+     * If the output parameter has already been deleted, the returned pointer will be null. This should be checked before 
+     * using the pointer. This overload ignores the Result list and requires the user to specify the type of the i-th result
+     *
+     * Caution: UB if the value_type does not match the actual type of the i-th result!
+     *
+     * Example:
+     * \code{cpp}
+     * if (auto result = res<double>(0); result) {
+     *     result->set_value(arg<double>(0).value() + arg<double>(1).value());
+     * }
+     * \endcode
+     * 
+     * @tparam i the index of the output argument.
+     * @return A shared_ptr to the output parameter
+     */
+    template <typename value_type>
+    decltype(auto) res(int i) const { 
+        assert(i < this->childs.size());
+        return std::dynamic_pointer_cast<impl::param_holder<value_type>>(this->childs[i].lock());
     }
 
     /**
@@ -353,7 +499,7 @@ public:
     decltype(auto) res() const { 
         assert(this->childs.size() == std::tuple_size_v<Results>);
         using value_type = typename std::tuple_element_t<i, Results>::value_type;
-        return std::dynamic_pointer_cast<impl::param_holder<value_type>>(this->childs[i].lock());
+        return this->res<value_type>(i);
     }
 
     /**
@@ -366,6 +512,31 @@ public:
     decltype(auto) args_tuple() const {
         return args_tuple_impl(std::make_index_sequence<std::tuple_size_v<Arguments>>{});
     }
+
+    /**
+     * @brief convenience function to connect this compute node to an input parameter
+     * 
+     * @tparam T the type held by the input parameter
+     * @param input the input parameter
+     */
+    template <typename T>
+    void depends_on(param<T> const& input) {
+        auto ptr = this->shared_from_this();
+        add_parent(ptr, input.node_pointer());
+    }
+
+    /**
+     * @brief convenience function to connect this compute node to an output parameter
+     * 
+     * @tparam T the type held by the output parameter
+     * @param output the output parameter
+     */
+    template <typename T>
+    void computes(param<T> const& output) {
+        auto ptr = this->shared_from_this();
+        add_parent(output.node_pointer(), ptr);
+    }
+
 private:
 
     template <size_t... i>
@@ -378,34 +549,6 @@ private:
         return std::make_tuple(arg<i>().value()...);
     }
 };
-
-namespace {
-
-    // Some template meta-programming to determine the return_type of parametric::compute
-    template <typename R>
-    struct compute_return_value_impl{};
-
-    // For more than one output, parametric::compute returns a Results instance
-    template <typename R, typename... Rs>
-    struct compute_return_value_impl<Results<R, Rs...>> {
-        using type = Results<R, Rs...>;
-    };
-
-    // For one output, parametric::compute returns a parameter - the first element of the Results instance
-    template <typename R>
-    struct compute_return_value_impl<Results<R>> {
-        using type = std::tuple_element_t<0, Results<R>>;
-    };
-
-    // For no outputs, parametric::compute returns a shared_ptr to the DAGNode representing the compute node.
-    template <>
-    struct compute_return_value_impl<Results<>> {
-        using type = std::shared_ptr<DAGNode>;
-    };
-}
-
-template <typename C>
-using compute_return_value = typename compute_return_value_impl<typename C::results_type>::type;
 
 /**
  * @brief This function should be used to connect compute nodes.
@@ -424,40 +567,13 @@ using compute_return_value = typename compute_return_value_impl<typename C::resu
  *         - If there is no output, it returns ptr.
  */
 template <typename C, typename... Args>
-compute_return_value<C> compute(std::shared_ptr<C> const& ptr, param<Args> const&... args)
+decltype(auto) compute(std::shared_ptr<C> const& ptr, Args&&... args)
 { 
-    constexpr size_t nresults = std::tuple_size_v<typename C::results_type>;
-
-    // make sure the post_connect callback is called at the end of this function using an RAII wrapper
-    struct raii {
-        std::shared_ptr<C> const& ptr;
-        ~raii() {
-            ptr->post_connect();
-        }
-    };
-    raii r{ptr};
-
-    // connect compute node to arguments
-    (add_parent(ptr, args.node_pointer()), ...);
-
-    if constexpr (nresults > 0) {
-
-        // initialize the results tuple
-        auto res = C::initialize_results();
-
-        // connect results to compute node
-        std::apply([&](auto& ...x){(..., add_parent(x.node_pointer(), ptr));}, res);
-
-        if constexpr (nresults == 1) {
-            // if there is just one result, don't return a tuple, but only a single parameter
-            return std::get<0>(res);
-        } else {
-            return res;
-        }
-    } else {
-        // if there is no result, simply return the compute node pointer after it has been connected to the inputs
-        return ptr;
-    }
+    ptr->connect_inputs(std::forward<Args>(args)...);
+    auto res = ptr->initialize_results();
+    ptr->connect_results(res);
+    ptr->post_connect();
+    return res;
 }
 
 /**
@@ -500,7 +616,7 @@ compute_return_value<C> compute(std::shared_ptr<C> const& ptr, param<Args> const
  *         - If there is no output, it returns ptr.
  */
 template <typename C, typename... Args>
-compute_return_value<C> compute(param<Args> const&... args)
+decltype(auto) compute(param<Args> const&... args)
 {
     auto ptr = std::make_shared<C>();
     
@@ -633,7 +749,7 @@ parametric::param<T>
 new_parametric_struct(const T& the_struct, const parametric::param<Args>& ... parametric_members)
 {
     // just need a type derived from ClonableDAGNode<Connector>
-    struct Connector : public ComputeNode<Connector,void, void> {};
+    struct Connector : public ComputeNode<Connector,Results<>, Arguments<>> {};
 
     auto c = std::make_shared<Connector>();
     auto t = param<T>(the_struct, "");

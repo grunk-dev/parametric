@@ -127,8 +127,8 @@ TEST(CustomClass, clone)
     // cloned parametric tree
     auto cloned_nodes = parametric::DAGNode::new_cloned_node_map();
     auto x = a.clone(cloned_nodes);
-    auto y = b.clone(cloned_nodes);
     auto z = c.clone(cloned_nodes);
+    auto y = b.clone(cloned_nodes);
 
     // check parent-child relations
     EXPECT_TRUE(a.node_pointer()->precedes(*b.node_pointer()));

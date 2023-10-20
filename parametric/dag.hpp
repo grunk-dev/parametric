@@ -250,6 +250,20 @@ public:
         }
     }
 
+    void swap_child(const DAGNode& child_old, const NodeRef& child_new)
+    {
+        if(
+            auto search = std::find_if(
+                childs.begin(), childs.end(), 
+                [&child_old](std::weak_ptr<DAGNode>& child){ return child.lock().get() == &child_old; }
+            ); 
+            search != childs.end()
+        ) 
+        {
+            *search = child_new;
+        }
+    }
+
     /**
      * @brief returns the number of parents
      */
@@ -347,10 +361,9 @@ struct ClonableDAGNode : public DAGNode
         auto& cloned = (*cloned_nodes)[this];
         if (!cloned) {
             auto c = std::make_shared<Derived>(static_cast<Derived const&>(*this));
-            c->parents.clear();
-            c->childs.clear(); // we are only cloning in direction of ancestors
-            for (auto& parent : parents) {
-                add_parent(c, parent->clone(cloned_nodes));
+            for (size_t i = 0; i < parents.size(); ++i) {
+                c->parents[i] = parents[i]->clone(cloned_nodes);
+                c->parents[i]->swap_child(*this, c);
             }
             cloned = c;
         }

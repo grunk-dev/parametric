@@ -248,6 +248,12 @@ namespace {
         using type = std::tuple<param<Ts>...>;
     };
 
+    template <>
+    struct ResultsImpl<void>
+    {
+        using type = std::tuple<>;
+    };
+
 } // anonymous namespace
 
 /// @private
@@ -650,19 +656,22 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 
     using rtype = typename std::invoke_result<Fn, Args...>::type;
 
-    if constexpr (!std::is_void_v<rtype>) {
+    class Computer
+    : public parametric::ComputeNode<Computer, parametric::Results<rtype>, parametric::Arguments<Args...>>
+    {
+    public:
 
-        class NonVoidComputer
-        : public parametric::ComputeNode<NonVoidComputer, parametric::Results<rtype>, parametric::Arguments<Args...>>
+        Computer(Fn f) : _wrapped_function(f) {}
+        
+        void eval() const override final
         {
-        public:
-
-            NonVoidComputer(Fn f) : _wrapped_function(f) {}
-            
-            void eval() const override final
-            {
+            if constexpr (std::is_void_v<rtype>) {
+                std::apply(
+                    std::forward<const Fn>(_wrapped_function),
+                    this->args_tuple()
+                );
+            } else {
                 if (auto r = this->template res<0>(); r) {
-                    // handle non-void-function
                     r->set_value(
                         std::apply(
                             std::forward<const Fn>(_wrapped_function),
@@ -671,37 +680,13 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
                     );
                 }
             }
+        }
 
-        private:
-            Fn _wrapped_function;
-        };
+    private:
+        Fn _wrapped_function;
+    };
 
-        return compute(std::make_shared<NonVoidComputer>(wrapped_function), parameterArgs...);
-
-    } else {
-
-        class VoidComputer
-        : public parametric::ComputeNode<VoidComputer, parametric::Results<>, parametric::Arguments<Args...>>
-        {
-        public:
-
-            VoidComputer(Fn f) : _wrapped_function(f) {}
-            
-            void eval() const override final
-            {
-                // handle void-function
-                std::apply(
-                    std::forward<const Fn>(_wrapped_function),
-                    this->args_tuple()
-                );
-            }
-
-        private:
-            Fn _wrapped_function;
-        };
-
-        return compute(std::make_shared<VoidComputer>(wrapped_function), parameterArgs...);
-    }
+    return compute(std::make_shared<Computer>(wrapped_function), parameterArgs...);
 }
 
 /**

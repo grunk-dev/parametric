@@ -248,6 +248,12 @@ namespace {
         using type = std::tuple<param<Ts>...>;
     };
 
+    template <>
+    struct ResultsImpl<void>
+    {
+        using type = std::tuple<>;
+    };
+
 } // anonymous namespace
 
 /// @private
@@ -284,6 +290,11 @@ namespace {
 
 template <typename T>
 using compute_return_value = typename compute_return_value_impl<T>::type;
+
+/**
+ * @brief tag type used as default template type for results or arguments of ComputeNode. 
+ */
+struct ignore{};
 
 /**
  * @brief This class is the base class to define arbitrary compute nodes.
@@ -334,7 +345,7 @@ using compute_return_value = typename compute_return_value_impl<T>::type;
  *  auto res = parametric::compute<DivComputer>(p1, p2);
  * \endcode
  */
-template <typename Derived, typename Results, typename Arguments>
+template <typename Derived, typename Results = ignore, typename Arguments = ignore>
 class ComputeNode
  : public ClonableDAGNode<Derived>
  , public std::enable_shared_from_this<ComputeNode<Derived, Results, Arguments>>
@@ -702,6 +713,7 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 
         return compute(std::make_shared<VoidComputer>(wrapped_function), parameterArgs...);
     }
+
 }
 
 /**

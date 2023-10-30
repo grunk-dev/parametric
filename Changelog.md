@@ -1,3 +1,10 @@
+# v0.3.1
+
+ - Fix bug, where cloned nodes would have the same parent-child relations as the source, but not necessarily the same order of parents/children. Now
+   `clone` preserves the ordering of parents and children (#15)
+ - Fix regression from redesign introduced in v0.3.0, which made it tedious to write ComputeNodes for void functions (#16)
+ - Add default template arguments to `ComputeNode`, as in some cases the result and argument types need not be specified (#16)
+
 # v0.3.0
 
  - Redesign parametic::ComputeNode (#13) to eliminate redundant storange of parent-child relations. This strongly effects the way custom compute nodes are written. This redesign was necessary to enable the possibility of deep-copying a parametric tree

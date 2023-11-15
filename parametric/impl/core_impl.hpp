@@ -30,9 +30,16 @@ template <class ResultType>
 class param_holder : public ClonableDAGNode<param_holder<ResultType>>
 {
 public:
+
+    using value_type = std::conditional_t<
+        std::is_reference_v<ResultType>,
+        std::reference_wrapper<std::remove_reference_t<ResultType>>,
+        ResultType
+    >;
+
     param_holder(const ResultType& v, const std::string& id)
         : ClonableDAGNode<param_holder<ResultType>>(id)
-        , m_value(v)
+        , m_value(std::ref(v))
     {
     }
     param_holder(const std::string& id)
@@ -77,9 +84,9 @@ public:
         throw std::runtime_error("value not initialized");
     }
 
-    template<class T = ResultType>
+    template<class T = value_type>
     typename std::enable_if<EqualityOperatorExists<T>::value>::type
-    set_value(const ResultType& v)
+    set_value(const value_type& v)
     {
         if (!IsValid() || !(v == *m_value)) {
             m_value.reset();
@@ -89,9 +96,9 @@ public:
         }
     }
 
-    template<class T = ResultType>
+    template<class T = value_type>
     typename std::enable_if<!EqualityOperatorExists<T>::value>::type
-    set_value(const ResultType& v)
+    set_value(const value_type& v)
     {
         if (!IsValid()) {
             m_value.reset();
@@ -137,7 +144,7 @@ private:
         validFlag = true;
     }
 
-    std::optional<ResultType> m_value;
+    std::optional<value_type> m_value;
     mutable bool validFlag{false};
 };
 

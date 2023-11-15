@@ -549,6 +549,9 @@ public:
 
 private:
 
+    template <size_t i>
+    using Arg = typename std::remove_reference_t<std::tuple_element_t<i, Arguments>>::value_type;
+
     template <size_t... i>
     static Results initialize_results_impl(std::index_sequence<i...>) {
         return Results(parametric::new_param<typename std::tuple_element_t<i, Results>::value_type>()...);
@@ -556,7 +559,7 @@ private:
 
     template <size_t... i>
     decltype(auto) args_tuple_impl(std::index_sequence<i...>) const {
-        return std::make_tuple(arg<i>().value()...);
+        return std::tuple<Arg<i> const&...>(arg<i>().value()...);
     }
 };
 
@@ -659,7 +662,7 @@ constexpr decltype(auto)
 eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
 {
 
-    using rtype = typename std::invoke_result<Fn, Args...>::type;
+    using rtype = typename std::invoke_result<Fn, Args const&...>::type;
 
     if constexpr (!std::is_void_v<rtype>) {
 

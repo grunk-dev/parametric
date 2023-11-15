@@ -96,3 +96,17 @@ TEST(Eval, void_function)
     o->eval();
     EXPECT_EQ(x, 42.);
 }
+
+namespace {
+    struct Foo {
+        Foo(double v) : bar(v) {}
+        double bar;
+    };
+}
+
+TEST(Eval, member_access) {
+    auto i = parametric::new_param(Foo(42.));
+    auto o = parametric::eval(&Foo::bar, i);
+    static_assert(std::is_same_v<decltype(o), parametric::param<double const&>>);
+    EXPECT_EQ(o, 42.);
+}

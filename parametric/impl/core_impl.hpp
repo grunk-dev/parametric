@@ -8,6 +8,7 @@
 #include <optional>
 #include <cassert>
 #include <stdexcept>
+#include <type_traits>
 
 namespace parametric {
 
@@ -32,15 +33,20 @@ class param_holder : public ClonableDAGNode<param_holder<ResultType>>
 public:
 
     using value_type = std::conditional_t<
-        std::is_reference_v<ResultType>,
+        std::is_lvalue_reference_v<ResultType>,
         std::reference_wrapper<std::remove_reference_t<ResultType>>,
         ResultType
     >;
 
     param_holder(const ResultType& v, const std::string& id)
         : ClonableDAGNode<param_holder<ResultType>>(id)
-        , m_value(std::ref(v))
     {
+        if constexpr (std::is_lvalue_reference_v<ResultType>){
+            m_value = std::ref(v);    
+        }
+        else {
+            m_value = v;
+        }
     }
     param_holder(const std::string& id)
         : ClonableDAGNode<param_holder<ResultType>>(id)

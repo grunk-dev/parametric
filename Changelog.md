@@ -1,3 +1,7 @@
+# v0.3.2
+
+ - Support function returning references (#17)
+
 # v0.3.1
 
  - Fix bug, where cloned nodes would have the same parent-child relations as the source, but not necessarily the same order of parents/children. Now

@@ -335,6 +335,14 @@ public:
         throw std::runtime_error("DAGNode: No implementation for virtual method \"clone\" found.\n");
     }
 
+    std::vector<std::weak_ptr<DAGNode>> const& get_children() const {
+        return childs;
+    }
+
+    std::vector<std::shared_ptr<DAGNode>> const& get_parents() const {
+        return parents;
+    }
+
 private:
     std::string _id; /**< @private */
 

@@ -1,3 +1,7 @@
+# v0.3.3
+
+- Expose parents and children of DAGNode in the public interface (#19)
+
 # v0.3.2
 
  - Support function returning references (#17)

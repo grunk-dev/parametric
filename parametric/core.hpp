@@ -233,35 +233,41 @@ void add_parent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, cons
 
 /// @private 
 /// A type representing the input arguments of a compute node
-template <typename... T>
-using Arguments = std::tuple<param<T> const&...>;
+template <typename S=DefaultSerializer>
+struct ComputeNodeTraits {
 
-namespace {
-
-    template <typename... Ts>
+private:
+    template <bool=true, typename... Ts>
     struct ResultsImpl 
     {
-        using type = std::tuple<param<Ts>...>;
+        using type = std::tuple<param<Ts, S>...>;
     };
 
-    template <typename... Ts>
-    struct ResultsImpl<std::tuple<Ts...>>
+    template <bool dummy, typename... Ts>
+    struct ResultsImpl<dummy, std::tuple<Ts...>>
     {
-        using type = std::tuple<param<Ts>...>;
+        using type = std::tuple<param<Ts, S>...>;
     };
 
-    template <>
-    struct ResultsImpl<void>
+    template <bool dummy>
+    struct ResultsImpl<dummy, void>
     {
         using type = std::tuple<>;
     };
+public:
 
-} // anonymous namespace
+    template <typename... T>
+    using Arguments = std::tuple<param<T, S> const&...>;
 
-/// @private
-/// A type representing the ouptut arguments of a compute node
-template <typename... R>
-using Results = typename ResultsImpl<R...>::type;
+    template <typename... R>
+    using Results = typename ResultsImpl<true, R...>::type;
+};
+
+template <typename... Ts>
+using Arguments = typename ComputeNodeTraits<DefaultSerializer>::template Arguments<Ts...>;
+
+template <typename... Ts>
+using Results = typename ComputeNodeTraits<DefaultSerializer>::template Results<Ts...>;
 
 namespace {
 
@@ -445,10 +451,10 @@ public:
      * @param i the index of the input argument.
      * @return A reference to an input parameter
      */
-    template <typename value_type>
+    template <typename value_type, typename S = DefaultSerializer>
     decltype(auto) arg(int i) const { 
         assert(i < this->parents.size());
-        return dynamic_cast<impl::param_holder<value_type>&>(*(this->parents[i]));
+        return dynamic_cast<impl::param_holder<value_type, S>&>(*(this->parents[i]));
     }
 
     /**
@@ -462,7 +468,8 @@ public:
     decltype(auto) arg() const { 
         assert(this->parents.size() == std::tuple_size_v<Arguments>);
         using value_type = typename std::decay_t<std::tuple_element_t<i, Arguments>>::value_type;
-        return this->arg<value_type>(i);
+        using serializer_type = typename std::decay_t<std::tuple_element_t<i, Arguments>>::serializer_type;
+        return this->arg<value_type, serializer_type>(i);
     }
 
     /**
@@ -484,10 +491,10 @@ public:
      * @tparam i the index of the output argument.
      * @return A shared_ptr to the output parameter
      */
-    template <typename value_type>
+    template <typename value_type, typename S=DefaultSerializer>
     decltype(auto) res(int i) const { 
         assert(i < this->childs.size());
-        return std::dynamic_pointer_cast<impl::param_holder<value_type>>(this->childs[i].lock());
+        return std::dynamic_pointer_cast<impl::param_holder<value_type, S>>(this->childs[i].lock());
     }
 
     /**
@@ -511,7 +518,8 @@ public:
     decltype(auto) res() const { 
         assert(this->childs.size() == std::tuple_size_v<Results>);
         using value_type = typename std::tuple_element_t<i, Results>::value_type;
-        return this->res<value_type>(i);
+        using serializer_type = typename std::tuple_element_t<i, Results>::serializer_type;
+        return this->res<value_type, serializer_type>(i);
     }
 
     /**
@@ -531,8 +539,8 @@ public:
      * @tparam T the type held by the input parameter
      * @param input the input parameter
      */
-    template <typename T>
-    void depends_on(param<T> const& input) {
+    template <typename T, typename S>
+    void depends_on(param<T, S> const& input) {
         auto ptr = this->shared_from_this();
         add_parent(ptr, input.node_pointer());
     }
@@ -543,8 +551,8 @@ public:
      * @tparam T the type held by the output parameter
      * @param output the output parameter
      */
-    template <typename T>
-    void computes(param<T> const& output) {
+    template <typename T, typename S>
+    void computes(param<T, S> const& output) {
         auto ptr = this->shared_from_this();
         add_parent(output.node_pointer(), ptr);
     }
@@ -556,7 +564,12 @@ private:
 
     template <size_t... i>
     static Results initialize_results_impl(std::index_sequence<i...>) {
-        return Results(parametric::new_param<typename std::tuple_element_t<i, Results>::value_type>()...);
+        return Results(
+            parametric::new_param<
+                typename std::tuple_element_t<i, Results>::value_type, 
+                typename std::tuple_element_t<i, Results>::serializer_type
+            >()...
+        );
     };
 
     template <size_t... i>
@@ -659,17 +672,19 @@ decltype(auto) compute(param<Args> const&... args)
  * auto result = parametric::eval(mult, a, b);
  * \endcode
  */
-template<typename Fn, typename... Args>
+template<typename Fn, typename S, typename... Args>
 constexpr decltype(auto)
-eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
+eval(Fn wrapped_function, const parametric::param<Args, S>& ... parameterArgs)
 {
 
     using rtype = typename std::invoke_result<Fn, Args const&...>::type;
+    using Results = typename ComputeNodeTraits<S>::template Results<rtype>;
+        using Arguments = typename ComputeNodeTraits<S>::template Arguments<Args...>;
 
     if constexpr (!std::is_void_v<rtype>) {
 
         class NonVoidComputer
-        : public parametric::ComputeNode<NonVoidComputer, parametric::Results<rtype>, parametric::Arguments<Args...>>
+        : public parametric::ComputeNode<NonVoidComputer, Results, Arguments>
         {
         public:
 
@@ -697,7 +712,7 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
     } else {
 
         class VoidComputer
-        : public parametric::ComputeNode<VoidComputer, parametric::Results<>, parametric::Arguments<Args...>>
+        : public parametric::ComputeNode<VoidComputer, Results, Arguments>
         {
         public:
 
@@ -760,12 +775,15 @@ eval(Fn wrapped_function, const parametric::param<Args>& ... parameterArgs)
  * }
  * \endcode
  */
-template<class T, typename... Args>
+template<class T, typename S, typename... Args>
 parametric::param<T>
-new_parametric_struct(const T& the_struct, const parametric::param<Args>& ... parametric_members)
+new_parametric_struct(const T& the_struct, const parametric::param<Args, S>& ... parametric_members)
 {
+    using Arguments = typename ComputeNodeTraits<S>::template Arguments<>;
+    using Results  = typename ComputeNodeTraits<S>::template Results<>;
+
     // just need a type derived from ClonableDAGNode<Connector>
-    struct Connector : public ComputeNode<Connector,Results<>, Arguments<>> {};
+    struct Connector : public ComputeNode<Connector,Results, Arguments> {};
 
     auto c = std::make_shared<Connector>();
     auto t = param<T>(the_struct, "");

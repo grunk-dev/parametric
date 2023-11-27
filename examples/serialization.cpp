@@ -117,7 +117,7 @@ namespace parametric {
 
 std::string serialize(parametric::param<MyDouble> const& p){
 
-    parametric::Serializer serializer(*(p.node_pointer()));
+    parametric::RecursiveSerializer serializer(*(p.node_pointer()));
 
     std::string out;
 

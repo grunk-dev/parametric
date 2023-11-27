@@ -30,7 +30,7 @@ namespace impl {
 }
 
 /**
- * @brief The Serializer class is a convenience class to recursively serialize
+ * @brief The RecursiveSerializer class is a convenience class to recursively serialize
  * a dependency tree starting at one node. The class will traverse all ancestor
  * nodes, serialize them to a string and store the strings in two stacks. One
  * for the root parameters, and one for the compute nodes. 
@@ -44,7 +44,7 @@ namespace impl {
  * implement ``virtual std::string DAGNode::serialize() const``.
  * 
  */
-class Serializer
+class RecursiveSerializer
 {
 public:
 
@@ -72,7 +72,7 @@ public:
      * @param p The param_holder, that is a node in the feature tree holding a parameter
      */
     template <typename T>
-    Serializer(impl::param_holder<T> const& p)
+    RecursiveSerializer(impl::param_holder<T> const& p)
      : start(p)
     {
         parse_tree();

@@ -69,7 +69,7 @@ TEST(Serialize, CustomComputeNode)
     EXPECT_EQ(z.compute_node()->serialize(), expected);
 }
 
-TEST(Serialize, Serializer)
+TEST(Serialize, RecursiveSerializer)
 {
     // create a dependency tree
     auto a= parametric::new_param(Foo{"XYZ", 44.3}, "a");
@@ -78,7 +78,7 @@ TEST(Serialize, Serializer)
     auto d = parametric::compute(std::make_shared<Bar>("d"), b, c);
 
     // create a serializer for d
-    parametric::Serializer s(*(d.node_pointer()));
+    parametric::RecursiveSerializer s(*(d.node_pointer()));
     EXPECT_FALSE(s.is_dirty());
 
     // extract the stacks of serialized nodes

@@ -182,29 +182,29 @@ private:
  * @brief Convenience function to create a parameter of type T with value v
  * and identifier id
  */
-template <class T>
-param<T> new_param(const T& v, const std::string& id)
+template <class T, typename S=DefaultSerializer>
+param<T, S> new_param(const T& v, const std::string& id)
 {
-    return param<T>(v, id);
+    return param<T, S>(v, id);
 }
 
 /**
  * @brief Convenience function to create a parameter of type T with value v
  */
-template <class T>
-param<T> new_param(const T& v)
+template <class T, typename S=DefaultSerializer>
+param<T, S> new_param(const T& v)
 {
-    return parametric::new_param(v, TypeName<T>::Get());
+    return parametric::new_param<T, S>(v, TypeName<T>::Get());
 }
 
 /**
  * @brief Convenience function to create an empty parameter of
  * and identifier id
  */
-template <class T>
-param<T> new_param()
+template <class T, typename S=DefaultSerializer>
+param<T, S> new_param()
 {
-    return param<T>(TypeName<T>::Get());
+    return param<T, S>(TypeName<T>::Get());
 }
 
 /**
@@ -217,10 +217,10 @@ param<T> new_param()
  * @param id the identifier id
  * @return param<T> the created parameter
  */
-template <typename T, typename... Args>
-param<T> make_param(Args const&... args, std::string const& id){
+template <typename T, typename S=DefaultSerializer, typename... Args>
+param<T, S> make_param(Args const&... args, std::string const& id){
     static_assert(std::is_constructible<T, Args...>::value, "make_param: T is not constructible from given arguments");
-    return parametric::param<T>(std::in_place_t(), args..., id);
+    return parametric::param<T, S>(std::in_place_t(), args..., id);
 }
 
 /// @private

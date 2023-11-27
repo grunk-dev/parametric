@@ -643,8 +643,8 @@ decltype(auto) compute(std::shared_ptr<C> const& ptr, Args&&... args)
  *         - If there is one ouput, it returns a parametric::param<R> instead of a tuple.
  *         - If there is no output, it returns ptr.
  */
-template <typename C, typename... Args>
-decltype(auto) compute(param<Args> const&... args)
+template <typename C, typename S, typename... Args>
+decltype(auto) compute(param<Args, S> const&... args)
 {
     auto ptr = std::make_shared<C>();
     

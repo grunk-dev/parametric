@@ -27,7 +27,7 @@ struct EqualityOperatorExists
 };
 
 template <class ResultType, typename S = DefaultSerializer>
-class param_holder : public ClonableDAGNode<param_holder<ResultType>>
+class param_holder : public ClonableDAGNode<param_holder<ResultType, S>>
 {
 public:
 
@@ -39,7 +39,7 @@ public:
     using serializer_type = S;
 
     param_holder(const ResultType& v, const std::string& id)
-        : ClonableDAGNode<param_holder<ResultType>>(id)
+        : ClonableDAGNode<param_holder<ResultType, S>>(id)
     {
         if constexpr (std::is_lvalue_reference_v<ResultType>){
             m_value = std::ref(v);    
@@ -49,7 +49,7 @@ public:
         }
     }
     param_holder(const std::string& id)
-        : ClonableDAGNode<param_holder<ResultType>>(id)
+        : ClonableDAGNode<param_holder<ResultType, S>>(id)
     {
     }
 
@@ -62,7 +62,7 @@ public:
     // in-place constructor
     template <typename... Args>
     param_holder(std::in_place_t, Args const&... args, std::string const& id)
-        : ClonableDAGNode<param_holder<ResultType>>(id)
+        : ClonableDAGNode<param_holder<ResultType, S>>(id)
         , m_value(std::in_place_t(), args...)
     {}
 

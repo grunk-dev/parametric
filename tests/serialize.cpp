@@ -58,6 +58,23 @@ TEST(Serialize, CustomType)
     EXPECT_EQ(x.node_pointer()->serialize(), expected);
 }
 
+namespace {
+    struct MySerializer
+    {
+        template <typename T>
+        static std::string serialize(T const& t) {
+            return std::string("MySerializer\n") + parametric::serialize(t);
+        }
+    };
+}
+
+TEST(Serialize, CustomSerializer)
+{
+    auto x = parametric::new_param<Foo, MySerializer>(Foo{"XYZ", 44.3});
+    std::string expected = "MySerializer\n{\n    \"name\": \"XYZ\",\n    \"age\": 44.3\n}\n";
+    EXPECT_EQ(x.node_pointer()->serialize(), expected);
+}
+
 TEST(Serialize, CustomComputeNode)
 {
     auto x = parametric::new_param(Foo{"XYZ", 44.3}, "x");

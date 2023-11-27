@@ -28,12 +28,14 @@ namespace parametric
  * it propagates this invalidation to all dependent parameters,
  * requiring their recomputation.
  */
-template <typename T>
+template <typename T, typename S = DefaultSerializer>
 class param
 {
 public:
 
     using value_type = T;
+    using serializer_type = S;
+    using node_type = impl::param_holder<T,S>;
 
 
     /**
@@ -42,7 +44,7 @@ public:
      * After construction, the parameter is valid (it contains a value)
      */
     param(const T& v, const std::string& id)
-        : m_holder(std::make_shared<impl::param_holder<T>>(v, id))
+        : m_holder(std::make_shared<node_type>(v, id))
     {}
 
     /**
@@ -51,16 +53,16 @@ public:
      * After construction, the parameter is invalid (it does not contain a value)
      */
     param(const std::string& id)
-        : m_holder(std::make_shared<impl::param_holder<T>>(id))
+        : m_holder(std::make_shared<node_type>(id))
     {}
 
     template <typename... Args>
     param(std::in_place_t, Args const&... args, std::string const& id)
-        : m_holder(std::make_shared<impl::param_holder<T>>(std::in_place_t(), args..., id))
+        : m_holder(std::make_shared<node_type>(std::in_place_t(), args..., id))
     {}
 
     /// @private
-    const std::shared_ptr<impl::param_holder<T>> node_pointer() const
+    const std::shared_ptr<node_type> node_pointer() const
     {
         return m_holder;
     }
@@ -125,7 +127,7 @@ public:
     /**
      * @brief Sets the value of the parameter, see param::set_value
      */
-    param<T>& operator=(const T& other)
+    param& operator=(const T& other)
     {
         m_holder->set_value(other);
         return *this;
@@ -155,12 +157,12 @@ public:
         return m_holder->IsValid();
     }
 
-    param<T> clone(
+    param clone(
         std::shared_ptr<DAGNode::ClonedNodeMap> cloned_nodes = DAGNode::new_cloned_node_map()
     ) const 
     {
         auto p = param(
-            std::static_pointer_cast<impl::param_holder<T>>(
+            std::static_pointer_cast<node_type>(
                 m_holder->clone(cloned_nodes)
             )
         );
@@ -168,12 +170,12 @@ public:
     }
 
 private:
-    param(const std::shared_ptr<impl::param_holder<T>>& holder)
+    param(const std::shared_ptr<node_type>& holder)
         : m_holder(holder)
     {}
 
 
-    std::shared_ptr<impl::param_holder<T>> m_holder;
+    std::shared_ptr<node_type> m_holder;
 };
 
 /**

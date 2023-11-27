@@ -23,11 +23,13 @@ inline std::string serialize(T const&){
     throw std::logic_error(std::string("No specialization of parametric::serialize found for data type \"") + TypeName<T>::Get() + "\".");
 }
 
-// forward declaration
-namespace impl {
+struct DefaultSerializer
+{
     template <typename T>
-    class param_holder;
-}
+    static std::string serialize(T const& t) {
+        return parametric::serialize(t);
+    }
+};
 
 /**
  * @brief The RecursiveSerializer class is a convenience class to recursively serialize
@@ -71,8 +73,7 @@ public:
      * @tparam T The type held by the param_holder
      * @param p The param_holder, that is a node in the feature tree holding a parameter
      */
-    template <typename T>
-    RecursiveSerializer(impl::param_holder<T> const& p)
+    RecursiveSerializer(DAGNode const& p)
      : start(p)
     {
         parse_tree();

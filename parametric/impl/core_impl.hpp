@@ -26,8 +26,7 @@ struct EqualityOperatorExists
     enum { value = !std::is_same<decltype(std::declval<T>() == std::declval<Arg>()), No>::value };
 };
 
-
-template <class ResultType>
+template <class ResultType, typename S = DefaultSerializer>
 class param_holder : public ClonableDAGNode<param_holder<ResultType>>
 {
 public:
@@ -37,6 +36,7 @@ public:
         std::reference_wrapper<std::remove_reference_t<ResultType>>,
         ResultType
     >;
+    using serializer_type = S;
 
     param_holder(const ResultType& v, const std::string& id)
         : ClonableDAGNode<param_holder<ResultType>>(id)
@@ -56,7 +56,7 @@ public:
     virtual std::string serialize() const override 
     {
         // this triggers evaluation of the node
-        return parametric::serialize(value());
+        return S::serialize(value());
     }
 
     // in-place constructor

@@ -58,6 +58,23 @@ TEST(Serialize, CustomType)
     EXPECT_EQ(x.node_pointer()->serialize(), expected);
 }
 
+namespace {
+    struct MySerializer
+    {
+        template <typename T>
+        static std::string serialize(T const& t) {
+            return std::string("MySerializer\n") + parametric::serialize(t);
+        }
+    };
+}
+
+TEST(Serialize, CustomSerializer)
+{
+    auto x = parametric::new_param<Foo, MySerializer>(Foo{"XYZ", 44.3});
+    std::string expected = "MySerializer\n{\n    \"name\": \"XYZ\",\n    \"age\": 44.3\n}\n";
+    EXPECT_EQ(x.node_pointer()->serialize(), expected);
+}
+
 TEST(Serialize, CustomComputeNode)
 {
     auto x = parametric::new_param(Foo{"XYZ", 44.3}, "x");
@@ -69,7 +86,7 @@ TEST(Serialize, CustomComputeNode)
     EXPECT_EQ(z.compute_node()->serialize(), expected);
 }
 
-TEST(Serialize, Serializer)
+TEST(Serialize, RecursiveSerializer)
 {
     // create a dependency tree
     auto a= parametric::new_param(Foo{"XYZ", 44.3}, "a");
@@ -78,7 +95,7 @@ TEST(Serialize, Serializer)
     auto d = parametric::compute(std::make_shared<Bar>("d"), b, c);
 
     // create a serializer for d
-    parametric::Serializer s(*(d.node_pointer()));
+    parametric::RecursiveSerializer s(*(d.node_pointer()));
     EXPECT_FALSE(s.is_dirty());
 
     // extract the stacks of serialized nodes

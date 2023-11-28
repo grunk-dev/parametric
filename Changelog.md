@@ -1,3 +1,7 @@
+# v0.3.4
+
+- Add a second defaulted template parameter to `parametric::param`, so that consumers of the library can provide their own serialization class (#20)
+
 # v0.3.3
 
 - Expose parents and children of DAGNode in the public interface (#19)

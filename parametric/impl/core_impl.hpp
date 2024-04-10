@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <type_traits>
 
+#define PSTL_USE_PARALLEL_POLICIES 0
 #include <algorithm>
 #include <execution>
 #include <mutex>

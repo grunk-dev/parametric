@@ -58,11 +58,15 @@ build-ubuntu:
   before_script:
   # setup and update conan profile. Specifically, for GCC set compiler.libcxx
   - *configure_libcxx
-  - sudo apt-get -qq update && sudo apt -qq -y install doxygen libtbb-dev
+  - sudo apt-get -qq update && sudo apt -qq -y install doxygen
+  # install requirements for documentation
   - pip3 install 'Sphinx>=2.4.0,<3.0.0' sphinx-rtd-theme 'breathe<4.15.0' m2r 'mistune==0.8.4' 'Jinja2<3.1'
   script:
   - mkdir $BUILD_DIR && cd $BUILD_DIR
-  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPARAMETRIC_BUILD_DOCS=ON -DCMAKE_INSTALL_PREFIX=../parametric-current
+  # install legacy tbb, which should be compatible with older gcc versions and clang
+  - conan install tbb/2020.3@ -g CMakeDeps
+  # configure and build
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPARAMETRIC_BUILD_DOCS=ON -DCMAKE_INSTALL_PREFIX=../parametric-current -DTBB_DIR=/opt/pyenv/versions/3.7.13/lib/cmake/tbb
   - cmake --build .
   - cmake --build . --target Sphinx
   - cmake --build . --target install

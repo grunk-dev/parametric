@@ -5,7 +5,6 @@ if (NOT TARGET "parametric")
   find_package(parametric REQUIRED)
 endif()
 
-find_package(TBB REQUIRED COMPONENTS tbb)
 
 enable_testing()
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
@@ -25,6 +24,6 @@ set(TESTSOURCES
 )
 
 add_executable(runUnitTests ${TESTSOURCES})
-target_link_libraries(runUnitTests PRIVATE parametric gtest_main tbb)
+target_link_libraries(runUnitTests PRIVATE parametric gtest_main)
 target_compile_features(runUnitTests PRIVATE cxx_std_17)
 add_gtest(runUnitTests)

@@ -3,6 +3,9 @@
 #include <parametric/core.hpp>
 #include <parametric/operators.hpp>
 
+#include <chrono>
+#include <thread>
+
 double add(double v1, double v2) {
     return v1 + v2;
 }
@@ -109,4 +112,33 @@ TEST(Eval, member_access) {
     auto o = parametric::eval(&Foo::bar, i);
     static_assert(std::is_same_v<decltype(o), parametric::param<double const&>>);
     EXPECT_EQ(o, 42.);
+}
+
+TEST(Eval, multithreading) {
+    auto add = [](int l, int r){
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        return l+r;
+    };
+
+    auto x = parametric::new_param(1);
+    auto y = parametric::new_param(2);
+    auto z = parametric::eval(add, x, y);
+
+    auto a = parametric::new_param(4);
+    auto b = parametric::new_param(5);
+    auto c = parametric::eval(add, a, b);
+
+    auto r = parametric::eval(add, z, c);
+
+    using namespace std::chrono_literals;
+    const auto start = std::chrono::high_resolution_clock::now();
+
+    EXPECT_EQ(12, r.value());
+
+    const auto end = std::chrono::high_resolution_clock::now();
+    const std::chrono::duration<double, std::milli> elapsed = end - start;
+    
+    if (std::thread::hardware_concurrency() > 1) {
+        EXPECT_LE(elapsed.count(), 250);
+    }
 }

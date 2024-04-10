@@ -6,14 +6,16 @@ if (NOT TARGET "parametric")
   find_package(parametric REQUIRED)
 endif()
 
+find_package(TBB REQUIRED COMPONENTS tbb)
+
 add_executable(tutorial tutorial.cpp)
 add_executable(custom_computenode custom_computenode.cpp)
 add_executable(parametric_struct parametric_struct.cpp)
 add_executable(serialization serialization.cpp)
-target_link_libraries(tutorial PRIVATE parametric)
-target_link_libraries(custom_computenode PRIVATE parametric)
-target_link_libraries(parametric_struct PRIVATE parametric)
-target_link_libraries(serialization PRIVATE parametric)
+target_link_libraries(tutorial PRIVATE parametric tbb)
+target_link_libraries(custom_computenode PRIVATE parametric tbb)
+target_link_libraries(parametric_struct PRIVATE parametric tbb)
+target_link_libraries(serialization PRIVATE parametric tbb)
 
 # a CAD example
 find_package(OCE QUIET)

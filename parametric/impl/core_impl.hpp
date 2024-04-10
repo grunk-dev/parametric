@@ -10,6 +10,10 @@
 #include <stdexcept>
 #include <type_traits>
 
+#include <algorithm>
+#include <execution>
+#include <mutex>
+
 namespace parametric {
 
 namespace impl
@@ -37,6 +41,14 @@ public:
         ResultType
     >;
     using serializer_type = S;
+
+    param_holder(param_holder const& other) 
+        : ClonableDAGNode<param_holder<ResultType, S>>(other)
+    {
+        std::lock_guard lock(other.mutex);
+        validFlag = other.validFlag;
+        m_value = other.m_value;
+    }
 
     param_holder(const ResultType& v, const std::string& id)
         : ClonableDAGNode<param_holder<ResultType, S>>(id)
@@ -125,8 +137,6 @@ public:
     }
 
     const NodeRef compute_node() const {
-        // TODO: Here we need a mutex to avoid multiple threads computing
-        // The same value
         assert(this->parents.size() <= 1);
 
         if (this->parents.size() > 0) {
@@ -144,13 +154,28 @@ protected:
 private:
     void eval() const override
     {
+        std::lock_guard lock(mutex);
+
+        validFlag = false;
+
         if (auto p = compute_node(); p) {
+
+            // explicitly evaluate inputs of compute node
+            // in parallel instead of relying on recursion
+            std::for_each(
+                std::execution::par,
+                p->get_parents().begin(),
+                p->get_parents().end(),
+                [](auto const& p){ p->eval(); }
+            );   
+
             p->eval();
         }
         validFlag = true;
     }
 
     std::optional<value_type> m_value;
+    mutable std::mutex mutex;
     mutable bool validFlag{false};
 };
 

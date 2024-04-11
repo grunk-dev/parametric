@@ -65,7 +65,8 @@ build-ubuntu:
   - pip3 install tbb-devel
   script:
   - mkdir $BUILD_DIR && cd $BUILD_DIR
-  # configure and build
+  # configure and build (why do I explictly need to add path to tbb to env?)
+  - export LIBRARY_PATH=/opt/pyenv/versions/3.7.13/lib/:$LIBRARY_PATH
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPARAMETRIC_BUILD_DOCS=ON -DCMAKE_INSTALL_PREFIX=../parametric-current -DTBB_DIR=/opt/pyenv/versions/3.7.13/lib/cmake/tbb
   - cmake --build .
   - cmake --build . --target Sphinx

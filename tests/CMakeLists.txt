@@ -34,6 +34,7 @@ target_link_libraries(runUnitTests PRIVATE parametric gtest_main)
 if(MULTI_THREADED)
   if(UNIX)
   target_link_libraries(runUnitTests PRIVATE tbb)
+  target_compile_definitions(runUnitTests PUBLIC MULTI_THREADED=1)
   endif(UNIX)
 endif(MULTI_THREADED)
 

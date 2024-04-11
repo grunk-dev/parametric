@@ -10,9 +10,10 @@
 #include <stdexcept>
 #include <type_traits>
 
-#define PSTL_USE_PARALLEL_POLICIES 0
 #include <algorithm>
+#ifdef MULTI_THREADED
 #include <execution>
+#endif
 #include <mutex>
 
 namespace parametric {
@@ -161,6 +162,7 @@ private:
 
         if (auto p = compute_node(); p) {
 
+#ifdef MULTI_THREADED
             // explicitly evaluate inputs of compute node
             // in parallel instead of relying on recursion
             std::for_each(
@@ -168,7 +170,8 @@ private:
                 p->get_parents().begin(),
                 p->get_parents().end(),
                 [](auto const& p){ p->eval(); }
-            );   
+            );
+#endif
 
             p->eval();
         }

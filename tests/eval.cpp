@@ -114,6 +114,7 @@ TEST(Eval, member_access) {
     EXPECT_EQ(o, 42.);
 }
 
+#ifdef MULTI_THREADED
 TEST(Eval, multithreading) {
     auto add = [](int l, int r){
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -142,3 +143,4 @@ TEST(Eval, multithreading) {
         EXPECT_LE(elapsed.count(), 250);
     }
 }
+#endif

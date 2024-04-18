@@ -14,27 +14,6 @@ target_include_directories(parametric INTERFACE
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-
-SET(MULTI_THREADED FALSE)
-include(CheckIncludeFileCXX)
-CHECK_INCLUDE_FILE_CXX("execution" HAS_EXECUTION_POLICY)
-if(HAS_EXECUTION_POLICY)
-  SET(MULTI_THREADED TRUE)
-  message(STATUS "execution policies are available")
-  if(UNIX)
-    find_package(TBB COMPONENTS tbb)
-    if (TBB_FOUND)
-      target_link_libraries(parametric INTERFACE tbb)
-    else(TBB_FOUND)
-      SET(MULTI_THREADED FALSE)
-    endif(TBB_FOUND)
-  endif(UNIX)
-endif(HAS_EXECUTION_POLICY)
-if(MULTI_THREADED)
-  message(STATUS "parametric can be used with multithreaded support")
-  target_compile_definitions(parametric INTERFACE MULTI_THREADED=1)
-endif(MULTI_THREADED)
-
 target_compile_features(parametric INTERFACE cxx_std_17)
 
 include(GNUInstallDirs)

@@ -4,6 +4,8 @@
 #include <parametric/dag.hpp>
 #include <parametric/serialization.hpp>
 
+#include <omp.h>
+
 #include <memory>
 #include <optional>
 #include <cassert>
@@ -11,10 +13,6 @@
 #include <type_traits>
 
 #include <algorithm>
-#ifdef MULTI_THREADED
-#include <execution>
-#endif
-#include <mutex>
 
 namespace parametric {
 
@@ -47,9 +45,11 @@ public:
     param_holder(param_holder const& other) 
         : ClonableDAGNode<param_holder<ResultType, S>>(other)
     {
-        std::lock_guard lock(other.mutex);
-        validFlag = other.validFlag;
-        m_value = other.m_value;
+        #pragma omp critical
+        {
+            validFlag = other.validFlag;
+            m_value = other.m_value;
+        }
     }
 
     param_holder(const ResultType& v, const std::string& id)
@@ -156,22 +156,12 @@ protected:
 private:
     void eval() const override
     {
-        std::lock_guard lock(mutex);
-
-        validFlag = false;
-
-        if (auto p = compute_node(); p) {
-
-#ifdef MULTI_THREADED
-            // explicitly evaluate inputs of compute node
-            // in parallel instead of relying on recursion
-            std::for_each(
-                std::execution::par,
-                p->get_parents().begin(),
-                p->get_parents().end(),
-                [](auto const& p){ p->eval(); }
-            );
-#endif
+        if (auto p = compute_node(); p && !IsValid()) {
+            auto& arguments = p->get_parents();
+            #pragma omp parallel for num_threads(arguments.size())
+            for(size_t i=0; i < arguments.size(); ++i) {
+                arguments[i]->eval();
+            }
 
             p->eval();
         }
@@ -179,7 +169,6 @@ private:
     }
 
     std::optional<value_type> m_value;
-    mutable std::mutex mutex;
     mutable bool validFlag{false};
 };
 

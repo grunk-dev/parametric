@@ -121,8 +121,6 @@ TEST(Eval, multithreading) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         return l+r;
     };
-    omp_set_max_active_levels(4);
-    std::cout << omp_get_max_active_levels() << "\n";
 
     auto l00 = parametric::new_param(1);
     auto l01 = parametric::new_param(2);
@@ -141,6 +139,8 @@ TEST(Eval, multithreading) {
     using namespace std::chrono_literals;
     const auto start = std::chrono::high_resolution_clock::now();
 
+    #pragma omp parallel
+    #pragma omp single nowait
     EXPECT_EQ(20, l30.value());
 
     const auto end = std::chrono::high_resolution_clock::now();

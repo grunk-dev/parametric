@@ -158,11 +158,11 @@ private:
     {
         if (auto p = compute_node(); p && !IsValid()) {
             auto& arguments = p->get_parents();
-            #pragma omp parallel for num_threads(arguments.size())
-            for(size_t i=0; i < arguments.size(); ++i) {
+            #pragma omp taskloop
+            for(int i=0; i < arguments.size(); ++i) {
                 arguments[i]->eval();
             }
-
+            #pragma omp taskwait
             p->eval();
         }
         validFlag = true;

@@ -116,8 +116,8 @@ TEST(Eval, member_access) {
 }
 
 TEST(Eval, multithreading) {
+
     auto add = [](int l, int r){
-        std::cout << "adding " << l << " and " << r << "\n";
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         return l+r;
     };
@@ -148,8 +148,7 @@ TEST(Eval, multithreading) {
     
     // parallel evaluation should first one add, then two adds in parallel, then three adds in parallel.
     // Since add takes approx. 100 ms, I expect the total execution time to be below 350
-    std::cout << elapsed.count() << "\n";
-    if (std::thread::hardware_concurrency() > 1) {
+    if (std::thread::hardware_concurrency() > 2) {
         EXPECT_LE(elapsed.count(), 350);
     }
 }

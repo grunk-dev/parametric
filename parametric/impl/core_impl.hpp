@@ -1,6 +1,7 @@
 #ifndef CORE_IMPL_HPP
 #define CORE_IMPL_HPP
 
+#include <parametric/mutex.hpp>
 #include <parametric/dag.hpp>
 #include <parametric/serialization.hpp>
 
@@ -45,11 +46,10 @@ public:
     param_holder(param_holder const& other) 
         : ClonableDAGNode<param_holder<ResultType, S>>(other)
     {
-        #pragma omp critical
-        {
-            validFlag = other.validFlag;
-            m_value = other.m_value;
-        }
+        ScopedLock lock(other.m_mutex);
+
+        validFlag = other.validFlag;
+        m_value = other.m_value;
     }
 
     param_holder(const ResultType& v, const std::string& id)
@@ -156,6 +156,8 @@ protected:
 private:
     void eval() const override
     {
+        ScopedLock lock(m_mutex);
+
         if (auto p = compute_node(); p && !IsValid()) {
             auto& arguments = p->get_parents();
             #pragma omp taskloop
@@ -169,6 +171,7 @@ private:
     }
 
     std::optional<value_type> m_value;
+    mutable mutex m_mutex;
     mutable bool validFlag{false};
 };
 

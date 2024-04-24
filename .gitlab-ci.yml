@@ -84,6 +84,8 @@ test-ubuntu:
   - docker
   image: conanio/$COMPILER-ubuntu18.04
   stage: test
+  before_script:
+  - sudo apt-get -qq update && sudo apt -qq -y install libomp-dev
   script:
   - cd $BUILD_DIR/tests
   - ./runUnitTests --gtest_output="xml:report.xml"

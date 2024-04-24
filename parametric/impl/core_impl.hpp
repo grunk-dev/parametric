@@ -160,8 +160,8 @@ private:
 
         if (auto p = compute_node(); p && !IsValid()) {
             auto& arguments = p->get_parents();
-            #pragma omp taskloop
             for(int i=0; i < arguments.size(); ++i) {
+                #pragma omp task
                 arguments[i]->eval();
             }
             #pragma omp taskwait

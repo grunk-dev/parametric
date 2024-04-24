@@ -8,6 +8,15 @@ endif()
 
 find_package(OpenMP)
 
+if (OpenMP_CXX_FOUND)
+  if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -openmp:llvm -openmp:experimental")
+  endif()
+  if (CMAKE_CXX_COMPILER_ID MATCHES "CLANG")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp=libomp")
+  endif()
+endif()
+
 add_executable(tutorial tutorial.cpp)
 add_executable(custom_computenode custom_computenode.cpp)
 add_executable(parametric_struct parametric_struct.cpp)

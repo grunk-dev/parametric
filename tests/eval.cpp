@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <omp.h>
 #include <parametric/core.hpp>
 #include <parametric/operators.hpp>
 
@@ -139,8 +138,6 @@ TEST(Eval, multithreading) {
     using namespace std::chrono_literals;
     const auto start = std::chrono::high_resolution_clock::now();
 
-    #pragma omp parallel
-    #pragma omp single nowait
     EXPECT_EQ(20, l30.value());
 
     const auto end = std::chrono::high_resolution_clock::now();

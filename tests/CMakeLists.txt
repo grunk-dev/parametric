@@ -24,6 +24,5 @@ set(TESTSOURCES
 
 add_executable(runUnitTests ${TESTSOURCES})
 target_link_libraries(runUnitTests PRIVATE parametric gtest_main)
-
 target_compile_features(runUnitTests PRIVATE cxx_std_17)
 add_gtest(runUnitTests)

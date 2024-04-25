@@ -1,11 +1,10 @@
 #ifndef CORE_IMPL_HPP
 #define CORE_IMPL_HPP
 
-#include <parametric/mutex.hpp>
 #include <parametric/dag.hpp>
 #include <parametric/serialization.hpp>
 
-#include <omp.h>
+#include <mutex>
 
 #include <memory>
 #include <optional>
@@ -46,7 +45,7 @@ public:
     param_holder(param_holder const& other) 
         : ClonableDAGNode<param_holder<ResultType, S>>(other)
     {
-        ScopedLock lock(other.m_mutex);
+        auto lock = std::lock_guard<std::mutex>(m_mutex);
 
         validFlag = other.validFlag;
         m_value = other.m_value;
@@ -156,22 +155,36 @@ protected:
 private:
     void eval() const override
     {
-        ScopedLock lock(m_mutex);
+        auto lock = std::lock_guard<std::mutex>(m_mutex);
 
         if (auto p = compute_node(); p && !IsValid()) {
-            auto& arguments = p->get_parents();
-            for(int i=0; i < arguments.size(); ++i) {
-                #pragma omp task
-                arguments[i]->eval();
-            }
-            #pragma omp taskwait
+            pre_evaluate_arguments();
             p->eval();
         }
         validFlag = true;
     }
 
+    void pre_evaluate_arguments() const
+    {
+        if (auto p = compute_node(); p && !IsValid()) {
+            auto& arguments = p->get_parents();
+            std::vector<std::thread> threads;
+            for(int i=0; i < arguments.size(); ++i) {
+                auto& arg = arguments[i];
+                threads.push_back(
+                    std::thread(
+                        [&]{ arg->eval(); }
+                    )
+                );
+            }
+            for (auto& thread : threads) {
+                thread.join();
+            }
+        }
+    }
+
     std::optional<value_type> m_value;
-    mutable mutex m_mutex;
+    mutable std::mutex m_mutex;
     mutable bool validFlag{false};
 };
 

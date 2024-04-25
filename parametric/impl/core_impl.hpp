@@ -4,6 +4,7 @@
 #include <parametric/dag.hpp>
 #include <parametric/serialization.hpp>
 
+#include <thread>
 #include <mutex>
 #include <memory>
 #include <optional>

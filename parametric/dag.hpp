@@ -250,6 +250,9 @@ public:
         }
     }
 
+    /**
+     * @brief swap_child swaps a child without adding this as parent to child_new
+     */
     void swap_child(const DAGNode& child_old, const NodeRef& child_new)
     {
         if(
@@ -262,6 +265,27 @@ public:
         {
             *search = child_new;
         }
+    }
+
+    /**
+     * @brief swap_parent swaps a parent without adding this as child to parent_new
+     */
+    void swap_parent(const DAGNode& parent_old, const NodeRef& parent_new)
+    {
+        if (
+            auto search = std::find_if(
+                parents.begin(), parents.end(),
+                [&parent_old](NodeRef& parent) { return parent.get() == &parent_old; }
+            );
+            search != parents.end()
+        )
+        {
+            *search = parent_new;
+        }
+    }
+
+    void add_child(const NodeRef& child_new) {
+        childs.push_back(child_new);
     }
 
     /**

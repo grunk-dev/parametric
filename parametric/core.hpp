@@ -52,7 +52,7 @@ public:
      *
      * After construction, the parameter is invalid (it does not contain a value)
      */
-    param(const std::string& id)
+    explicit param(const std::string& id)
         : m_holder(std::make_shared<node_type>(id))
     {}
 

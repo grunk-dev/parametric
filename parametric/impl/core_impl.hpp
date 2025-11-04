@@ -70,9 +70,6 @@ public:
     {
         if (!IsValid()) {
             eval();
-            // this assertion should only fail, if the node was not connected to its compute node
-            // and therefore compute fails
-            assert(IsValid());
         }
 
         if (m_value) {
@@ -94,7 +91,7 @@ public:
     typename std::enable_if<EqualityOperatorExists<T>::value>::type
     set_value(const value_type& v)
     {
-        if (!IsValid() || !(v == *m_value)) {
+        if (!(v == *m_value)) {
             m_value.reset();
             m_value = v;
             this->invalidate();
@@ -106,15 +103,13 @@ public:
     typename std::enable_if<!EqualityOperatorExists<T>::value>::type
     set_value(const value_type& v)
     {
-        if (!IsValid()) {
-            m_value.reset();
-            m_value = v;
-            this->invalidate();
-            validFlag = true;
-        }
+        m_value.reset();
+        m_value = v;
+        this->invalidate();
+        validFlag = true;
     }
 
-    bool IsValid() const
+    bool IsValid() const override final
     {
         return validFlag;
     }
@@ -147,7 +142,7 @@ private:
         if (auto p = compute_node(); p) {
             p->eval();
         }
-        validFlag = true;
+        validFlag = m_value.has_value();
     }
 
     std::optional<value_type> m_value;

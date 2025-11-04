@@ -306,6 +306,11 @@ public:
      */
     virtual void eval() const {}
 
+    /**
+     * @brief Returns whether the node is in a valid state
+     */
+    virtual bool IsValid() const { return false; };
+
     virtual ~DAGNode()
     {
         for (const auto& parent : parents) {

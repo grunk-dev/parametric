@@ -91,7 +91,7 @@ public:
     typename std::enable_if<EqualityOperatorExists<T>::value>::type
     set_value(const value_type& v)
     {
-        if (!(v == *m_value)) {
+        if (!m_value || !(v == *m_value)) {
             m_value.reset();
             m_value = v;
             this->invalidate();

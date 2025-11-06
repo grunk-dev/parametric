@@ -3,6 +3,9 @@
 #include <parametric/core.hpp>
 #include <parametric/operators.hpp>
 
+#include <chrono>
+#include <thread>
+
 double add(double v1, double v2) {
     return v1 + v2;
 }
@@ -109,4 +112,40 @@ TEST(Eval, member_access) {
     auto o = parametric::eval(&Foo::bar, i);
     static_assert(std::is_same_v<decltype(o), parametric::param<double const&>>);
     EXPECT_EQ(o, 42.);
+}
+
+TEST(Eval, multithreading) {
+
+    auto add = [](int l, int r){
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        return l+r;
+    };
+
+    auto l00 = parametric::new_param(1);
+    auto l01 = parametric::new_param(2);
+    auto l02 = parametric::new_param(3);
+    auto l03 = parametric::new_param(4);
+
+    auto l10 = parametric::eval(add, l00, l01);
+    auto l11 = parametric::eval(add, l01, l02);
+    auto l12 = parametric::eval(add, l02, l03);
+
+    auto l20 = parametric::eval(add, l10, l11);
+    auto l21 = parametric::eval(add, l11, l12);
+
+    auto l30 = parametric::eval(add, l20, l21);
+
+    using namespace std::chrono_literals;
+    const auto start = std::chrono::high_resolution_clock::now();
+
+    EXPECT_EQ(20, l30.value());
+
+    const auto end = std::chrono::high_resolution_clock::now();
+    const std::chrono::duration<double, std::milli> elapsed = end - start;
+    
+    // parallel evaluation should first one add, then two adds in parallel, then three adds in parallel.
+    // Since add takes approx. 100 ms, I expect the total execution time to be below 350
+    if (std::thread::hardware_concurrency() > 2) {
+        EXPECT_LE(elapsed.count(), 350);
+    }
 }

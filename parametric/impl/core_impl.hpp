@@ -4,6 +4,8 @@
 #include <parametric/dag.hpp>
 #include <parametric/serialization.hpp>
 
+#include <thread>
+#include <mutex>
 #include <memory>
 #include <optional>
 #include <cassert>
@@ -37,6 +39,15 @@ public:
         ResultType
     >;
     using serializer_type = S;
+
+    param_holder(param_holder const& other) 
+        : ClonableDAGNode<param_holder<ResultType, S>>(other)
+    {
+        auto lock = std::lock_guard<std::mutex>(m_mutex);
+
+        validFlag = other.validFlag;
+        m_value = other.m_value;
+    }
 
     param_holder(const ResultType& v, const std::string& id)
         : ClonableDAGNode<param_holder<ResultType, S>>(id)
@@ -120,8 +131,6 @@ public:
     }
 
     const NodeRef compute_node() const {
-        // TODO: Here we need a mutex to avoid multiple threads computing
-        // The same value
         assert(this->parents.size() <= 1);
 
         if (this->parents.size() > 0) {
@@ -139,13 +148,36 @@ protected:
 private:
     void eval() const override
     {
-        if (auto p = compute_node(); p) {
+        auto lock = std::lock_guard<std::mutex>(m_mutex);
+
+        if (auto p = compute_node(); p && !IsValid()) {
+            pre_evaluate_arguments();
             p->eval();
         }
         validFlag = m_value.has_value();
     }
 
+    void pre_evaluate_arguments() const
+    {
+        if (auto p = compute_node(); p && !IsValid()) {
+            auto& arguments = p->get_parents();
+            std::vector<std::thread> threads;
+            for(int i=0; i < arguments.size(); ++i) {
+                auto& arg = arguments[i];
+                threads.push_back(
+                    std::thread(
+                        [&]{ arg->eval(); }
+                    )
+                );
+            }
+            for (auto& thread : threads) {
+                thread.join();
+            }
+        }
+    }
+
     std::optional<value_type> m_value;
+    mutable std::mutex m_mutex;
     mutable bool validFlag{false};
 };
 

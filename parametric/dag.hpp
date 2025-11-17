@@ -36,6 +36,16 @@ typedef std::shared_ptr<parametric::DAGNode> NodeRef;
      */
 void add_parent(const NodeRef& child, const NodeRef& parent);
 
+
+/**
+ * @brief swap_node replaces old_node in old_node's DAG with new_node.
+ * The old_node remains valid, but its children now use new_node instead.
+ * The new_node's previous parent-child-relations are kept in place.
+ * @param old_node
+ * @param new_node
+ */
+void swap_node(const NodeRef& old_node, const NodeRef& new_node);
+
 /**
  * @brief This class provides a basis node of a directed acyclic graph (DAG)
  *
@@ -102,6 +112,21 @@ public:
         }
 
         child->parents.push_back(parent);
+    }
+
+    friend void swap_node(const NodeRef& old_node, const NodeRef& new_node)
+    {
+        auto const& children = old_node->get_children();
+        for (auto const& c : children) {
+            if (auto cp = c.lock(); cp) {
+                cp->swap_parent(
+                    *old_node,
+                    new_node
+                );
+                old_node->remove_child(cp);
+                new_node->add_child(cp);
+            }
+        }
     }
 
     /**
@@ -250,6 +275,9 @@ public:
         }
     }
 
+    /**
+     * @brief swap_child swaps a child without adding this as parent to child_new
+     */
     void swap_child(const DAGNode& child_old, const NodeRef& child_new)
     {
         if(
@@ -263,6 +291,7 @@ public:
             *search = child_new;
         }
     }
+
 
     /**
      * @brief returns the number of parents
@@ -352,6 +381,46 @@ private:
     std::string _id; /**< @private */
 
 protected:
+
+    /**
+     * @brief swap_parent swaps a parent without adding this as child to parent_new
+     */
+    void swap_parent(const DAGNode& parent_old, const NodeRef& parent_new)
+    {
+        if (
+            auto search = std::find_if(
+                parents.begin(), parents.end(),
+                [&parent_old](NodeRef& parent) { return parent.get() == &parent_old; }
+                );
+            search != parents.end()
+            )
+        {
+            *search = parent_new;
+        }
+    }
+
+    /**
+     * @brief add_child adds a new child, without modifying the parent list of the child
+     * @param child_new
+     */
+    void add_child(const NodeRef& child_new) {
+        childs.push_back(child_new);
+    }
+
+    void remove_child(const NodeRef& child) {
+        if(
+            auto search = std::find_if(
+                childs.begin(), childs.end(),
+                [&child](std::weak_ptr<DAGNode>& c){ return c.lock().get() == child.get(); }
+                );
+            search != childs.end()
+            )
+        {
+            childs.erase(search);
+        }
+    }
+
+
     mutable std::vector<std::weak_ptr<DAGNode>> childs; /**< @brief Pointer to child nodes */
     std::vector<std::shared_ptr<DAGNode>> parents;      /**< @brief Pointer to parent nodes */
 

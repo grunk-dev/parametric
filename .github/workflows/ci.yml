@@ -20,8 +20,8 @@ jobs:
         config: ["Release"]
         os: ["ubuntu-latest", "ubuntu-22.04", "windows-2022", "windows-latest", "macos-13"]
         include:
-         - os: ubuntu-latest
-           config: Debug
+         - config: Debug
+           os: ubuntu-latest
     uses: ./.github/workflows/build-test.yml
     secrets: inherit
     with:

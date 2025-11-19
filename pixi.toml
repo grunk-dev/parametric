@@ -21,6 +21,7 @@ docutils = "<0.21"
 [tasks]
 configure = { cmd = [
     "cmake", 
+    "-G", "Ninja",
     "-S", ".",
     "-B", "build",
     "-D", "CMAKE_INSTALL_PREFIX=build/install",

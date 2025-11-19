@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  schedule:
+    - cron: "20 3 * * 2"
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+  push:
+    branches:
+      - 'main'
+    tags:
+      - v*
+  workflow_dispatch:
+
+jobs:
+
+  build-test:
+    strategy:
+      matrix:
+        config: ["Debug", "Release"]
+        os: ["ubuntu-latest", "ubuntu-22.04", "windows-2022", "windows-latest", "macos-13"]
+        exclude:
+         - os: windows-2022
+           config: Debug
+         - os: windows-latest
+           config: Debug
+    runs-on: ${{ matrix.os }}
+    uses: ./.github/workflows/build-test.yml
+    secrets: inherit
+    with:
+      os: ${{ matrix.os }}
+      config: ${{ matrix.config }}
+      pixi-cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}

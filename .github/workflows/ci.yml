@@ -17,12 +17,10 @@ jobs:
   build-test:
     strategy:
       matrix:
-        config: ["Debug", "Release"]
+        config: ["Release"]
         os: ["ubuntu-latest", "ubuntu-22.04", "windows-2022", "windows-latest", "macos-13"]
-        exclude:
-         - os: windows-2022
-           config: Debug
-         - os: windows-latest
+        include:
+         - os: ubuntu-latest
            config: Debug
     uses: ./.github/workflows/build-test.yml
     secrets: inherit

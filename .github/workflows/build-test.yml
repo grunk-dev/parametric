@@ -78,7 +78,7 @@ jobs:
           path: build.tar.gz
           retention-days: 1
 
-test:
+  test:
     runs-on: ${{ inputs.os }}
     needs: build
     steps:

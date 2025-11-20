@@ -5,9 +5,11 @@ authors = ["Jan Kleienrt <jan.kleinert@dlr.de>"]
 platforms = ["win-64", "linux-64", "osx-64"]
 channels = ["conda-forge"]
 
-[dependencies]
+[feature.base.dependencies]
 cmake = "*"
 ninja = "*"
+
+[feature.docs.dependencies]
 doxygen = "*"
 sphinx = "*"
 sphinx_rtd_theme = "*"
@@ -18,6 +20,10 @@ jinja2 = "<3.1"
 standard-imghdr = "*"
 docutils = "<0.21"
 
+[environments]
+"default" = ["base"]
+"docs" = ["base", "docs"]
+
 [tasks]
 configure = { cmd = [
     "cmake", 
@@ -26,9 +32,10 @@ configure = { cmd = [
     "-B", "build",
     "-D", "CMAKE_INSTALL_PREFIX=build/install",
     "-D", "CMAKE_BUILD_TYPE={{ config }}",
-    "-D", "PARAMETRIC_BUILD_DOCS=ON"
+    "-D", "PARAMETRIC_BUILD_DOCS={{ docs }}"
 ], args = [
     { "arg" = "config", "default"="Release"},
+    { "arg" = "docs", "default"="ON"}
 ]}
 build = { cmd = "cmake --build . {{ extra_args }}", cwd = "build", args= [ { "arg" = "extra_args", "default" = "-j"}]}
 install = { cmd = "cmake --build . --target install {{ extra_args }}", cwd = "build", args= [ { "arg" = "extra_args", "default" = "-j"}] }

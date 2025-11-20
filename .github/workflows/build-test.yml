@@ -24,6 +24,16 @@ on:
         required: true
         type: string
 
+      build-docs:
+        description: "Build the documentation of parametric (ON or OFF)"
+        required: true
+        type: string
+
+      env:
+        description: "The pixi environment to use."
+        required: true 
+        type: string
+
 
 jobs:
 
@@ -51,21 +61,22 @@ jobs:
         with:
           cache: true
           cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+          environments: ${{ inputs.env }}
 
-      # configure, build and install tigl3
+      # configure, build and install parametric
       - name: Configure parametric (Linux, MacOS)
-        run: pixi run configure ${{ inputs.config }}
+        run: pixi run -e ${{ inputs.env }} configure ${{ inputs.config }} ${{ inputs.build-docs }}
         if: startsWith(inputs.os, 'windows') == false
         env:
           CMAKE_CXX_COMPILER_LAUNCHER: ccache
       - name: Configure parametric (Windows)
-        run: pixi run configure ${{ inputs.config }}
+        run: pixi run -e ${{ inputs.env }} configure ${{ inputs.config }} ${{ inputs.build-docs }}
         if: startsWith(inputs.os, 'windows')
         env:
           CMAKE_CXX_COMPILER_LAUNCHER: sccache
           SCCACHE_GHA_ENABLED: "true"
       - name: Build and install parametric
-        run: pixi run install -j4
+        run: pixi run -e ${{ inputs.env }} install -j4
 
       # save build artifacts
 
@@ -77,6 +88,13 @@ jobs:
           name: build-${{ inputs.os }}-${{ inputs.config }}
           path: build.tar.gz
           retention-days: 1
+
+      - name: Upload documentation
+        if: inputs.build-docs == 'ON'
+        uses: actions/upload-artifact@v5
+        with:
+          name: html-documentation
+          path: build/docs/html/*
 
   test:
     runs-on: ${{ inputs.os }}

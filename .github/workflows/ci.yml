@@ -19,7 +19,11 @@ jobs:
       matrix:
         config: ["Release"]
         os: ["ubuntu-latest", "ubuntu-22.04", "windows-2022", "windows-latest", "macos-13"]
+        build-docs: ["OFF"]
         include:
+         - config: Release
+           os: "ubuntu-latest"
+           build-docs: "ON"
          - config: Debug
            os: ubuntu-latest
     uses: ./.github/workflows/build-test.yml
@@ -27,3 +31,5 @@ jobs:
     with:
       os: ${{ matrix.os }}
       config: ${{ matrix.config }}
+      build-docs: ${{ matrix.build-docs }}
+      env: ${{ matrix.build-docs == 'ON' && 'docs' || 'default'}}

@@ -2,6 +2,7 @@
 
 #include <parametric/core.hpp>
 #include <sstream>
+#include <iomanip>
 
 using namespace std::string_literals;
 

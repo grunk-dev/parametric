@@ -1,8 +1,6 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 project(parametric VERSION 0.3.4)
-
-option(BUILD_PARAMETRIC_BENCHMARKS "Build benchmarks using Google Benchmark" OFF)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
@@ -16,10 +14,7 @@ target_compile_features(parametric INTERFACE cxx_std_17)
 
 include(GNUInstallDirs)
 
-if(BUILD_PARAMETRIC_BENCHMARKS)
 add_subdirectory(benchmarks)
-endif()
-
 add_subdirectory(examples)
 add_subdirectory(tests)
 add_subdirectory(docs)

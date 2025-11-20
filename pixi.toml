@@ -32,7 +32,9 @@ configure = { cmd = [
     "-B", "build",
     "-D", "CMAKE_INSTALL_PREFIX=build/install",
     "-D", "CMAKE_BUILD_TYPE={{ config }}",
-    "-D", "PARAMETRIC_BUILD_DOCS={{ docs }}"
+    "-D", "PARAMETRIC_BUILD_DOCS={{ docs }}",
+    "-D", "PARAMETRIC_BUILD_TESTS=ON",
+    "-D", "PARAMETRIC_BUILD_EXAMPLES=ON",
 ], args = [
     { "arg" = "config", "default"="Release"},
     { "arg" = "docs", "default"="ON"}

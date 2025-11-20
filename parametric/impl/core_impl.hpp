@@ -38,7 +38,7 @@ public:
     >;
     using serializer_type = S;
 
-    param_holder(const ResultType& v, const std::string& id)
+    param_holder(const std::string& id, const ResultType& v)
         : ClonableDAGNode<param_holder<ResultType, S>>(id)
     {
         if constexpr (std::is_lvalue_reference_v<ResultType>){
@@ -61,7 +61,7 @@ public:
 
     // in-place constructor
     template <typename... Args>
-    param_holder(std::in_place_t, Args const&... args, std::string const& id)
+    param_holder(std::string const& id, std::in_place_t, Args const&... args)
         : ClonableDAGNode<param_holder<ResultType, S>>(id)
         , m_value(std::in_place_t(), args...)
     {}

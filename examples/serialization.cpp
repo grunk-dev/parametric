@@ -141,8 +141,8 @@ std::string serialize(parametric::param<MyDouble> const& p){
 
 int main()
 {
-    auto a = parametric::new_param(MyDouble{0.5}, "a");
-    auto b = parametric::new_param(MyDouble{0.1}, "b");
+    auto a = parametric::new_param("a", MyDouble{0.5});
+    auto b = parametric::new_param("b", MyDouble{0.1});
     auto c = my_eval("c", BinaryOp::plus, a, b);
     auto d = my_eval("d", BinaryOp::div, c, b);
 

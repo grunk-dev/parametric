@@ -41,7 +41,7 @@ CustomResult custom_compute(parametric::param<double> op1, double op2){
 
 TEST(CustomClass, multipleOuts)
 {
-    auto b = parametric::new_param(4.0, "b");
+    auto b = parametric::new_param("b", 4.0);
 
     auto node = custom_compute(b, 2.0);
     auto pow_result = node.pow();

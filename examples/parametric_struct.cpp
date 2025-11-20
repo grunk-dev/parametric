@@ -4,8 +4,8 @@
 // This is a simple structure composed of multiple parameters
 struct AStruct
 {
-    parametric::param<int> a{10, "a"};
-    parametric::param<int> b{100, "a"};
+    parametric::param<int> a{"a", 10};
+    parametric::param<int> b{"b", 100};
 };
 
 // As a best practice, create a helper function to build parametric

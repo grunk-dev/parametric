@@ -18,8 +18,8 @@ public:
 int main()
 {
     // just create to values
-    auto v1 = parametric::new_param(10.0, "v1");
-    auto v2 = parametric::new_param(2.0, "v2");
+    auto v1 = parametric::new_param("v1", 10.0);
+    auto v2 = parametric::new_param("v2", 2.0);
 
     // now we are creating the compute node and getting the result parameter
     auto result = parametric::compute<DivComputer>(v1, v2);

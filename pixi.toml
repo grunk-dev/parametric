@@ -1,0 +1,42 @@
+[workspace]
+name = "grunk"
+version = "0.5.0"
+authors = ["Jan Kleienrt <jan.kleinert@dlr.de>"]
+platforms = ["win-64", "linux-64", "osx-64"]
+channels = ["conda-forge"]
+
+[feature.base.dependencies]
+cmake = "*"
+ninja = "*"
+
+[feature.docs.dependencies]
+doxygen = "*"
+sphinx = "*"
+sphinx_rtd_theme = "*"
+breathe = "*"
+m2r = "*"
+mistune = "*"
+jinja2 = "<3.1"
+standard-imghdr = "*"
+docutils = "<0.21"
+
+[environments]
+"default" = ["base"]
+"docs" = ["base", "docs"]
+
+[tasks]
+configure = { cmd = [
+    "cmake", 
+    "-G", "Ninja",
+    "-S", ".",
+    "-B", "build",
+    "-D", "CMAKE_INSTALL_PREFIX=build/install",
+    "-D", "CMAKE_BUILD_TYPE={{ config }}",
+    "-D", "PARAMETRIC_BUILD_DOCS={{ docs }}"
+], args = [
+    { "arg" = "config", "default"="Release"},
+    { "arg" = "docs", "default"="ON"}
+]}
+build = { cmd = "cmake --build . {{ extra_args }}", cwd = "build", args= [ { "arg" = "extra_args", "default" = "-j"}]}
+install = { cmd = "cmake --build . --target install {{ extra_args }}", cwd = "build", args= [ { "arg" = "extra_args", "default" = "-j"}] }
+test = { cmd = "./runUnitTests", cwd = "build/tests/" }

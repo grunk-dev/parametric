@@ -17,16 +17,19 @@ jobs:
   build-test:
     strategy:
       matrix:
-        config: ["Release"]
-        os: ["ubuntu-latest", "ubuntu-22.04", "windows-2022", "windows-latest", "macos-13"]
-        build-docs: ["OFF"]
         include:
          - config: Release
-           os: "ubuntu-latest"
-           build-docs: "ON"
+           os: ubuntu-latest
+           build-docs: ON
          - config: Debug
            os: ubuntu-latest
-           build-docs: "OFF"
+           build-docs: OFF
+         - config: Release
+           os: macos-13
+           build-docs: OFF
+         - config: Release
+           os: windows-latest
+           build-docs: OFF
     uses: ./.github/workflows/build-test.yml
     secrets: inherit
     with:

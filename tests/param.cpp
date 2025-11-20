@@ -69,7 +69,7 @@ TEST_F(Param, make_param){
 TEST_F(Param, new_param){
 
     {
-        auto t = parametric::new_param(Counter(), "");
+        auto t = parametric::new_param("", Counter());
     }
 
     EXPECT_EQ(m_ctor_counter, 1);

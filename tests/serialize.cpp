@@ -78,8 +78,8 @@ TEST(Serialize, CustomSerializer)
 
 TEST(Serialize, CustomComputeNode)
 {
-    auto x = parametric::new_param(Foo{"XYZ", 44.3}, "x");
-    auto y = parametric::new_param(Foo{"ABC", 1.23}, "y");
+    auto x = parametric::new_param("x", Foo{"XYZ", 44.3});
+    auto y = parametric::new_param("y", Foo{"ABC", 1.23});
     auto z = parametric::compute(std::make_shared<Bar>("z"), x, y);
 
     std::string expected = 
@@ -90,8 +90,8 @@ TEST(Serialize, CustomComputeNode)
 TEST(Serialize, RecursiveSerializer)
 {
     // create a dependency tree
-    auto a= parametric::new_param(Foo{"XYZ", 44.3}, "a");
-    auto b = parametric::new_param(Foo{"ABC", 1.23}, "b");
+    auto a= parametric::new_param("a", Foo{"XYZ", 44.3});
+    auto b = parametric::new_param("b", Foo{"ABC", 1.23});
     auto c = parametric::compute(std::make_shared<Bar>("c"), a, b);
     auto d = parametric::compute(std::make_shared<Bar>("d"), b, c);
 

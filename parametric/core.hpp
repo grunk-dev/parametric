@@ -43,8 +43,8 @@ public:
      *
      * After construction, the parameter is valid (it contains a value)
      */
-    param(const T& v, const std::string& id)
-        : m_holder(std::make_shared<node_type>(v, id))
+    param(const std::string& id, const T& v)
+        : m_holder(std::make_shared<node_type>(id, v))
     {}
 
     /**
@@ -57,8 +57,8 @@ public:
     {}
 
     template <typename... Args>
-    param(std::in_place_t, Args const&... args, std::string const& id)
-        : m_holder(std::make_shared<node_type>(std::in_place_t(), args..., id))
+    param(std::string const& id, std::in_place_t, Args const&... args)
+        : m_holder(std::make_shared<node_type>(id, std::in_place_t(), args...))
     {}
 
     /// @private
@@ -183,9 +183,9 @@ private:
  * and identifier id
  */
 template <class T, typename S=DefaultSerializer>
-param<T, S> new_param(const T& v, const std::string& id)
+param<T, S> new_param(const std::string& id, const T& v)
 {
-    return param<T, S>(v, id);
+    return param<T, S>(id, v);
 }
 
 /**
@@ -194,7 +194,7 @@ param<T, S> new_param(const T& v, const std::string& id)
 template <class T, typename S=DefaultSerializer>
 param<T, S> new_param(const T& v)
 {
-    return parametric::new_param<T, S>(v, TypeName<T>::Get());
+    return parametric::new_param<T, S>(TypeName<T>::Get(), v);
 }
 
 /**
@@ -218,9 +218,9 @@ param<T, S> new_param()
  * @return param<T> the created parameter
  */
 template <typename T, typename S=DefaultSerializer, typename... Args>
-param<T, S> make_param(Args const&... args, std::string const& id){
+param<T, S> make_param(std::string const& id, Args const&... args){
     static_assert(std::is_constructible<T, Args...>::value, "make_param: T is not constructible from given arguments");
-    return parametric::param<T, S>(std::in_place_t(), args..., id);
+    return parametric::param<T, S>(id, std::in_place_t(), args...);
 }
 
 /// @private
@@ -786,7 +786,7 @@ new_parametric_struct(const T& the_struct, const parametric::param<Args, S>& ...
     struct Connector : public ComputeNode<Connector,Results, Arguments> {};
 
     auto c = std::make_shared<Connector>();
-    auto t = param<T>(the_struct, "");
+    auto t = param<T>("", the_struct);
 
     // connect c to arguments
     (add_parent(c, parametric_members.node_pointer()), ...);

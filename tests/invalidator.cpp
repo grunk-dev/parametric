@@ -7,8 +7,8 @@
 
 struct MyParms
 {
-    parametric::param<float> a{1., "a"};
-    parametric::param<float> b{2., "b"};
+    parametric::param<float> a{"a", 1.};
+    parametric::param<float> b{"b", 2.};
 };
 
 /**

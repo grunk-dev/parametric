@@ -25,7 +25,7 @@ jobs:
            os: ubuntu-latest
            build-docs: OFF
          - config: Release
-           os: macos-13
+           os: macos-latest
            build-docs: OFF
          - config: Release
            os: windows-latest

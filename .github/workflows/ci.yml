@@ -26,6 +26,7 @@ jobs:
            build-docs: "ON"
          - config: Debug
            os: ubuntu-latest
+           build-docs: "OFF"
     uses: ./.github/workflows/build-test.yml
     secrets: inherit
     with:

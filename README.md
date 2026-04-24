@@ -11,7 +11,7 @@ SPDX-License-Identifier: Apache-2.0
 [![documentation](https://img.shields.io/badge/docs-online-blue)](https://grunk-dev.github.io/parametric/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
-Parametric is a conceptual C++ library for parametric lazy evaluation of functions. The base concept are parameters from which computational expensive parametric results are derived. 
+Parametric is a C++ library for parametric lazy evaluation of functions. The base concept are parameters from which computational expensive parametric results are derived. 
 
 The result is only computed, if it is required (lazy evaluation). If any input parameter has changed, the result will be invalidated and the computation is computed again.
 

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Jan Kleinert <jan.kleinert@dlr.de>
+//
+// SPDX-License-Identifier: Apache-2.0
+
 #include <parametric/core.hpp>
 #include <gtest/gtest.h>
 

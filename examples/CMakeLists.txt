@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Jan Kleinert <jan.kleinert@dlr.de>
+#
+# SPDX-License-Identifier: Apache-2.0
+
 option(PARAMETRIC_BUILD_EXAMPLES "Build examples" OFF)
 
 if(PARAMETRIC_BUILD_EXAMPLES)

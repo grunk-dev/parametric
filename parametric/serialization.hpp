@@ -1,3 +1,12 @@
+// SPDX-FileCopyrightText: 2026 <owner>
+// SPDX-FileCopyrightText: 2026 Jan Kleinert <jan.kleinert@dlr.de>
+//
+// SPDX-License-Identifier: Apache-2.0
+
+#pragma once 
+
+#include <parametric/dag.hpp>
+#include <parametric/typename.hpp>
 #pragma once 
 
 #include <parametric/dag.hpp>

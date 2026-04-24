@@ -1,7 +1,9 @@
-# SPDX-FileCopyrightText: 2026 Jan Kleinert <jan.kleinert@dlr.de>
-# SPDX-FileCopyrightText: 2026 Martin Siggel <martin.siggel@dlr.de>
+# SPDX-FileCopyrightText: 2017 Craig Scott
 #
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
+
+# Distributed under the OSI-approved MIT License.  See accompanying
+# file LICENSE or https://github.com/Crascit/DownloadProject for details.
 
 # Distributed under the OSI-approved MIT License.  See accompanying
 # file LICENSE or https://github.com/Crascit/DownloadProject for details.

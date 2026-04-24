@@ -93,6 +93,13 @@ jobs:
           path: build.tar.gz
           retention-days: 1
 
+      - name: Verify built docs
+        if: inputs.build-docs == 'ON'
+        run: |
+          if [ ! -d build/docs/html ]; then
+            echo "Documentation directory not found: build/docs/html"; ls -la build || true; exit 1
+          fi
+
       - name: Upload documentation
         if: inputs.build-docs == 'ON'
         uses: actions/upload-artifact@v7

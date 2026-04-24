@@ -1,7 +1,15 @@
+<!--
+SPDX-FileCopyrightText: 2026 Jan Kleinert <jan.kleinert@dlr.de>
+SPDX-FileCopyrightText: 2026 Martin Siggel <martin.siggel@dlr.de>
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # Parametric #
 
 [![CI](https://github.com/grunk-dev/parametric/actions/workflows/ci.yml/badge.svg)](https://github.com/grunk-dev/parametric/actions/workflows/ci.yml)
 [![documentation](https://img.shields.io/badge/docs-online-blue)](https://paradigms.pages.gitlab.dlr.de/parametric/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
 Parametric is a conceptual C++ library for parametric lazy evaluation of functions. The base concept are parameters from which computational expensive parametric results are derived. 
 
@@ -82,3 +90,8 @@ What do we see here?
  - If no input (``j`` or ``k``) is changed, no computation is performed again.
  - If we change only ``k``, ``j_sqr`` is not computed again
  - If we change ``j``, ``j_sqr`` has to be recomputed 
+
+License
+-------
+
+This project is licensed under the Apache License 2.0 - see the [license file](LICENSES/Apache-2.0.txt) file for details.

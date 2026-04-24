@@ -94,4 +94,4 @@ What do we see here?
 License
 -------
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the [license file](LICENSES/Apache-2.0.txt) file for details.

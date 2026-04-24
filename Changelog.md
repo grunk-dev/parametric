@@ -4,6 +4,14 @@ SPDX-FileCopyrightText: 2026 Jan Kleinert <jan.kleinert@dlr.de>
 SPDX-License-Identifier: Apache-2.0
 -->
 
+# v0.3.5
+
+- First open source version!
+- Added Apache-2.0 license and make the repository reuse conform
+- Avoid implicit conversion of std::string to parameter (#25)
+- Change order in parameter creation: Name first, argument second. This is more template friendly for MSVC
+- Fix issue with validity state of placeholder params (#26)
+
 # v0.3.4
 
 - Add a second defaulted template parameter to `parametric::param`, so that consumers of the library can provide their own serialization class (#20)

@@ -5,8 +5,6 @@
 
 #ifndef PARAMETRIC_CORE_HPP
 #define PARAMETRIC_CORE_HPP
-#ifndef PARAMETRIC_CORE_HPP
-#define PARAMETRIC_CORE_HPP
 
 #include <parametric/typename.hpp>
 #include <parametric/tupletools.hpp>

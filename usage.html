@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usage &mdash; parametric 0.3.4 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=1e28cc32"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Design concept" href="concept.html" />
+    <link rel="prev" title="Docs" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #58777b" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/parametric-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-parameters">Creating parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wrapping-free-functions">Wrapping free functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-object-oriented-approach">The object oriented approach</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concept.html">Design concept</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #58777b" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">parametric</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Usage</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h1>
+<section id="creating-parameters">
+<h2>Creating parameters<a class="headerlink" href="#creating-parameters" title="Link to this heading"></a></h2>
+<p>In parametric, parameters are values that might change later. Parameters are
+implemented with the template class <code class="docutils literal notranslate"><span class="pre">parametric::param&lt;T&gt;</span></code>. To create a <em>valid</em> parameter, use</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">parametric</span><span class="o">::</span><span class="n">param</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">my_param</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myparam&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>A valid parameter is a parameter with a value - in this case 10.0.
+Here, the first argument is the current value of the parameter, the second is the identifier, which is optional.</p>
+<p>To create an invalid parameter, just omit the value argument</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">parametric</span><span class="o">::</span><span class="n">param</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">my_invalid_param</span><span class="p">(</span><span class="s">&quot;myparam&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>An invalid parameter is a parameter that does not yet have a value, but it will have one in future,
+similar to a placeholder.</p>
+<p>Similarly to <code class="docutils literal notranslate"><span class="pre">std::make_unique</span></code>, parametric also offers the convenience factory function</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">my_param</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>which deduces the type of the parameter from the first argument.</p>
+</section>
+<section id="wrapping-free-functions">
+<h2>Wrapping free functions<a class="headerlink" href="#wrapping-free-functions" title="Link to this heading"></a></h2>
+<p>If a free function should be converted into a compute node,
+use the function <code class="docutils literal notranslate"><span class="pre">parametric::eval</span></code>.
+This function converts each input argument of the function into
+a parameter of the same type. It returns an output parameter
+of type <code class="docutils literal notranslate"><span class="pre">parametric::param&lt;RTYPE&gt;</span></code>, where <code class="docutils literal notranslate"><span class="pre">RTYPE</span></code> is the type
+of the function’s return value.</p>
+<p>Here is an example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="nf">divide</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">v1</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">v2</span><span class="p">;</span>
+<span class="w"> </span><span class="p">}</span>
+
+<span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;v1&quot;</span><span class="p">);</span>
+<span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">v2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;v2&quot;</span><span class="p">);</span>
+<span class="hll"><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">eval</span><span class="p">(</span><span class="n">divide</span><span class="p">,</span><span class="w"> </span><span class="n">v1</span><span class="p">,</span><span class="w"> </span><span class="n">v2</span><span class="p">);</span>
+</span></pre></div>
+</div>
+<p>Similarly to free functions, <code class="docutils literal notranslate"><span class="pre">parametric::eval</span></code> can also be used on lambdas:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">sin_v1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">eval</span><span class="p">([](</span><span class="kt">double</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sin</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="p">},</span><span class="w"> </span><span class="n">v1</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Limitations of <code class="docutils literal notranslate"><span class="pre">parametric::eval</span></code></p>
+<ul class="simple">
+<li><p>All input values must be converted into parameters</p></li>
+<li><p>It does not work in objects or object methods</p></li>
+</ul>
+</div>
+<p>Of course, the limitations can be overcome by creating convenience functions that encapsulate
+the call to <code class="docutils literal notranslate"><span class="pre">parametric::eval</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">parametric</span><span class="o">::</span><span class="n">param</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">p_pow</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">param</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">base</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">exponent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">eval</span><span class="p">([</span><span class="n">exponent</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">pow</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">exponent</span><span class="p">);</span>
+<span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="n">base</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In this example, only <code class="docutils literal notranslate"><span class="pre">base</span></code> goes in as a parameter whereas the exponent is constant
+and captured by the lambda.</p>
+</section>
+<section id="the-object-oriented-approach">
+<h2>The object oriented approach<a class="headerlink" href="#the-object-oriented-approach" title="Link to this heading"></a></h2>
+<p>If wrapping free functions does not provide enough flexibility, also compute objects
+can be defined. A compute object is a node in the compute graph
+that is derived from the <code class="docutils literal notranslate"><span class="pre">parametric::ComputeNode</span></code> base class.</p>
+<p>Here’s an example to define a custom compute node:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DivComputer</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">ComputeNode</span><span class="o">&lt;</span><span class="n">DivComputer</span><span class="p">,</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">Results</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">Arguments</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">eval</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">set_value</span><span class="p">(</span><span class="n">arg</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">().</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">arg</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">().</span><span class="n">value</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The important ingredients are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The class must be derived from <code class="docutils literal notranslate"><span class="pre">parametric::ComputeNode</span></code>, where the template arguments reflect the signature of the compute node.</p></li>
+<li><p>The class must override the <code class="docutils literal notranslate"><span class="pre">ComputeNode::eval</span></code> method to perform the actual computation</p></li>
+</ol>
+</div></blockquote>
+<p>To use this compute node,  is has to be constructed and connected with <code class="docutils literal notranslate"><span class="pre">parametric::comute&lt;ClassName&gt;</span> <span class="pre">(arg1,</span> <span class="pre">arg2,</span> <span class="pre">...)</span></code> like in the following example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;v1&quot;</span><span class="p">);</span>
+<span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">v2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;v2&quot;</span><span class="p">);</span>
+<span class="hll"><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">compute</span><span class="o">&lt;</span><span class="n">DivComputer</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span><span class="w"> </span><span class="n">v2</span><span class="p">);</span>
+</span></pre></div>
+</div>
+<p>Depending on the signature, the return value of <code class="docutils literal notranslate"><span class="pre">parametric::compute</span></code> is
+* either a <code class="docutils literal notranslate"><span class="pre">parametric::param&lt;T&gt;</span></code>; if there is just one return value,
+* a <code class="docutils literal notranslate"><span class="pre">parametric::Results&lt;R1,</span> <span class="pre">R2,</span> <span class="pre">...&gt;</span></code> which is a tuple of <code class="docutils literal notranslate"><span class="pre">parametric::param&lt;R1&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">parametric::param&lt;R2&gt;</span></code>, … ; if there is more than one return value,
+* a <code class="docutils literal notranslate"><span class="pre">std::shared_ptr&lt;DAGNode&gt;</span></code> pointing to the compute node, if there is no return value.</p>
+<p>In the above example, the compute node is default constructible. If this is not the case, we have to use another overload of <code class="docutils literal notranslate"><span class="pre">parametric::compute</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DivComputer</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">ComputeNode</span><span class="o">&lt;</span><span class="n">DivComputer</span><span class="p">,</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">Results</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">Arguments</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+<span class="w">    </span><span class="n">DivComputer</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">default_id</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">eval</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">set_value</span><span class="p">(</span><span class="n">arg</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">().</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">arg</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">().</span><span class="n">value</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// overrides the post_connect callback to set a default id for the result right after the connection of inputs and outputs</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">post_connect</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">set_id</span><span class="p">(</span><span class="n">default_id</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">default_id</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;v1&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">v2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;v2&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">compute</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">DivComputer</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;threepwood&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">v1</span><span class="p">,</span><span class="w"> </span><span class="n">v2</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Docs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="concept.html" class="btn btn-neutral float-right" title="Design concept" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, German Aerospace Center.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

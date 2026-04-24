@@ -1,0 +1,838 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; parametric 0.3.4 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=1e28cc32"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Index" href="genindex.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #58777b" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/parametric-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concept.html">Design concept</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#core">Core</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE"><code class="docutils literal notranslate"><span class="pre">parametric::param</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric5param5paramERKNSt6stringERK1T"><code class="docutils literal notranslate"><span class="pre">param()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric5param5paramERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">param()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric5param12compute_nodeEv"><code class="docutils literal notranslate"><span class="pre">compute_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric5param5valueEv"><code class="docutils literal notranslate"><span class="pre">value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric5param12change_valueEv"><code class="docutils literal notranslate"><span class="pre">change_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric5param9set_valueERK1T"><code class="docutils literal notranslate"><span class="pre">set_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric5paramcvRK1TEv"><code class="docutils literal notranslate"><span class="pre">operator</span> <span class="pre">const</span> <span class="pre">T</span> <span class="pre">&amp;()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric5paramaSERK1T"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric5param2idEv"><code class="docutils literal notranslate"><span class="pre">id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric5param6set_idERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">set_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric5param8is_validEv"><code class="docutils literal notranslate"><span class="pre">is_valid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00EN10parametric9new_paramE5paramI1T1SERK1T"><code class="docutils literal notranslate"><span class="pre">new_param()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00EN10parametric9new_paramE5paramI1T1SEv"><code class="docutils literal notranslate"><span class="pre">new_param()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00DpEN10parametric21new_parametric_structEN10parametric5paramI1TEERK1TDpRKN10parametric5paramI4Args1SEE"><code class="docutils literal notranslate"><span class="pre">new_parametric_struct()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00DpEN10parametric4evalEDc2FnDpRKN10parametric5paramI4Args1SEE"><code class="docutils literal notranslate"><span class="pre">eval()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I000EN10parametric11ComputeNodeE"><code class="docutils literal notranslate"><span class="pre">parametric::ComputeNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4IDpEN10parametric11ComputeNode14connect_inputsEvDpRR4Args"><code class="docutils literal notranslate"><span class="pre">connect_inputs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric11ComputeNode18initialize_resultsEv"><code class="docutils literal notranslate"><span class="pre">initialize_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric11ComputeNode15connect_resultsERK20compute_return_valueI7ResultsE"><code class="docutils literal notranslate"><span class="pre">connect_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric11ComputeNode12post_connectEv"><code class="docutils literal notranslate"><span class="pre">post_connect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric11ComputeNode4evalEv"><code class="docutils literal notranslate"><span class="pre">eval()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00ENK10parametric11ComputeNode3argEDci"><code class="docutils literal notranslate"><span class="pre">arg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I_iENK10parametric11ComputeNode3argEDcv"><code class="docutils literal notranslate"><span class="pre">arg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00ENK10parametric11ComputeNode3resEDci"><code class="docutils literal notranslate"><span class="pre">res()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I_iENK10parametric11ComputeNode3resEDcv"><code class="docutils literal notranslate"><span class="pre">res()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric11ComputeNode10args_tupleEv"><code class="docutils literal notranslate"><span class="pre">args_tuple()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00EN10parametric11ComputeNode10depends_onEvRK5paramI1T1SE"><code class="docutils literal notranslate"><span class="pre">depends_on()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00EN10parametric11ComputeNode8computesEvRK5paramI1T1SE"><code class="docutils literal notranslate"><span class="pre">computes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dag">DAG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric7NodeRefE"><code class="docutils literal notranslate"><span class="pre">NodeRef</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric7DAGNodeE"><code class="docutils literal notranslate"><span class="pre">parametric::DAGNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric7DAGNode9DirectionE"><code class="docutils literal notranslate"><span class="pre">Direction</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric7DAGNode9Direction2upE"><code class="docutils literal notranslate"><span class="pre">up</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric7DAGNode9Direction4downE"><code class="docutils literal notranslate"><span class="pre">down</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric7DAGNode7DAGNodeERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">DAGNode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric7DAGNode9serializeEv"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric7DAGNode2idEv"><code class="docutils literal notranslate"><span class="pre">id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric7DAGNode6set_idERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">set_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric7DAGNode8precedesERK7DAGNode"><code class="docutils literal notranslate"><span class="pre">precedes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I0ENK10parametric7DAGNode6acceptEvR7Visitor6size_t9Direction"><code class="docutils literal notranslate"><span class="pre">accept()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I0EN10parametric7DAGNode6acceptEvR7Visitor6size_t9Direction"><code class="docutils literal notranslate"><span class="pre">accept()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric7DAGNode13remove_parentERK7DAGNode"><code class="docutils literal notranslate"><span class="pre">remove_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric7DAGNode11num_parentsEv"><code class="docutils literal notranslate"><span class="pre">num_parents()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric7DAGNode12num_childrenEv"><code class="docutils literal notranslate"><span class="pre">num_children()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric7DAGNode10invalidateEv"><code class="docutils literal notranslate"><span class="pre">invalidate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric7DAGNode4evalEv"><code class="docutils literal notranslate"><span class="pre">eval()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric7DAGNode7IsValidEv"><code class="docutils literal notranslate"><span class="pre">IsValid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4NK10parametric7DAGNode5cloneENSt10shared_ptrI13ClonedNodeMapEE"><code class="docutils literal notranslate"><span class="pre">clone()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N10parametric7DAGNode10add_parentERK7NodeRefRK7NodeRef"><code class="docutils literal notranslate"><span class="pre">add_parent</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#operators">Operators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00EplDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"><code class="docutils literal notranslate"><span class="pre">operator+()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00EmlDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"><code class="docutils literal notranslate"><span class="pre">operator*()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv410parametric"><code class="docutils literal notranslate"><span class="pre">parametric</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00EN10parametric5p_addEDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"><code class="docutils literal notranslate"><span class="pre">p_add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00EN10parametric6p_multEDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"><code class="docutils literal notranslate"><span class="pre">p_mult()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #58777b" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">parametric</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<span id="parametric-api"></span><h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+<p>The parametric library API consists of the following parts:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#core-api"><span class="std std-ref">parametric/core.hpp</span></a>: the core API everything required tp build up compute graphs.</p></li>
+<li><p><a class="reference internal" href="#dag-api"><span class="std std-ref">parametric/dag.hpp</span></a>: the DAG API provides functions and classes to build up directed acyclic graphs.</p></li>
+<li><p><a class="reference internal" href="#operators-api"><span class="std std-ref">parametric/operators.hpp</span></a>: the header file adds provides parametric operator overloads</p></li>
+</ul>
+<p>All functions and types provided by the library reside in namespace <code class="docutils literal notranslate"><span class="pre">parametric</span></code>.</p>
+<section id="core">
+<span id="core-api"></span><h2>Core<a class="headerlink" href="#core" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">parametric/core.hpp</span></code> defines everything required to build up compute graphs.
+The main building blocks are parmetric values (<code class="docutils literal notranslate"><span class="pre">parametric::param</span></code>), compute nodes (<code class="docutils literal notranslate"><span class="pre">parametric::ComputeNode</span></code>)
+and interface parameters(<code class="docutils literal notranslate"><span class="pre">parametric::InterfaceParam</span></code>).
+The role of each object is described at the <a class="reference internal" href="concept.html#concepts"><span class="std std-ref">design concept</span></a> section.</p>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN10parametric5paramE">
+<span id="_CPPv3I00EN10parametric5paramE"></span><span id="_CPPv2I00EN10parametric5paramE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">DefaultSerializer</span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1param"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">param</span></span></span><a class="headerlink" href="#_CPPv4I00EN10parametric5paramE" title="Link to this definition"></a><br /></dt>
+<dd><p>This class encapsulates an arbitrary type to be used as a parameter. </p>
+<p>A parameter is an object with a value and a valid state. Whenever its value has been changed, it propagates this invalidation to all dependent parameters, requiring their recomputation. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric5param5paramERKNSt6stringERK1T">
+<span id="_CPPv3N10parametric5param5paramERKNSt6stringERK1T"></span><span id="_CPPv2N10parametric5param5paramERKNSt6stringERK1T"></span><span id="parametric::param::param__ssCR.TCR"></span><span class="target" id="classparametric_1_1param_1a7e737a13fe1324cd0e6ab782a76a2caf"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">param</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">id</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">v</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric5param5paramERKNSt6stringERK1T" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a <strong>valid</strong> parameter from a value and an identifier. </p>
+<p>After construction, the parameter is valid (it contains a value) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric5param5paramERKNSt6stringE">
+<span id="_CPPv3N10parametric5param5paramERKNSt6stringE"></span><span id="_CPPv2N10parametric5param5paramERKNSt6stringE"></span><span id="parametric::param::param__ssCR"></span><span class="target" id="classparametric_1_1param_1ab8ed56ac14befdff038d342dfa31b520"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">param</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">id</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric5param5paramERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a <strong>invalid</strong> parameter with an identifier. </p>
+<p>After construction, the parameter is invalid (it does not contain a value) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric5param12compute_nodeEv">
+<span id="_CPPv3NK10parametric5param12compute_nodeEv"></span><span id="_CPPv2NK10parametric5param12compute_nodeEv"></span><span id="parametric::param::compute_nodeC"></span><span class="target" id="classparametric_1_1param_1a9062a9d311be03791619346934722273"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10parametric7NodeRefE" title="parametric::NodeRef"><span class="n"><span class="pre">NodeRef</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compute_node</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric5param12compute_nodeEv" title="Link to this definition"></a><br /></dt>
+<dd><p>returns a shared_ptr to the compute node, if this param is a computation result. If it is an independent parameter, the returned pointer will be null. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>const <a class="reference internal" href="#namespaceparametric_1aaff6a9a55954aa38a8ce36da6c6c6122"><span class="std std-ref">NodeRef</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric5param5valueEv">
+<span id="_CPPv3NK10parametric5param5valueEv"></span><span id="_CPPv2NK10parametric5param5valueEv"></span><span id="parametric::param::valueC"></span><span class="target" id="classparametric_1_1param_1ad74ca49b8dea94302f72c39d5a7ec07a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">value</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric5param5valueEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the current value of the parameter. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric5param12change_valueEv">
+<span id="_CPPv3N10parametric5param12change_valueEv"></span><span id="_CPPv2N10parametric5param12change_valueEv"></span><span id="parametric::param::change_value"></span><span class="target" id="classparametric_1_1param_1a465165580ccbae7b824a834f22c0ab11"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">change_value</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric5param12change_valueEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Write access to the value. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric5param9set_valueERK1T">
+<span id="_CPPv3N10parametric5param9set_valueERK1T"></span><span id="_CPPv2N10parametric5param9set_valueERK1T"></span><span id="parametric::param::set_value__TCR"></span><span class="target" id="classparametric_1_1param_1a3acafb2abe63fe3d324a2c447804747c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_value</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric5param9set_valueERK1T" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the value of the parameter. </p>
+<p>The value will only be changed only, if the new value is different than the old one. The parameter will be <strong>valid</strong> after setting the value.</p>
+<p>Note: The check for difference is done using the != operator. If a custom class does not provide this operator, it can be added on global scope e.g.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span><span class="w"> </span><span class="nf">operator</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">MyClass</span><span class="o">&amp;</span><span class="w"> </span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">MyClass</span><span class="o">&amp;</span><span class="w"> </span><span class="n">c2</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – The value to be set. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric5paramcvRK1TEv">
+<span id="_CPPv3NK10parametric5paramcvRK1TEv"></span><span id="_CPPv2NK10parametric5paramcvRK1TEv"></span><span id="parametric::param::castto-TCR-operatorC"></span><span class="target" id="classparametric_1_1param_1a931783c377fc8067f2042bdc5cf83f5e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&amp;</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric5paramcvRK1TEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the parameter value. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric5paramaSERK1T">
+<span id="_CPPv3N10parametric5paramaSERK1T"></span><span id="_CPPv2N10parametric5paramaSERK1T"></span><span id="parametric::param::assign-operator__TCR"></span><span class="target" id="classparametric_1_1param_1a2f22f7abbd42252b8ca2ced4ba9fe344"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric5paramaSERK1T" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the value of the parameter, see <a class="reference internal" href="#classparametric_1_1param_1a3acafb2abe63fe3d324a2c447804747c"><span class="std std-ref">param::set_value</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric5param2idEv">
+<span id="_CPPv3NK10parametric5param2idEv"></span><span id="_CPPv2NK10parametric5param2idEv"></span><span id="parametric::param::idC"></span><span class="target" id="classparametric_1_1param_1a5c64e6c8a7b4d3f864e452d5d95010e2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">id</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric5param2idEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the identifier of the parameter. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric5param6set_idERKNSt6stringE">
+<span id="_CPPv3N10parametric5param6set_idERKNSt6stringE"></span><span id="_CPPv2N10parametric5param6set_idERKNSt6stringE"></span><span id="parametric::param::set_id__ssCR"></span><span class="target" id="classparametric_1_1param_1a65705195e51b39740e857585cd4bda78"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_id</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">id</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric5param6set_idERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the identifier of the parameter. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric5param8is_validEv">
+<span id="_CPPv3NK10parametric5param8is_validEv"></span><span id="_CPPv2NK10parametric5param8is_validEv"></span><span id="parametric::param::is_validC"></span><span class="target" id="classparametric_1_1param_1a96feffa1306c92d3c25ec62f81831ed7"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_valid</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric5param8is_validEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Indicates, whether the parameter contains a value (valid) or not (invalid) </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve function “parametric::new_param” with arguments (const T&amp;, const std::string&amp;) in doxygen xml output for project “parametric” from directory: /home/runner/work/parametric/parametric/build/docs/doxygen/xml.
+Potential matches:
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span> <span class="n">typename</span> <span class="n">S</span> <span class="o">=</span> <span class="n">DefaultSerializer</span><span class="o">&gt;</span> <span class="n">param</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">S</span><span class="o">&gt;</span> <span class="n">new_param</span><span class="p">()</span>
+<span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span> <span class="n">typename</span> <span class="n">S</span> <span class="o">=</span> <span class="n">DefaultSerializer</span><span class="o">&gt;</span> <span class="n">param</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">S</span><span class="o">&gt;</span> <span class="n">new_param</span><span class="p">(</span><span class="n">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span> <span class="n">typename</span> <span class="n">S</span> <span class="o">=</span> <span class="n">DefaultSerializer</span><span class="o">&gt;</span> <span class="n">param</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">S</span><span class="o">&gt;</span> <span class="n">new_param</span><span class="p">(</span><span class="n">const</span> <span class="n">std</span><span class="p">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="nb">id</span><span class="p">,</span> <span class="n">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN10parametric9new_paramE5paramI1T1SERK1T">
+<span id="_CPPv3I00EN10parametric9new_paramERK1T"></span><span id="_CPPv2I00EN10parametric9new_paramERK1T"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">DefaultSerializer</span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="namespaceparametric_1a301ba84572983024ad7839a2d041348a"></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric9new_paramE5paramI1T1SERK1T" title="parametric::new_param::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric9new_paramE5paramI1T1SERK1T" title="parametric::new_param::S"><span class="n"><span class="pre">S</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-prename descclassname"><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">new_param</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric9new_paramE5paramI1T1SERK1T" title="parametric::new_param::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">v</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN10parametric9new_paramE5paramI1T1SERK1T" title="Link to this definition"></a><br /></dt>
+<dd><p>Convenience function to create a parameter of type T with value v. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN10parametric9new_paramE5paramI1T1SEv">
+<span id="_CPPv3I00EN10parametric9new_paramEv"></span><span id="_CPPv2I00EN10parametric9new_paramEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">DefaultSerializer</span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="namespaceparametric_1af4970639641cdb6626b41cf8d37b8eab"></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric9new_paramE5paramI1T1SEv" title="parametric::new_param::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric9new_paramE5paramI1T1SEv" title="parametric::new_param::S"><span class="n"><span class="pre">S</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-prename descclassname"><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">new_param</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN10parametric9new_paramE5paramI1T1SEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Convenience function to create an empty parameter of and identifier id. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00DpEN10parametric21new_parametric_structEN10parametric5paramI1TEERK1TDpRKN10parametric5paramI4Args1SEE">
+<span id="_CPPv3I00DpEN10parametric21new_parametric_structERK1TDpRKN10parametric5paramI4Args1SEE"></span><span id="_CPPv2I00DpEN10parametric21new_parametric_structERK1TDpRKN10parametric5paramI4Args1SEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">Args</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="namespaceparametric_1aefc5ced5abc8c6f11070c2fe7ec92692"></span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00DpEN10parametric21new_parametric_structEN10parametric5paramI1TEERK1TDpRKN10parametric5paramI4Args1SEE" title="parametric::new_parametric_struct::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-prename descclassname"><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">new_parametric_struct</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00DpEN10parametric21new_parametric_structEN10parametric5paramI1TEERK1TDpRKN10parametric5paramI4Args1SEE" title="parametric::new_parametric_struct::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">the_struct</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00DpEN10parametric21new_parametric_structEN10parametric5paramI1TEERK1TDpRKN10parametric5paramI4Args1SEE" title="parametric::new_parametric_struct::Args"><span class="n"><span class="pre">Args</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00DpEN10parametric21new_parametric_structEN10parametric5paramI1TEERK1TDpRKN10parametric5paramI4Args1SEE" title="parametric::new_parametric_struct::S"><span class="n"><span class="pre">S</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">parametric_members</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00DpEN10parametric21new_parametric_structEN10parametric5paramI1TEERK1TDpRKN10parametric5paramI4Args1SEE" title="Link to this definition"></a><br /></dt>
+<dd><p>This function creates a parametric version from a structure or an object that consists of parameters. </p>
+<p>It propagates mutation of the member parameters to the object itself.</p>
+<p>The first argument is the structure/object to be wrapped, the following arguments are all parameters, which the object depends on</p>
+<p>Here’s an example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">AStruct</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">parametric</span><span class="o">::</span><span class="n">param</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;a&quot;</span><span class="p">};</span>
+<span class="w">  </span><span class="n">parametric</span><span class="o">::</span><span class="n">param</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">{</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;a&quot;</span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="n">structSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">AStruct</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">a</span><span class="p">.</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">b</span><span class="p">.</span><span class="n">value</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="n">AStruct</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">parametricS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_parametric_struct</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">b</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">eval</span><span class="p">(</span><span class="n">structSum</span><span class="p">,</span><span class="w"> </span><span class="n">parametricS</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The best practice is to create a helper function for each structure that contains parameters by creating a template specialization of parametric::new_param as follows:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="n">parametric</span><span class="o">::</span><span class="n">param</span><span class="o">&lt;</span><span class="n">AStruct</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">AStruct</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_parametric_struct</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">b</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00DpEN10parametric4evalEDc2FnDpRKN10parametric5paramI4Args1SEE">
+<span id="_CPPv3I00DpEN10parametric4evalE2FnDpRKN10parametric5paramI4Args1SEE"></span><span id="_CPPv2I00DpEN10parametric4evalE2FnDpRKN10parametric5paramI4Args1SEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Fn</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">Args</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="namespaceparametric_1acab31ecb983064441efe4688a5c4b08c"></span><span class="k"><span class="pre">decltype</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">auto</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="sig-prename descclassname"><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">eval</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00DpEN10parametric4evalEDc2FnDpRKN10parametric5paramI4Args1SEE" title="parametric::eval::Fn"><span class="n"><span class="pre">Fn</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">wrapped_function</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00DpEN10parametric4evalEDc2FnDpRKN10parametric5paramI4Args1SEE" title="parametric::eval::Args"><span class="n"><span class="pre">Args</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00DpEN10parametric4evalEDc2FnDpRKN10parametric5paramI4Args1SEE" title="parametric::eval::S"><span class="n"><span class="pre">S</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">parameterArgs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00DpEN10parametric4evalEDc2FnDpRKN10parametric5paramI4Args1SEE" title="Link to this definition"></a><br /></dt>
+<dd><p>This function creates a parametric version from a “normal” function. </p>
+<p>The first argument is the function to be wrapped It accepts a variable list of input arguments, each must be a parameter</p>
+<p>Here’s an example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="nf">mult</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">parametric</span><span class="o">::</span><span class="n">param</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">2.0</span><span class="p">);</span>
+<span class="n">parametric</span><span class="o">::</span><span class="n">param</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">eval</span><span class="p">(</span><span class="n">mult</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I000EN10parametric11ComputeNodeE">
+<span id="_CPPv3I000EN10parametric11ComputeNodeE"></span><span id="_CPPv2I000EN10parametric11ComputeNodeE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Derived</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Results</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">ignore</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Arguments</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">ignore</span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1_compute_node"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ComputeNode</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ClonableDAGNode</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I000EN10parametric11ComputeNodeE" title="parametric::ComputeNode::Derived"><span class="n"><span class="pre">Derived</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">enable_shared_from_this</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I000EN10parametric11ComputeNodeE" title="parametric::ComputeNode"><span class="n"><span class="pre">ComputeNode</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I000EN10parametric11ComputeNodeE" title="parametric::ComputeNode::Derived"><span class="n"><span class="pre">Derived</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">ignore</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">ignore</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I000EN10parametric11ComputeNodeE" title="Link to this definition"></a><br /></dt>
+<dd><p>This class is the base class to define arbitrary compute nodes. </p>
+<p>A compute node has to<ul class="simple">
+<li><p>inherit from <a class="reference internal" href="#classparametric_1_1_compute_node"><span class="std std-ref">parametric::ComputeNode</span></a>&lt;YourClass, parametric::Results&lt;ResultType1, ResultType2, …&gt;, parametric::Arguments&lt;ArgType1, ArgType2, …&gt;&gt;</p></li>
+<li><p>be constructed with parametric::compute</p></li>
+</ul>
+</p>
+<p>A compute node may<ul class="simple">
+<li><p>override the <a class="reference internal" href="#classparametric_1_1_compute_node_1a2575929d2510d5b552f28144145bf79d"><span class="std std-ref">ComputeNode::eval</span></a> method to perform the computation</p></li>
+<li><p>customize parametric::compute by<ul>
+<li><p>providing a custom void connect_inputs(args…) function to connect inputs to the compute node</p></li>
+<li><p>providing a custom R <a class="reference internal" href="#classparametric_1_1_compute_node_1af1fe9fa156443b3cab2df5c38c8c82c4"><span class="std std-ref">initialize_results()</span></a> function to initialize the output parameters</p></li>
+<li><p>providing a custom void connect_results(R const&amp;) function to connect the outputs to the compute node</p></li>
+<li><p>providing a custom void <a class="reference internal" href="#classparametric_1_1_compute_node_1acc308f5dab71e3cc756f99c0e67bc6da"><span class="std std-ref">post_connect()</span></a> callback to perform some customization after the compute node has been connected to its inputs and outputs, e.g. setting default ids.</p></li>
+</ul>
+</p></li>
+</ul>
+</p>
+<p>A compute node may have any number of inputs and outputs</p>
+<p>After a compute node has been connected to its inputs and outputs, argument parameters can be queried with <a class="reference internal" href="#classparametric_1_1_compute_node_1aaae77d4b515442c21358e53e2096f62f"><span class="std std-ref">ComputeNode::arg&lt;i&gt;()</span></a> in the overwritten methods.</p>
+<p>Pointers to a result can be queried with <a class="reference internal" href="#classparametric_1_1_compute_node_1af77fc7cace4e65e2e17225bfe5c46180"><span class="std std-ref">ComputeNode::res&lt;i&gt;()</span></a>. Since it may be possible that a result goes out of scope before the compute node, pointers queried with <a class="reference internal" href="#classparametric_1_1_compute_node_1af77fc7cace4e65e2e17225bfe5c46180"><span class="std std-ref">ComputeNode::res&lt;i&gt;()</span></a> may be nullptr. This should be checked in the overriden methods before using the pointer.</p>
+<p>Example: <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// define computing node</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DivComputer</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">ComputeNode</span><span class="o">&lt;</span><span class="n">DivComputer</span><span class="p">,</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">Results</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">Arguments</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;&gt;</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">eval</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">set_value</span><span class="p">(</span><span class="n">arg</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">().</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">arg</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">().</span><span class="n">value</span><span class="p">());</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">post_connect</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">set_id</span><span class="p">(</span><span class="s">&quot;reosonable_default_id&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</p>
+<p>The DivComputer compute node is then used as follows</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;p1&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">new_param</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;p2&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parametric</span><span class="o">::</span><span class="n">compute</span><span class="o">&lt;</span><span class="n">DivComputer</span><span class="o">&gt;</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">p2</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IDpEN10parametric11ComputeNode14connect_inputsEvDpRR4Args">
+<span id="_CPPv3IDpEN10parametric11ComputeNode14connect_inputsEDpRR4Args"></span><span id="_CPPv2IDpEN10parametric11ComputeNode14connect_inputsEDpRR4Args"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">Args</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1_compute_node_1a1d09976aca0c9fc6d9adbf9b12527337"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">connect_inputs</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN10parametric11ComputeNode14connect_inputsEvDpRR4Args" title="parametric::ComputeNode::connect_inputs::Args"><span class="n"><span class="pre">Args</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">args</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN10parametric11ComputeNode14connect_inputsEvDpRR4Args" title="Link to this definition"></a><br /></dt>
+<dd><p>default implementation for connecting the inputs to the outputs. </p>
+<p>This function may be provided by the derived class to customize the behavior of parametric::compute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Args</strong> – arguments forwarded from parametric::compute</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>args</strong> – input arguments that shall be connected to the compute node </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric11ComputeNode18initialize_resultsEv">
+<span id="_CPPv3N10parametric11ComputeNode18initialize_resultsEv"></span><span id="_CPPv2N10parametric11ComputeNode18initialize_resultsEv"></span><span id="parametric::ComputeNode::initialize_results"></span><span class="target" id="classparametric_1_1_compute_node_1af1fe9fa156443b3cab2df5c38c8c82c4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">compute_return_value</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I000EN10parametric11ComputeNodeE" title="parametric::ComputeNode::Results"><span class="n"><span class="pre">Results</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">initialize_results</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric11ComputeNode18initialize_resultsEv" title="Link to this definition"></a><br /></dt>
+<dd><p>default implementation for initializing the results of the compute node </p>
+<p>This function may be provided by the derived class to customize the behavior of parametric::compute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>compute_return_value&lt;Results&gt; a tuple of <a class="reference internal" href="#classparametric_1_1param"><span class="std std-ref">param&lt;T&gt;</span></a> values for multi-output functions, a <a class="reference internal" href="#classparametric_1_1param"><span class="std std-ref">param&lt;T&gt;</span></a> for single output functions or a shared_ptr to this for void functions </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric11ComputeNode15connect_resultsERK20compute_return_valueI7ResultsE">
+<span id="_CPPv3N10parametric11ComputeNode15connect_resultsERK20compute_return_valueI7ResultsE"></span><span id="_CPPv2N10parametric11ComputeNode15connect_resultsERK20compute_return_valueI7ResultsE"></span><span id="parametric::ComputeNode::connect_results__compute_return_value:Results:CR"></span><span class="target" id="classparametric_1_1_compute_node_1a484c10c6735a9fb83fe286451f82f240"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">connect_results</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">compute_return_value</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I000EN10parametric11ComputeNodeE" title="parametric::ComputeNode::Results"><span class="n"><span class="pre">Results</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">res</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric11ComputeNode15connect_resultsERK20compute_return_valueI7ResultsE" title="Link to this definition"></a><br /></dt>
+<dd><p>default implementation for connecting the results of the compute node to the compute node. </p>
+<p>This function may be provided by the derived class to customize the behavior of parametric::compute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>res</strong> – The results as returned by <a class="reference internal" href="#classparametric_1_1_compute_node_1af1fe9fa156443b3cab2df5c38c8c82c4"><span class="std std-ref">initialize_results</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric11ComputeNode12post_connectEv">
+<span id="_CPPv3NK10parametric11ComputeNode12post_connectEv"></span><span id="_CPPv2NK10parametric11ComputeNode12post_connectEv"></span><span id="parametric::ComputeNode::post_connectC"></span><span class="target" id="classparametric_1_1_compute_node_1acc308f5dab71e3cc756f99c0e67bc6da"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">post_connect</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric11ComputeNode12post_connectEv" title="Link to this definition"></a><br /></dt>
+<dd><p>override this method as a post connection callback. </p>
+<p>This method will be called immediately after the compute node has been connected to its inputs and outputs. It can be used to set a default id for the outputs using <a class="reference internal" href="#classparametric_1_1_compute_node_1ac8bce678a6e0c7bdbcf22e13208534bc"><span class="std std-ref">arg&lt;i&gt;()</span></a> and <a class="reference internal" href="#classparametric_1_1_compute_node_1af77fc7cace4e65e2e17225bfe5c46180"><span class="std std-ref">res&lt;i&gt;()</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric11ComputeNode4evalEv">
+<span id="_CPPv3NK10parametric11ComputeNode4evalEv"></span><span id="_CPPv2NK10parametric11ComputeNode4evalEv"></span><span id="parametric::ComputeNode::evalC"></span><span class="target" id="classparametric_1_1_compute_node_1a2575929d2510d5b552f28144145bf79d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">eval</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric11ComputeNode4evalEv" title="Link to this definition"></a><br /></dt>
+<dd><p>override this method to perform the calculation. </p>
+<p>Use <a class="reference internal" href="#classparametric_1_1_compute_node_1ac8bce678a6e0c7bdbcf22e13208534bc"><span class="std std-ref">arg&lt;i&gt;()</span></a> and <a class="reference internal" href="#classparametric_1_1_compute_node_1af77fc7cace4e65e2e17225bfe5c46180"><span class="std std-ref">res&lt;i&gt;()</span></a> to query the inputs and outputs </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00ENK10parametric11ComputeNode3argEDci">
+<span id="_CPPv3I00ENK10parametric11ComputeNode3argEi"></span><span id="_CPPv2I00ENK10parametric11ComputeNode3argEi"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">value_type</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">DefaultSerializer</span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1_compute_node_1aaae77d4b515442c21358e53e2096f62f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">decltype</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">auto</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">arg</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4I00ENK10parametric11ComputeNode3argEDci" title="Link to this definition"></a><br /></dt>
+<dd><p>returns the i-th input argument. This function must be called after the compute node has been connected to its inputs via parametric::compute. It ignores the Argument list and expects the argument type to be specified by the user. </p>
+<p>Caution: UB if the value_type does not match the actual type of the i-th argument!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value_type</strong> – the value_type of the i-th argument. </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>i</strong> – the index of the input argument. </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A reference to an input parameter </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I_iENK10parametric11ComputeNode3argEDcv">
+<span id="_CPPv3I_iENK10parametric11ComputeNode3argEv"></span><span id="_CPPv2I_iENK10parametric11ComputeNode3argEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">i</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1_compute_node_1ac8bce678a6e0c7bdbcf22e13208534bc"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">decltype</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">auto</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">arg</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4I_iENK10parametric11ComputeNode3argEDcv" title="Link to this definition"></a><br /></dt>
+<dd><p>returns the i-th input argument. This function must be called after the compute node has been connected to its inputs via parametric::compute. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i</strong> – the index of the input argument. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A reference to an input parameter </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00ENK10parametric11ComputeNode3resEDci">
+<span id="_CPPv3I00ENK10parametric11ComputeNode3resEi"></span><span id="_CPPv2I00ENK10parametric11ComputeNode3resEi"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">value_type</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">DefaultSerializer</span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1_compute_node_1af77fc7cace4e65e2e17225bfe5c46180"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">decltype</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">auto</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">res</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4I00ENK10parametric11ComputeNode3resEDci" title="Link to this definition"></a><br /></dt>
+<dd><p>returns a pointer to the i-th output argument. The function must be called after the compute node has been connected to its outputs via parametric::compute. </p>
+<p>If the output parameter has already been deleted, the returned pointer will be null. This should be checked before using the pointer. This overload ignores the Result list and requires the user to specify the type of the i-th result</p>
+<p>Caution: UB if the value_type does not match the actual type of the i-th result!</p>
+<p>Example: <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">set_value</span><span class="p">(</span><span class="n">arg</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">arg</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">value</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i</strong> – the index of the output argument. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A shared_ptr to the output parameter </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I_iENK10parametric11ComputeNode3resEDcv">
+<span id="_CPPv3I_iENK10parametric11ComputeNode3resEv"></span><span id="_CPPv2I_iENK10parametric11ComputeNode3resEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">i</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1_compute_node_1a8ccd34aad59d4fd53866b3931fc79439"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">decltype</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">auto</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">res</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4I_iENK10parametric11ComputeNode3resEDcv" title="Link to this definition"></a><br /></dt>
+<dd><p>returns a pointer to the i-th output argument. The function must be called after the compute node has been connected to its outputs via parametric::compute. </p>
+<p>If the output parameter has already been deleted, the returned pointer will be null. This should be checked before using the pointer.</p>
+<p>Example: <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">set_value</span><span class="p">(</span><span class="n">arg</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">().</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">arg</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">().</span><span class="n">value</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i</strong> – the index of the output argument. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A shared_ptr to the output parameter </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric11ComputeNode10args_tupleEv">
+<span id="_CPPv3NK10parametric11ComputeNode10args_tupleEv"></span><span id="_CPPv2NK10parametric11ComputeNode10args_tupleEv"></span><span id="parametric::ComputeNode::args_tupleC"></span><span class="target" id="classparametric_1_1_compute_node_1a9a64d320318299baf4a251d387e6d834"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">decltype</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">auto</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">args_tuple</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric11ComputeNode10args_tupleEv" title="Link to this definition"></a><br /></dt>
+<dd><p>A convenience function that collects the input arguments in a tuple. </p>
+<p>This can be used to forward the input arguments to std::apply for instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple of the evaluated input arguments. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN10parametric11ComputeNode10depends_onEvRK5paramI1T1SE">
+<span id="_CPPv3I00EN10parametric11ComputeNode10depends_onERK5paramI1T1SE"></span><span id="_CPPv2I00EN10parametric11ComputeNode10depends_onERK5paramI1T1SE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1_compute_node_1aba25e75cf5ca172fc2fb6c44e9dd96a8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">depends_on</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric11ComputeNode10depends_onEvRK5paramI1T1SE" title="parametric::ComputeNode::depends_on::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric11ComputeNode10depends_onEvRK5paramI1T1SE" title="parametric::ComputeNode::depends_on::S"><span class="n"><span class="pre">S</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">input</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN10parametric11ComputeNode10depends_onEvRK5paramI1T1SE" title="Link to this definition"></a><br /></dt>
+<dd><p>convenience function to connect this compute node to an input parameter </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – the type held by the input parameter </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>input</strong> – the input parameter </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN10parametric11ComputeNode8computesEvRK5paramI1T1SE">
+<span id="_CPPv3I00EN10parametric11ComputeNode8computesERK5paramI1T1SE"></span><span id="_CPPv2I00EN10parametric11ComputeNode8computesERK5paramI1T1SE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1_compute_node_1a13171185affacd1fe98b9a67b0a68076"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computes</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric11ComputeNode8computesEvRK5paramI1T1SE" title="parametric::ComputeNode::computes::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN10parametric11ComputeNode8computesEvRK5paramI1T1SE" title="parametric::ComputeNode::computes::S"><span class="n"><span class="pre">S</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">output</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN10parametric11ComputeNode8computesEvRK5paramI1T1SE" title="Link to this definition"></a><br /></dt>
+<dd><p>convenience function to connect this compute node to an output parameter </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – the type held by the output parameter </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>output</strong> – the output parameter </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve function “parametric::compute” with arguments (std::shared_ptr&lt;C&gt; const&amp;, param&lt;Args&gt; const&amp;…) in doxygen xml output for project “parametric” from directory: /home/runner/work/parametric/parametric/build/docs/doxygen/xml.
+Potential matches:
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">C</span><span class="p">,</span> <span class="n">typename</span> <span class="o">...</span><span class="n">Args</span><span class="o">&gt;</span> <span class="n">decltype</span><span class="p">(</span><span class="n">auto</span><span class="p">)</span> <span class="n">compute</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">C</span><span class="o">&gt;</span> <span class="n">const</span> <span class="o">&amp;</span><span class="n">ptr</span><span class="p">,</span> <span class="n">Args</span><span class="o">&amp;&amp;...</span> <span class="n">args</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">C</span><span class="p">,</span> <span class="n">typename</span> <span class="n">S</span><span class="p">,</span> <span class="n">typename</span> <span class="o">...</span><span class="n">Args</span><span class="o">&gt;</span> <span class="n">decltype</span><span class="p">(</span><span class="n">auto</span><span class="p">)</span> <span class="n">compute</span><span class="p">(</span><span class="n">param</span><span class="o">&lt;</span><span class="n">Args</span><span class="p">,</span> <span class="n">S</span><span class="o">&gt;</span> <span class="n">const</span><span class="o">&amp;...</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve function “parametric::compute” with arguments (param&lt;Args&gt; const&amp;…) in doxygen xml output for project “parametric” from directory: /home/runner/work/parametric/parametric/build/docs/doxygen/xml.
+Potential matches:
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">C</span><span class="p">,</span> <span class="n">typename</span> <span class="o">...</span><span class="n">Args</span><span class="o">&gt;</span> <span class="n">decltype</span><span class="p">(</span><span class="n">auto</span><span class="p">)</span> <span class="n">compute</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">C</span><span class="o">&gt;</span> <span class="n">const</span> <span class="o">&amp;</span><span class="n">ptr</span><span class="p">,</span> <span class="n">Args</span><span class="o">&amp;&amp;...</span> <span class="n">args</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">C</span><span class="p">,</span> <span class="n">typename</span> <span class="n">S</span><span class="p">,</span> <span class="n">typename</span> <span class="o">...</span><span class="n">Args</span><span class="o">&gt;</span> <span class="n">decltype</span><span class="p">(</span><span class="n">auto</span><span class="p">)</span> <span class="n">compute</span><span class="p">(</span><span class="n">param</span><span class="o">&lt;</span><span class="n">Args</span><span class="p">,</span> <span class="n">S</span><span class="o">&gt;</span> <span class="n">const</span><span class="o">&amp;...</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="dag">
+<span id="dag-api"></span><h2>DAG<a class="headerlink" href="#dag" title="Link to this heading"></a></h2>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric7NodeRefE">
+<span id="_CPPv3N10parametric7NodeRefE"></span><span id="_CPPv2N10parametric7NodeRefE"></span><span id="parametric::NodeRef"></span><span class="target" id="namespaceparametric_1aaff6a9a55954aa38a8ce36da6c6c6122"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N10parametric7DAGNodeE" title="parametric::DAGNode"><span class="n"><span class="pre">DAGNode</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-prename descclassname"><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">NodeRef</span></span></span><a class="headerlink" href="#_CPPv4N10parametric7NodeRefE" title="Link to this definition"></a><br /></dt>
+<dd><p>A shared pointer to a DAG node. </p>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric7DAGNodeE">
+<span id="_CPPv3N10parametric7DAGNodeE"></span><span id="_CPPv2N10parametric7DAGNodeE"></span><span id="parametric::DAGNode"></span><span class="target" id="classparametric_1_1_d_a_g_node"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DAGNode</span></span></span><a class="headerlink" href="#_CPPv4N10parametric7DAGNodeE" title="Link to this definition"></a><br /></dt>
+<dd><p>This class provides a basis node of a directed acyclic graph (DAG) </p>
+<p>It provides all required methods to connect multiple nodes to a larger graph.</p>
+<p>Design Considerations: In the current design, child nodes own their parent nodes. This makes it possible to hold a pointer to a child node keeping the whole graph alive. </p>
+<p>Subclassed by parametric::ClonableDAGNode&lt; Derived &gt;</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp enum-class">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric7DAGNode9DirectionE">
+<span id="_CPPv3N10parametric7DAGNode9DirectionE"></span><span id="_CPPv2N10parametric7DAGNode9DirectionE"></span><span class="target" id="classparametric_1_1_d_a_g_node_1a700c78221ab49ec1e09e9bbced471bde"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Direction</span></span></span><a class="headerlink" href="#_CPPv4N10parametric7DAGNode9DirectionE" title="Link to this definition"></a><br /></dt>
+<dd><p>Defines the graph travsersal direction. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric7DAGNode9Direction2upE">
+<span id="_CPPv3N10parametric7DAGNode9Direction2upE"></span><span id="_CPPv2N10parametric7DAGNode9Direction2upE"></span><span class="target" id="classparametric_1_1_d_a_g_node_1a700c78221ab49ec1e09e9bbced471bdea46c48bec0d282018b9d167eef7711b2c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">up</span></span></span><a class="headerlink" href="#_CPPv4N10parametric7DAGNode9Direction2upE" title="Link to this definition"></a><br /></dt>
+<dd><p>Traverse upwards, i.e. in direction of parents </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric7DAGNode9Direction4downE">
+<span id="_CPPv3N10parametric7DAGNode9Direction4downE"></span><span id="_CPPv2N10parametric7DAGNode9Direction4downE"></span><span class="target" id="classparametric_1_1_d_a_g_node_1a700c78221ab49ec1e09e9bbced471bdea74e8333ad11685ff3bdae589c8f6e34d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">down</span></span></span><a class="headerlink" href="#_CPPv4N10parametric7DAGNode9Direction4downE" title="Link to this definition"></a><br /></dt>
+<dd><p>Traverse downwards, i.e. in direction of childs </p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric7DAGNode7DAGNodeERKNSt6stringE">
+<span id="_CPPv3N10parametric7DAGNode7DAGNodeERKNSt6stringE"></span><span id="_CPPv2N10parametric7DAGNode7DAGNodeERKNSt6stringE"></span><span id="parametric::DAGNode::DAGNode__ssCR"></span><span class="target" id="classparametric_1_1_d_a_g_node_1a9ed198250b7034686e8964074570ab93"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DAGNode</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">id</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric7DAGNode7DAGNodeERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p><a class="reference internal" href="#classparametric_1_1_d_a_g_node"><span class="std std-ref">DAGNode</span></a> Constructs the node with an identifier. The id does not have to be unique. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – The identifier of the node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric7DAGNode9serializeEv">
+<span id="_CPPv3NK10parametric7DAGNode9serializeEv"></span><span id="_CPPv2NK10parametric7DAGNode9serializeEv"></span><span id="parametric::DAGNode::serializeC"></span><span class="target" id="classparametric_1_1_d_a_g_node_1adf845e9ec6704ac8c7b95b0a728d7471"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">serialize</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric7DAGNode9serializeEv" title="Link to this definition"></a><br /></dt>
+<dd><p>This virtual function can be overwritten for serializing and deserializing nodes to std::string. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>std::string </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric7DAGNode2idEv">
+<span id="_CPPv3NK10parametric7DAGNode2idEv"></span><span id="_CPPv2NK10parametric7DAGNode2idEv"></span><span id="parametric::DAGNode::idC"></span><span class="target" id="classparametric_1_1_d_a_g_node_1a518eedf4b0e544ddb4f0091188e84522"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">id</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric7DAGNode2idEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the identifier of the node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The id as a string </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric7DAGNode6set_idERKNSt6stringE">
+<span id="_CPPv3N10parametric7DAGNode6set_idERKNSt6stringE"></span><span id="_CPPv2N10parametric7DAGNode6set_idERKNSt6stringE"></span><span id="parametric::DAGNode::set_id__ssCR"></span><span class="target" id="classparametric_1_1_d_a_g_node_1a2c74a3a7252910cb9e07306f9d0e53d1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_id</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">id</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric7DAGNode6set_idERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the identifier of the node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – The identifier string. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric7DAGNode8precedesERK7DAGNode">
+<span id="_CPPv3NK10parametric7DAGNode8precedesERK7DAGNode"></span><span id="_CPPv2NK10parametric7DAGNode8precedesERK7DAGNode"></span><span id="parametric::DAGNode::precedes__DAGNodeCRC"></span><span class="target" id="classparametric_1_1_d_a_g_node_1a30916f3b64b2c67d555d2cb97a42a121"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">precedes</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10parametric7DAGNodeE" title="parametric::DAGNode"><span class="n"><span class="pre">DAGNode</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">node</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric7DAGNode8precedesERK7DAGNode" title="Link to this definition"></a><br /></dt>
+<dd><p>Checks, whether “node” precides the current node in the DAG. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> – The node to be checked </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True, if node precedes this node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0ENK10parametric7DAGNode6acceptEvR7Visitor6size_t9Direction">
+<span id="_CPPv3I0ENK10parametric7DAGNode6acceptER7Visitor6size_t9Direction"></span><span id="_CPPv2I0ENK10parametric7DAGNode6acceptER7Visitor6size_t9Direction"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Visitor</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1_d_a_g_node_1ad45d0f1dfaa4cc1bb4c057b6f22640df"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">accept</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0ENK10parametric7DAGNode6acceptEvR7Visitor6size_t9Direction" title="parametric::DAGNode::accept::Visitor"><span class="n"><span class="pre">Visitor</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">v</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">depth</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span>, <a class="reference internal" href="#_CPPv4N10parametric7DAGNode9DirectionE" title="parametric::DAGNode::Direction"><span class="n"><span class="pre">Direction</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dir</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10parametric7DAGNode9DirectionE" title="parametric::DAGNode::Direction"><span class="n"><span class="pre">Direction</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N10parametric7DAGNode9Direction4downE" title="parametric::DAGNode::Direction::down"><span class="n"><span class="pre">down</span></span></a><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4I0ENK10parametric7DAGNode6acceptEvR7Visitor6size_t9Direction" title="Link to this definition"></a><br /></dt>
+<dd><p>This provides an interface for the visitor pattern to walk through the whole DAG down from this node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> – The Visitor that is applied on each node during traversal </p></li>
+<li><p><strong>depth</strong> – The current depth of traversal </p></li>
+<li><p><strong>dir</strong> – The direction of traversal (either up or down) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN10parametric7DAGNode6acceptEvR7Visitor6size_t9Direction">
+<span id="_CPPv3I0EN10parametric7DAGNode6acceptER7Visitor6size_t9Direction"></span><span id="_CPPv2I0EN10parametric7DAGNode6acceptER7Visitor6size_t9Direction"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Visitor</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classparametric_1_1_d_a_g_node_1a3034e8f02fb57b646ae1f506be48f5f8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">accept</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN10parametric7DAGNode6acceptEvR7Visitor6size_t9Direction" title="parametric::DAGNode::accept::Visitor"><span class="n"><span class="pre">Visitor</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">v</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">depth</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span>, <a class="reference internal" href="#_CPPv4N10parametric7DAGNode9DirectionE" title="parametric::DAGNode::Direction"><span class="n"><span class="pre">Direction</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dir</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10parametric7DAGNode9DirectionE" title="parametric::DAGNode::Direction"><span class="n"><span class="pre">Direction</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N10parametric7DAGNode9Direction4downE" title="parametric::DAGNode::Direction::down"><span class="n"><span class="pre">down</span></span></a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN10parametric7DAGNode6acceptEvR7Visitor6size_t9Direction" title="Link to this definition"></a><br /></dt>
+<dd><p>This provides an interface for the visitor pattern to walk through the whole DAG down from this node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> – The Visitor that is applied on each node during traversal </p></li>
+<li><p><strong>depth</strong> – The current depth of traversal </p></li>
+<li><p><strong>dir</strong> – The direction of traversal (either up or down) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric7DAGNode13remove_parentERK7DAGNode">
+<span id="_CPPv3N10parametric7DAGNode13remove_parentERK7DAGNode"></span><span id="_CPPv2N10parametric7DAGNode13remove_parentERK7DAGNode"></span><span id="parametric::DAGNode::remove_parent__DAGNodeCR"></span><span class="target" id="classparametric_1_1_d_a_g_node_1ae9e0822ac9fe8d50338833604028b407"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">remove_parent</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10parametric7DAGNodeE" title="parametric::DAGNode"><span class="n"><span class="pre">DAGNode</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">parent</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric7DAGNode13remove_parentERK7DAGNode" title="Link to this definition"></a><br /></dt>
+<dd><p>Removes the node “parent” from the current node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> – The node to be removed </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric7DAGNode11num_parentsEv">
+<span id="_CPPv3NK10parametric7DAGNode11num_parentsEv"></span><span id="_CPPv2NK10parametric7DAGNode11num_parentsEv"></span><span id="parametric::DAGNode::num_parentsC"></span><span class="target" id="classparametric_1_1_d_a_g_node_1aea8301f7413957102841babf0bb134df"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">num_parents</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric7DAGNode11num_parentsEv" title="Link to this definition"></a><br /></dt>
+<dd><p>returns the number of parents </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric7DAGNode12num_childrenEv">
+<span id="_CPPv3NK10parametric7DAGNode12num_childrenEv"></span><span id="_CPPv2NK10parametric7DAGNode12num_childrenEv"></span><span id="parametric::DAGNode::num_childrenC"></span><span class="target" id="classparametric_1_1_d_a_g_node_1ada3da943251d4d9b0c7a63730a0a32c6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">num_children</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric7DAGNode12num_childrenEv" title="Link to this definition"></a><br /></dt>
+<dd><p>returns the number of children </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric7DAGNode10invalidateEv">
+<span id="_CPPv3N10parametric7DAGNode10invalidateEv"></span><span id="_CPPv2N10parametric7DAGNode10invalidateEv"></span><span id="parametric::DAGNode::invalidate"></span><span class="target" id="classparametric_1_1_d_a_g_node_1ac86136def15654fe83d82165de8c4230"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">invalidate</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric7DAGNode10invalidateEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Invalidates this node and all other childs. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric7DAGNode4evalEv">
+<span id="_CPPv3NK10parametric7DAGNode4evalEv"></span><span id="_CPPv2NK10parametric7DAGNode4evalEv"></span><span id="parametric::DAGNode::evalC"></span><span class="target" id="classparametric_1_1_d_a_g_node_1a56d97cb8c39013a6164591182fd17142"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">eval</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric7DAGNode4evalEv" title="Link to this definition"></a><br /></dt>
+<dd><p>This method is internally used to evaluate the state of the node. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric7DAGNode7IsValidEv">
+<span id="_CPPv3NK10parametric7DAGNode7IsValidEv"></span><span id="_CPPv2NK10parametric7DAGNode7IsValidEv"></span><span id="parametric::DAGNode::IsValidC"></span><span class="target" id="classparametric_1_1_d_a_g_node_1a7cdcebc78d9e5f4a232e7ddd7e6a8834"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IsValid</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric7DAGNode7IsValidEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns whether the node is in a valid state. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK10parametric7DAGNode5cloneENSt10shared_ptrI13ClonedNodeMapEE">
+<span id="_CPPv3NK10parametric7DAGNode5cloneENSt10shared_ptrI13ClonedNodeMapEE"></span><span id="_CPPv2NK10parametric7DAGNode5cloneENSt10shared_ptrI13ClonedNodeMapEE"></span><span id="parametric::DAGNode::clone__std::shared_ptr:ClonedNodeMap:C"></span><span class="target" id="classparametric_1_1_d_a_g_node_1a27f70817d7c4549d93728d08a91ce412"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N10parametric7DAGNodeE" title="parametric::DAGNode"><span class="n"><span class="pre">DAGNode</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clone</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">ClonedNodeMap</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cloned_nodes</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">new_cloned_node_map</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK10parametric7DAGNode5cloneENSt10shared_ptrI13ClonedNodeMapEE" title="Link to this definition"></a><br /></dt>
+<dd><p>This function deep-copies a node together with all of its ancestors, while maintaining parent-child-relations. </p>
+<p>The optional input cloned_nodes is used to keep track of the already cloned nodes. This way redundant clones can be avoided. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10parametric7DAGNode10add_parentERK7NodeRefRK7NodeRef">
+<span id="_CPPv3N10parametric7DAGNode10add_parentERK7NodeRefRK7NodeRef"></span><span id="_CPPv2N10parametric7DAGNode10add_parentERK7NodeRefRK7NodeRef"></span><span id="parametric::DAGNode::add_parent__NodeRefCR.NodeRefCR"></span><span class="target" id="classparametric_1_1_d_a_g_node_1afba2280e8017cb073d6e8d1497767e37"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">add_parent</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10parametric7NodeRefE" title="parametric::NodeRef"><span class="n"><span class="pre">NodeRef</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">child</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N10parametric7NodeRefE" title="parametric::NodeRef"><span class="n"><span class="pre">NodeRef</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">parent</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10parametric7DAGNode10add_parentERK7NodeRefRK7NodeRef" title="Link to this definition"></a><br /></dt>
+<dd><p>Adds the node “parent” as parent to the node “child”. </p>
+<p>The list of children is unique, but the list of parents may contain duplicates. The rationale behind this is that a compute node could have the same parent for different arguments, e.g. b = a*a, but a parent must only invalidate their children once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>child</strong> – The node to which “parent” is added as a parent. </p></li>
+<li><p><strong>parent</strong> – The parent node to be added.</p></li>
+<li><p><strong>child</strong> – The node to which “parent” is added as a parent. </p></li>
+<li><p><strong>parent</strong> – The parent node to be added. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="operators">
+<span id="operators-api"></span><h2>Operators<a class="headerlink" href="#operators" title="Link to this heading"></a></h2>
+<p>This file contains the parametric variant of arithmetic functions and their operator overloads. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EplDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE">
+<span id="_CPPv3I00EplRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"></span><span id="_CPPv2I00EplRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T1</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T2</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="operators_8hpp_1afe7cac102d97bfde5b62ccafab9ba062"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">+</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EplDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="operator+::T1"><span class="n"><span class="pre">T1</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EplDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="operator+::T2"><span class="n"><span class="pre">T2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EplDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EmlDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE">
+<span id="_CPPv3I00EmlRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"></span><span id="_CPPv2I00EmlRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T1</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T2</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="operators_8hpp_1a7bf3e671c4170bce1db364f4200485c2"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">*</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EmlDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="operator*::T1"><span class="n"><span class="pre">T1</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EmlDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="operator*::T2"><span class="n"><span class="pre">T2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EmlDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv410parametric">
+<span id="_CPPv310parametric"></span><span id="_CPPv210parametric"></span><span id="parametric"></span><span class="target" id="namespaceparametric"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parametric</span></span></span><a class="headerlink" href="#_CPPv410parametric" title="Link to this definition"></a><br /></dt>
+<dd><p>Objects to adapt to legacy code that does not yet use parameters yet </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN10parametric5p_addEDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE">
+<span id="_CPPv3I00EN10parametric5p_addERKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"></span><span id="_CPPv2I00EN10parametric5p_addERKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T1</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T2</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="namespaceparametric_1a217e9824690c53f92d7908d9c9d39cb7"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">p_add</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5p_addEDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="parametric::p_add::T1"><span class="n"><span class="pre">T1</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5p_addEDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="parametric::p_add::T2"><span class="n"><span class="pre">T2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN10parametric5p_addEDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN10parametric6p_multEDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE">
+<span id="_CPPv3I00EN10parametric6p_multERKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"></span><span id="_CPPv2I00EN10parametric6p_multERKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T1</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T2</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="namespaceparametric_1a4b33f3bcaf27169daca6963f598ada39"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">p_mult</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric6p_multEDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="parametric::p_mult::T1"><span class="n"><span class="pre">T1</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410parametric" title="parametric"><span class="n"><span class="pre">parametric</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric5paramE" title="parametric::param"><span class="n"><span class="pre">param</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN10parametric6p_multEDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="parametric::p_mult::T2"><span class="n"><span class="pre">T2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN10parametric6p_multEDaRKN10parametric5paramI2T1EERKN10parametric5paramI2T2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="genindex.html" class="btn btn-neutral float-right" title="Index" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, German Aerospace Center.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

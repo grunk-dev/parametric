@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Jan Kleinert <jan.kleinert@dlr.de>
+#
+# SPDX-License-Identifier: Apache-2.0
+
 [workspace]
 name = "grunk"
 version = "0.5.0"
@@ -20,9 +24,14 @@ jinja2 = "<3.1"
 standard-imghdr = "*"
 docutils = "<0.21"
 
+[feature.tools]
+dependencies = { python = "*" }
+pypi-dependencies = { reuse = "*" }
+
 [environments]
 "default" = ["base"]
 "docs" = ["base", "docs"]
+"tools" = ["base", "tools"]
 
 [tasks]
 configure = { cmd = [
@@ -42,3 +51,10 @@ configure = { cmd = [
 build = { cmd = "cmake --build . {{ extra_args }}", cwd = "build", args= [ { "arg" = "extra_args", "default" = "-j"}]}
 install = { cmd = "cmake --build . --target install {{ extra_args }}", cwd = "build", args= [ { "arg" = "extra_args", "default" = "-j"}] }
 test = { cmd = "./runUnitTests", cwd = "build/tests/" }
+
+#_reuse = { cmd = "reuse lint" }
+_reuse = { cmd = "reuse {{ sub_cmd }}",args = [ { "arg" = "sub_cmd", "default" = "lint"} ] }
+
+[tasks.reuse]
+args = [ { "arg" = "sub_cmd", "default" = "lint"} ]
+depends-on = [{ task = "_reuse", environment="tools", args = ["{{sub_cmd}}"] }]

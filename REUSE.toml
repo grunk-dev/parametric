@@ -8,11 +8,11 @@ version = 1
 [[annotations]]
 path = "pixi.lock"
 precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 <owner>"
+SPDX-FileCopyrightText = "2026 Jan Kleienrt <jan.kleinert@dlr.de>"
 SPDX-License-Identifier = "Apache-2.0"
 
 [[annotations]]
 path = "docs/images/**"
 precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 <owner>"
+SPDX-FileCopyrightText = "2026 Jan Kleienrt <jan.kleinert@dlr.de>"
 SPDX-License-Identifier = "Apache-2.0"

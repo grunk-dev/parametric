@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 Jan Kleinert <jan.kleinert@dlr.de>
+# SPDX-FileCopyrightText: 2026 Martin Siggel <martin.siggel@dlr.de>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Kleinert"
+    given-names: "Jan"
+    orcid: "https://orcid.org/0000-0002-2709-214X"
+  - family-names: "Siggel"
+    given-names: "Martin"
+    orcid: "https://orcid.org/0000-0002-3952-4659"
+title: "parametric: A C++ library for parametric lazy evaluation of functions"
+version: 0.3.5
+doi: 10.0000/zenodo.0000000
+date-released: 2026-04-26
+url: "https://github.com/grunk-dev/parametric"

@@ -26,7 +26,7 @@ docutils = "<0.21"
 
 [feature.tools]
 dependencies = { python = "*" }
-pypi-dependencies = { reuse = "*" }
+pypi-dependencies = { reuse = "*", cffconvert = "*" }
 
 [environments]
 "default" = ["base"]

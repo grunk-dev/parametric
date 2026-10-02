@@ -4,6 +4,10 @@ SPDX-FileCopyrightText: 2026 Jan Kleinert <jan.kleinert@dlr.de>
 SPDX-License-Identifier: Apache-2.0
 -->
 
+# Unreleased
+
+- Fix undefined behaviour in `DAGNode::~DAGNode()`, which erased from the parent list while iterating over it (#86)
+
 # v0.3.5
 
 - First open source version!

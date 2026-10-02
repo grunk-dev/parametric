@@ -110,3 +110,17 @@ TEST(DAG, destroyNodeWithDuplicateParents)
     add_parent(c, a);
     EXPECT_TRUE(a->precedes(*c));
 }
+
+// Dead consumers must not pile up in a long-lived parent. See https://github.com/grunk-dev/parametric/issues/85
+TEST(DAG, deadChildrenArePruned)
+{
+    NodeRef x(new DAGNode("x"));
+    for (int i = 0; i < 1000; ++i) {
+        NodeRef c(new DAGNode("c"));
+        add_parent(c, x);
+    }
+    NodeRef alive(new DAGNode("alive"));
+    add_parent(alive, x);
+    EXPECT_EQ(1, x->num_children());
+    EXPECT_TRUE(x->precedes(*alive));
+}

@@ -559,6 +559,10 @@ public:
         add_parent(output.node_pointer(), ptr);
     }
 
+protected:
+    /** @brief The i-th child is the i-th result, so expired results must keep their slot. */
+    bool has_positional_children() const override { return true; }
+
 private:
 
     template <size_t i>

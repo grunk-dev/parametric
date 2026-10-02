@@ -96,11 +96,19 @@ public:
             throw std::runtime_error("Cannot attach node: cycles are not allowed.");
         }
 
+        // Drop entries of consumers that have been destroyed in the meantime, so that a long-lived
+        // node does not accumulate one dead weak_ptr per consumer ever attached to it. This is done
+        // here and not in ~DAGNode, because a node may be destroyed while its parent is traversing
+        // its child list. Nodes with positional children (outputs of compute nodes) must keep their slots.
+        if (!parent->has_positional_children()) {
+            parent->childs.erase(
+                std::remove_if(parent->childs.begin(), parent->childs.end(),
+                               [](auto const& c) { return c.expired(); }),
+                parent->childs.end());
+        }
+
         auto predicate = [&child](auto const& c){
-            if (!c.expired()) {
-                return c.lock() == child;
-            }
-            return false;
+            return c.lock() == child;
         };
         if (std::find_if(std::begin(parent->childs), std::end(parent->childs), predicate ) == parent->childs.end()) {
             parent->childs.push_back(child);
@@ -365,6 +373,12 @@ protected:
      * specific invalidation logic of the node
      */
     virtual void invalidateSelf() {}
+
+    /**
+     * @brief Override this function to return true if the position of a child in the child list is
+     * meaningful, e.g. for the outputs of a compute node. Dead entries of such nodes are never pruned.
+     */
+    virtual bool has_positional_children() const { return false; }
 };
 
 template <typename Derived>

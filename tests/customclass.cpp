@@ -209,3 +209,21 @@ TEST(CustomClass, void_function){
     //reset
     MyVoidFun::value = 0.;
 }
+// Attaching to a compute node must not shift its output slots when an earlier output is dead (#85)
+TEST(CustomClass, deadOutputKeepsSlot)
+{
+    auto b = parametric::new_param("b", 4.0);
+    auto ptr = std::shared_ptr<CustomComputer>(new CustomComputer(2.0));
+    using Results = std::tuple<parametric::param<double>, parametric::param<double>>;
+    auto results = std::make_unique<Results>(parametric::compute(ptr, b));
+    auto div_result = std::get<1>(*results);
+    results.reset(); // drops the first output only, div_result keeps the second alive
+    ASSERT_EQ(nullptr, ptr->res<double>(0));
+
+    auto extra = parametric::new_param("extra", 0.0);
+    ptr->computes(extra);
+
+    EXPECT_EQ(nullptr, ptr->res<double>(0));
+    EXPECT_NE(nullptr, ptr->res<double>(1));
+    EXPECT_EQ(div_result.node_pointer(), ptr->res<double>(1));
+}

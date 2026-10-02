@@ -7,6 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 # Unreleased
 
 - Fix undefined behaviour in `DAGNode::~DAGNode()`, which erased from the parent list while iterating over it (#86)
+- Fix dead child entries accumulating in long-lived nodes, which made attaching N consumers cost O(N^2) (#85)
 
 # v0.3.5
 

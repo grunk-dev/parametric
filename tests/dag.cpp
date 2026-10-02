@@ -74,3 +74,39 @@ TEST(DAG, unattach)
     EXPECT_FALSE(b->precedes(*a));
     EXPECT_TRUE(b->precedes(*c));
 }
+// Destroying a node must not modify the parent list it iterates over (UB, flagged by ASan with
+// -D_GLIBCXX_SANITIZE_VECTOR). See https://github.com/grunk-dev/parametric/issues/86
+TEST(DAG, destroyNodeWithParents)
+{
+    NodeRef x(new DAGNode("x"));
+    NodeRef y(new DAGNode("y"));
+    {
+        NodeRef z(new DAGNode("z"));
+        NodeRef w(new DAGNode("w"));
+        add_parent(z, x);
+        add_parent(z, y);
+        add_parent(w, z);
+        add_parent(w, x);
+        EXPECT_EQ(2, w->num_parents());
+    }
+    // the surviving parents are still intact and usable
+    EXPECT_EQ(0, x->num_parents());
+    EXPECT_EQ(0, y->num_parents());
+    NodeRef c(new DAGNode("c"));
+    add_parent(c, x);
+    EXPECT_TRUE(x->precedes(*c));
+}
+
+TEST(DAG, destroyNodeWithDuplicateParents)
+{
+    NodeRef a(new DAGNode("a"));
+    {
+        NodeRef b(new DAGNode("b"));
+        add_parent(b, a);
+        add_parent(b, a);
+        EXPECT_EQ(2, b->num_parents());
+    }
+    NodeRef c(new DAGNode("c"));
+    add_parent(c, a);
+    EXPECT_TRUE(a->precedes(*c));
+}

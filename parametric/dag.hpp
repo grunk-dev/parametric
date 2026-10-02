@@ -316,14 +316,14 @@ public:
      */
     virtual bool IsValid() const { return false; };
 
-    virtual ~DAGNode()
-    {
-        for (const auto& parent : parents) {
-            if (parent) {
-                remove_parent(*parent);
-            }
-        }
-    }
+    /**
+     * @brief Destroys the node.
+     *
+     * The parent list is released together with the node. Entries in the parents' child lists
+     * are deliberately left in place: they are weak pointers that simply expire, and compute nodes
+     * rely on them as positional output slots (see ComputeNode::res).
+     */
+    virtual ~DAGNode() = default;
 
     using ClonedNodeMap = std::unordered_map<DAGNode const*, std::shared_ptr<DAGNode>>; /**< @private */
     static std::shared_ptr<ClonedNodeMap> new_cloned_node_map() {

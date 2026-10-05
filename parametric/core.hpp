@@ -233,6 +233,34 @@ void add_parent(const std::shared_ptr<parametric::impl::param_holder<C1>>&, cons
     static_assert(AlwaysFalse<C1>::value, "Connecting two parametric values is not allowed");
 }
 
+/**
+ * @brief Replaces the parameter old_p by new_p in all computations that depend on old_p
+ *
+ * Every compute node that used old_p as an input uses new_p instead, at the same argument position.
+ * Results that depend on old_p are invalidated and recomputed from new_p on next access. The parameter
+ * old_p stays valid, but does not have any dependents afterwards. The parents of new_p are not modified.
+ *
+ * Both parameters must have the same value and serializer type. If the replacement would introduce a
+ * cycle, e.g. because new_p depends on old_p, a std::runtime_error is thrown and nothing is changed.
+ *
+ * \code{cpp}
+ * auto a = parametric::new_param(1.0);
+ * auto b = parametric::new_param(2.0);
+ * auto c = parametric::new_param(10.0);
+ * auto sum = parametric::eval(add, a, b); // 3.0
+ * parametric::swap_param(a, c);
+ * sum.value();                            // 12.0
+ * \endcode
+ *
+ * @param old_p The parameter to be replaced
+ * @param new_p The parameter taking its place
+ */
+template <typename T, typename S>
+void swap_param(param<T, S> const& old_p, param<T, S> const& new_p)
+{
+    swap_node(old_p.node_pointer(), new_p.node_pointer());
+}
+
 /// @private 
 /// A type representing the input arguments of a compute node
 template <typename S=DefaultSerializer>

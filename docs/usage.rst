@@ -91,6 +91,27 @@ In this example, only ``base`` goes in as a parameter whereas the exponent is co
 and captured by the lambda.
 
 
+Replacing a parameter
+---------------------
+
+An input of an existing computation can be exchanged with ``parametric::swap_param``. All results
+that depend on the old parameter then depend on the new one, at the same argument position:
+
+.. code-block:: cpp
+
+    auto a = parametric::new_param(1.0);
+    auto b = parametric::new_param(2.0);
+    auto c = parametric::new_param(10.0);
+
+    auto sum = parametric::eval(add, a, b); // 3.0
+    parametric::swap_param(a, c);
+    sum.value();                            // 12.0
+
+Both parameters must have the same type. The old parameter stays valid, but does not have any dependents anymore.
+If the new parameter depends on the old one, the replacement would create a cycle. In this case a ``std::runtime_error``
+is thrown and nothing is changed. On the level of generic DAG nodes, ``parametric::swap_node`` provides the same functionality.
+
+
 The object oriented approach
 ----------------------------
 

@@ -42,6 +42,23 @@ typedef std::shared_ptr<parametric::DAGNode> NodeRef;
 void add_parent(const NodeRef& child, const NodeRef& parent);
 
 /**
+ * @brief Replaces old_node by new_node as a parent of all children of old_node
+ *
+ * After the call, every child that depended on old_node depends on new_node instead, at the same
+ * position in its parent list. This also holds if old_node appears multiple times in the parent list
+ * of a child. The moved children and all their descendants are invalidated. old_node itself stays valid
+ * and keeps its own parents, but has no children afterwards. The parents of new_node are not modified.
+ *
+ * The function has the strong exception guarantee: if it throws, the graph is unchanged.
+ *
+ * @param old_node The node to be replaced.
+ * @param new_node The node that takes over the children of old_node.
+ * @throws std::invalid_argument if one of the nodes is null or has positional children (e.g. compute nodes).
+ * @throws std::runtime_error if the replacement would introduce a cycle.
+ */
+void swap_node(const NodeRef& old_node, const NodeRef& new_node);
+
+/**
  * @brief This class provides a basis node of a directed acyclic graph (DAG)
  *
  * It provides all required methods to connect multiple nodes to a
@@ -115,6 +132,51 @@ public:
         }
 
         child->parents.push_back(parent);
+    }
+
+    friend void swap_node(const NodeRef& old_node, const NodeRef& new_node)
+    {
+        if (!old_node || !new_node) {
+            throw std::invalid_argument("Cannot swap node: null pointer passed.");
+        }
+
+        if (old_node->has_positional_children() || new_node->has_positional_children()) {
+            throw std::invalid_argument("Cannot swap node: nodes with positional children (e.g. compute nodes) are not supported.");
+        }
+
+        if (old_node == new_node) {
+            return;
+        }
+
+        // Take a snapshot of the live children, because the child list of old_node is modified below.
+        std::vector<NodeRef> moved;
+        for (auto const& c : old_node->childs) {
+            if (NodeRef cp = c.lock()) {
+                moved.push_back(std::move(cp));
+            }
+        }
+
+        // Validate everything before modifying anything.
+        for (auto const& c : moved) {
+            if (c == new_node || c->precedes(*new_node)) {
+                throw std::runtime_error("Cannot swap node: cycles are not allowed.");
+            }
+        }
+
+        for (auto const& c : moved) {
+            c->replace_parent(*old_node, new_node);
+
+            auto predicate = [&c](auto const& x) { return x.lock() == c; };
+            if (std::find_if(new_node->childs.begin(), new_node->childs.end(), predicate) == new_node->childs.end()) {
+                new_node->childs.push_back(c);
+            }
+        }
+        old_node->childs.clear();
+
+        for (auto const& c : moved) {
+            c->invalidateSelf();
+            c->invalidate();
+        }
     }
 
     /**
@@ -365,6 +427,19 @@ private:
     std::string _id; /**< @private */
 
 protected:
+    /**
+     * @brief Replaces all occurrences of parent_old in the parent list by parent_new, keeping their
+     * positions. The child lists of the parents are not modified.
+     */
+    void replace_parent(const DAGNode& parent_old, const NodeRef& parent_new)
+    {
+        for (auto& p : parents) {
+            if (p.get() == &parent_old) {
+                p = parent_new;
+            }
+        }
+    }
+
     mutable std::vector<std::weak_ptr<DAGNode>> childs; /**< @brief Pointer to child nodes */
     std::vector<std::shared_ptr<DAGNode>> parents;      /**< @brief Pointer to parent nodes */
 

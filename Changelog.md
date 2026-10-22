@@ -6,6 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # Unreleased
 
+- Add `swap_param` and `swap_node` to replace a parameter in a DAG (#22)
 - Fix undefined behaviour in `DAGNode::~DAGNode()`, which erased from the parent list while iterating over it (#86)
 - Fix dead child entries accumulating in long-lived nodes, which made attaching N consumers cost O(N^2) (#85)
 
